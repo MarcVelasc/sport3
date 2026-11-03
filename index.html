@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sport 3 · Reserva tu cancha en Tarija</title>
+<meta name="description" content="Reserva cancha de fútbol 6 o wally en Sport 3, Miraflores, Tarija. Mira los horarios libres y envía tu reserva por WhatsApp.">
+<meta name="theme-color" content="#E57B37">
+<meta property="og:title" content="Sport 3 · Reserva tu cancha">
+<meta property="og:description" content="Fútbol 6 y wally en Miraflores, Tarija. Elige tu horario y reserva por WhatsApp.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="img/fondo.jpg">
+<link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=League+Spartan:wght@600;700&display=swap">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<div class="bgimg" aria-hidden="true"></div>
+<div class="band">
+  <header class="top-in">
+    <a class="brand" href="#" id="home" aria-label="Sport 3, inicio"><img src="img/logo.png" alt="Sport 3"></a>
+  </header>
+  <div class="intro" id="intro">
+    <h1 id="t1">Reserva <span>tu cancha</span></h1>
+    <div class="hero-chips"><span class="hchip"><i></i>Todos los días · 15:00 a 22:00</span><span class="hchip">Fútbol 6 y wally</span><span class="hchip zona"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>Miraflores, Tarija</span></div>
+  </div>
+</div>
+
+<main>
+  <!-- STEP 1: choose -->
+  <section class="step" id="step1" aria-labelledby="t1">
+    <div class="block">
+      <div class="bh"><span class="num">1</span><h3>Deporte</h3></div>
+      <p class="cta">Elige qué vas a <b>jugar hoy</b>: fútbol 6 o wally.</p>
+      <div class="sports" id="sport" role="radiogroup" aria-label="Deporte" data-v="0">
+        <button type="button" class="sp" role="radio" aria-checked="true" data-sport="futbol" id="sp-futbol">
+          <span class="ic"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7l4.76 3.45-1.76 5.55h-6l-1.76-5.55z" fill="currentColor" fill-opacity=".9"/><path d="M12 7V3m3 13 2.5 3m-.74-8.55 3.74-1.45m-11.44 7.05L6.5 19m.74-8.55L3.5 9"/></svg></span>
+          <span><b>Fútbol 6</b><small>Desde Bs 120</small></span>
+        </button>
+        <button type="button" class="sp" role="radio" aria-checked="false" data-sport="wally" id="sp-wally" tabindex="-1">
+          <span class="ic"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 12a8 8 0 0 0 8 4"/><path d="M7.5 13.5a12 12 0 0 0 8.5 6.5"/><path d="M12 12a8 8 0 0 0-7.464 4.928"/><path d="M12.951 7.353a12 12 0 0 0-9.88 4.111"/><path d="M12 12a8 8 0 0 0-.536-8.928"/><path d="M15.549 15.147a12 12 0 0 0 1.38-10.611"/></svg></span>
+          <span><b>Wally</b><small>Bs 60 la hora</small></span>
+        </button>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="bh"><span class="num">2</span><h3>Fecha</h3></div>
+      <p class="cta">¿Qué <b>día</b> quieres jugar? Toca la fecha para cambiarla.</p>
+      <div class="datewrap">
+        <button type="button" class="field" id="dateBtn" aria-haspopup="dialog" aria-expanded="false" aria-controls="cal">
+          <span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M16 3v4M8 3v4M3 10h18"/></svg></span>
+          <span class="ft"><small id="dateTag">Hoy</small><b id="dateTxt"></b></span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+        <div class="pop" id="cal" role="dialog" aria-label="Elegir fecha"></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="bh"><span class="num">3</span><h3>Horarios</h3><span class="meta" id="slotsCap"></span></div>
+      <p class="cta">Elige una hora <b>disponible</b>. Para jugar más tiempo, toca horas seguidas.</p>
+      <div class="slots-wrap">
+        <div class="slots" id="slots" role="group" aria-label="Turnos del día"></div>
+      </div>
+    </div>
+
+    <div class="block" id="courtBlock" hidden>
+      <div class="bh"><span class="num">4</span><h3>Cancha</h3></div>
+      <p class="cta">Elige en qué cancha quieres jugar.</p>
+      <div class="courts" id="courts" role="radiogroup" aria-label="Cancha"></div>
+    </div>
+
+    <div class="dock">
+    <div class="sum" id="sum" aria-live="polite"></div>
+    <div class="below-sum">
+      <button type="button" class="primary" id="btnContinue" disabled>Reservar esta cancha<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></button>
+    </div>
+    </div>
+  </section>
+
+  <!-- STEP 2: details -->
+  <section class="step" id="step2" hidden aria-labelledby="t2">
+    <button type="button" class="back" data-go="1"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>Cambiar horario</button>
+    <h2 id="t2">Resumen de la reserva</h2>
+    <p class="cta" style="margin:-14px 0 0">Revisa tu reserva y deja tus datos de contacto.</p>
+    <dl class="recap" id="recap2" aria-label="Tu reserva"></dl>
+    <form id="form2" class="block" novalidate>
+      <div class="bh"><h3>Datos de contacto</h3></div>
+      <div class="inp"><label for="nombre">Nombre</label><input id="nombre" autocomplete="name" placeholder="Ej. Carlos Mendoza"></div>
+      <div class="inp"><label for="celular">Celular (WhatsApp)</label><div class="pre"><span>+591</span><input id="celular" inputmode="numeric" autocomplete="tel-national" placeholder="7XXXXXXX" maxlength="8"></div></div>
+      <fieldset class="paysel">
+        <legend>¿Cómo vas a pagar?</legend>
+        <label class="payopt"><input type="radio" name="pago" value="qr"><span><b>Pagar ahora con QR</b><small>Tu cancha queda asegurada.</small></span></label>
+        <label class="payopt"><input type="radio" name="pago" value="cancha"><span><b>Pagar en la cancha</b><small>Efectivo o QR al llegar.</small></span></label>
+        <p class="warnbox" id="warnCancha" hidden>Pasados 15 minutos de la hora reservada sin pago ni llegada, la cancha vuelve a quedar disponible para otros clientes.</p>
+      </fieldset>
+      <label class="check"><input type="checkbox" id="cumple"><span>Es para un cumpleaños<small>Los cumpleaños se reservan con mínimo 3 horas seguidas.</small></span></label>
+      <p class="err" id="err2" hidden></p>
+      <button type="submit" class="primary">Confirmar reserva<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></button>
+    </form>
+  </section>
+
+  <!-- STEP 3: review + send -->
+  <section class="step" id="step3" hidden aria-labelledby="t3">
+    <button type="button" class="back" data-go="2"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>Cambiar datos</button>
+    <div class="done">
+      <h2 id="t3">Envía tu <span>reserva</span></h2>
+      <p class="note">Se abre un chat con el dueño con tu reserva ya escrita. Solo tienes que tocar enviar.</p>
+      <p class="note hold" id="holdNote" hidden>Tu cancha queda apartada 2 horas. Envía el mensaje para que el dueño la confirme.</p>
+    </div>
+    <dl class="dl" id="dl3"></dl>
+    <div class="paybox" id="paybox3"><span id="payLbl3">Total</span><b id="total3">Bs 0</b><small id="payNote3"></small><div class="qrbox" id="qrbox" hidden><canvas id="qrCanvas" width="29" height="29" aria-label="Código QR de pago"></canvas><img id="qrImg" alt="Código QR de pago de Sport 3" hidden></div></div>
+    <div class="block" style="gap:10px">
+      <a class="primary wa" id="btnWa" target="_blank" rel="noopener">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.3a.5.5 0 0 0 0-.5l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.2 2.2 2.2 0 0 0 .1-1.3c0-.1-.2-.2-.5-.3z"/></svg>
+        Enviar reserva por WhatsApp
+      </a>
+      <details class="preview"><summary>Ver el mensaje que se enviará<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary><pre id="msgPreview"></pre></details>
+    </div>
+  </section>
+
+  <!-- STEP 4: sent -->
+  <section class="step" id="step4" hidden aria-labelledby="t4">
+    <div class="done">
+      <div class="tick"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path id="tickPath" d="M5 12.5 10 17.5 19 7"/></svg></div>
+      <h2 id="t4">Reserva <span>enviada</span></h2>
+      <p class="note">El dueño te confirma por WhatsApp. Tu reserva queda firme con esa confirmación.</p>
+    </div>
+    <dl class="dl" id="dl4"></dl>
+    <p class="warnbox" id="warn4" hidden></p>
+    <div class="block" style="gap:10px">
+      <div class="bh"><h3>Cómo llegar</h3></div>
+      <div class="map" id="map">
+      <canvas id="mapCanvas" aria-hidden="true"></canvas>
+      <a class="map-open" id="mapOpen" target="_blank" rel="noopener" aria-label="Abrir Sport 3 en Google Maps"></a>
+      <span class="pulse" aria-hidden="true"></span>
+      <span class="pin" aria-hidden="true"><svg width="34" height="44" viewBox="0 0 34 44"><defs><linearGradient id="pg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E89739"/><stop offset=".6" stop-color="#E57B37"/><stop offset="1" stop-color="#DC8549"/></linearGradient></defs><path d="M17 43C17 43 32 27.5 32 16.5A15 15 0 0 0 2 16.5C2 27.5 17 43 17 43Z" fill="url(#pg)" stroke="#fff" stroke-width="2.5"/><circle cx="17" cy="16.5" r="5.5" fill="#fff"/></svg></span>
+      <div class="map-bar">
+        <div><b>Sport 3</b><small>Miraflores, Tarija</small></div>
+        <a class="go-btn" id="mapGo" target="_blank" rel="noopener"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 21 3l-8 18-2-8-8-2z"/></svg>Cómo llegar</a>
+      </div>
+    </div>
+    </div>
+    <p class="note">¿No llegaste a enviar el mensaje? Vuelve a enviarlo. Si no puedes ir, avísale al dueño por WhatsApp hasta las 12:00 del día del partido para liberar la cancha.</p>
+    <div class="block" style="gap:10px">
+      <a class="btn2" id="btnWa2" target="_blank" rel="noopener">Volver a enviar por WhatsApp</a>
+      <a class="btn2" id="gcal" target="_blank" rel="noopener">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg>
+        Agregar a mi calendario
+      </a>
+      <button type="button" class="linkbtn" data-go="1">Hacer otra reserva</button>
+    </div>
+  </section>
+
+  <!-- OWNER -->
+  <section class="step" id="owner" hidden aria-labelledby="t5">
+    <button type="button" class="back" data-go="1"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>Ver la página de reservas</button>
+    <div class="done">
+      <span class="owner-pill"><i></i>Pantalla del dueño · los clientes no la ven</span>
+      <h2 id="t5">Reservas</h2>
+      <p class="note">Aquí llegan las reservas de la página. Toque <b>Confirmar</b> cuando el cliente le escriba y <b>Pagó</b> cuando vea el comprobante o le pague en la cancha. Si una reserva pendiente no se confirma en 2 horas, la cancha vuelve a quedar libre.</p>
+    </div>
+    <div id="oFocus" hidden></div>
+    <form class="block" id="oLogin" novalidate>
+      <h3>Entrar como dueño</h3>
+      <p class="note">Solo la primera vez en este celular. Después se abre directo.</p>
+      <div class="inp"><label for="oEmail">Correo</label><input id="oEmail" type="email" autocomplete="username" inputmode="email"></div>
+      <div class="inp"><label for="oPass">Contraseña</label><input id="oPass" type="password" autocomplete="current-password"></div>
+      <button type="submit" class="primary">Entrar</button>
+      <p class="note" id="oLoginMsg" aria-live="polite"></p>
+    </form>
+    <div id="oPanel" hidden>
+    <p class="note">Sesión: <span id="oUser"></span> · <button type="button" class="linkbtn" id="oLogout">Cerrar sesión</button></p>
+    <div class="days" id="oDays" role="group" aria-label="Día"></div>
+    <h3 class="osec">Reservas de la página</h3>
+    <div class="ores" id="oRes" aria-live="polite"></div>
+    <h3 class="osec">Por teléfono o en persona</h3>
+    <p class="note">Marque cuántas canchas quedan ocupadas en cada turno. Las reservas de la página ya se cuentan solas.</p>
+    <div class="seg" id="oSport" role="radiogroup" aria-label="Deporte" data-v="0">
+      <span class="seg-ind" aria-hidden="true"></span>
+      <button type="button" role="radio" aria-checked="true" data-sport="futbol"><b>Fútbol 6</b></button>
+      <button type="button" role="radio" aria-checked="false" data-sport="wally" tabindex="-1"><b>Wally</b></button>
+    </div>
+    <div class="olist" id="oList"></div>
+    <div class="saved" id="oSaved" aria-live="polite"></div>
+    <form class="block" id="oPhoneForm" novalidate>
+      <div class="inp"><label for="oPhone">Su WhatsApp personal, donde llegan las reservas</label>
+        <div style="display:flex;gap:8px"><div class="pre" style="flex:1"><span>+591</span><input id="oPhone" inputmode="numeric" placeholder="7XXXXXXX" maxlength="15"></div>
+        <button type="submit" class="btn2" style="height:auto;padding:0 16px">Guardar</button></div></div>
+      <p class="note">Los clientes envían su reserva a este número. Si usa el bot de WhatsApp, ponga aquí el número del bot con código de país.</p>
+    </form>
+    </div>
+  </section>
+
+  <p class="demo-band" id="band">Versión de demostración · los horarios ocupados son de ejemplo</p>
+  <p class="demo-band"><a href="privacidad.html" style="color:inherit">Política de privacidad</a></p>
+</main>
+
+<!-- chat -->
+<button class="fab" id="fab" type="button" aria-label="Abrir el asistente" aria-expanded="false" aria-controls="chat">
+  <svg class="i-chat" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a8 8 0 1 1 3.3 6.5L4 20l1.2-3.6A8 8 0 0 1 4 12z"/></svg>
+  <svg class="i-x" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+</button>
+<div class="chat" id="chat" role="dialog" aria-label="Asistente de Sport 3">
+  <div class="chat-h"><div class="av" aria-hidden="true">S3</div><div><b>Asistente Sport 3</b><small><i></i>Responde al instante</small></div></div>
+  <div class="msgs" id="msgs" aria-live="polite"></div>
+  <form class="chat-f" id="chatForm"><input id="chatIn" placeholder="Escriba su pregunta" autocomplete="off" aria-label="Escriba su pregunta"><button class="send" id="chatSend" type="submit" aria-label="Enviar" disabled><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5m0 0-6 6m6-6 6 6"/></svg></button></form>
+</div>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.min.js"></script>
+<script src="js/config.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

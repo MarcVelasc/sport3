@@ -1,0 +1,355 @@
+/* =====================================================================
+   Propuesta de diseño «Líneas de tiza» · Sport 3
+   Idea: la página se dibuja con el lenguaje de la cancha. Césped sintético de fondo,
+   líneas de tiza como estructura y el naranja de la marca solo para lo que se toca.
+   Lo memorable: las canchas se eligen sobre un plano dibujado como cancha de verdad.
+   ===================================================================== */
+:root{
+  --turf:#2B170D;        /* césped */
+  --turf-2:#3D2416;      /* césped iluminado */
+  --chalk:#FFFFFF;       /* tiza */
+  --line-c:rgba(255,255,255,.78);
+  --paper:#F26B1D;       /* fondo de página: blanco frío, no crema */
+  --ink:#2B170D;         /* texto */
+  --ink-2:#7A5A48;       /* texto secundario */
+  --rule:#F0E1D6;        /* bordes */
+  --orange:#F26B1D;      /* naranja Sport 3 */
+  --orange-ink:#B44A0B;  /* naranja para texto sobre blanco (contraste AA) */
+  --taken:#E3D6CD;
+
+  /* se reasignan los tokens del diseño original */
+  --page:var(--paper); --bg:#fff; --fg:var(--ink); --mut:var(--ink-2); --faint:#B9A193;
+  --line:var(--rule); --line-warm:var(--rule); --cream:#FFF1E7; --cream-2:#FDE4D3;
+  --accent:var(--orange); --accent-ink:var(--orange-ink); --accent-soft:#FDE9DC;
+  --grad:var(--orange); --gold:var(--orange); --on-gold:#fff;
+  --ok:#A3410A; --ok-soft:#FFE8D9;
+  --f-display:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
+  --f-body:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+html,body{background:var(--paper)}
+body{font:16px/1.5 var(--f-body);color:var(--ink)}
+body::before{background:var(--turf)}
+:focus-visible{outline:3px solid var(--orange);outline-offset:2px}
+.bgimg{display:none}
+
+/* ---------- portada: una cancha vista desde arriba ---------- */
+.band{
+  background-color:var(--turf);
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='760' height='440' viewBox='0 0 760 440' fill='none' stroke='%23FFFFFF' stroke-opacity='.22' stroke-width='3'%3E%3Crect x='40' y='30' width='680' height='380' rx='4'/%3E%3Cpath d='M380 30v380'/%3E%3Ccircle cx='380' cy='220' r='70'/%3E%3Ccircle cx='380' cy='220' r='4' fill='%23FFFFFF' fill-opacity='.4'/%3E%3Crect x='40' y='120' width='90' height='200'/%3E%3Crect x='630' y='120' width='90' height='200'/%3E%3C/svg%3E"),
+    repeating-linear-gradient(90deg,rgba(255,255,255,.035) 0 48px,transparent 48px 96px);
+  background-position:right -260px top 34px,0 0;
+  background-repeat:no-repeat,repeat;
+  background-size:760px 440px,auto;
+  padding-block:0 64px;
+}
+.top-in{height:76px}
+.brand{background:var(--chalk);box-shadow:none;padding:9px 16px}
+.intro{gap:12px;padding-top:18px}
+.intro h1{font-family:var(--f-display);font-weight:700;font-size:64px;line-height:.92;letter-spacing:-.005em;color:var(--chalk);text-shadow:none;max-width:9ch}
+.intro h1 span{color:inherit;background:none}
+.lede{margin:0;max-width:34ch;font-size:17px;line-height:1.45;color:rgba(255,255,255,.86)}
+.abierto{display:inline-flex;align-items:center;gap:8px;margin-top:4px;font-size:15px;font-weight:600;color:var(--chalk)}
+.abierto i{width:9px;height:9px;border-radius:50%;background:#FFD36E;box-shadow:0 0 0 4px rgba(255,211,110,.18)}
+.hero-chips{display:none}
+
+/* ---------- la hoja ---------- */
+main{margin-top:-30px;border-radius:28px;box-shadow:0 1px 0 rgba(43,23,13,.06),0 20px 50px rgba(43,23,13,.14);padding:28px 20px 30px}
+.step{gap:32px}
+h2{font-family:var(--f-display);font-size:38px;font-weight:700;line-height:1;letter-spacing:0}
+.block{gap:12px}
+.bh{gap:12px}
+.num{width:30px;height:30px;background:var(--turf);color:var(--chalk);font:700 17px/1 var(--f-display);box-shadow:none}
+.bh h3{font-family:var(--f-display);font-size:24px;font-weight:700;letter-spacing:0}
+.bh .meta{font-size:14px;color:var(--ink-2);font-weight:500}
+.cta{margin:-6px 0 0 42px;font-size:15.5px;color:var(--ink-2)}
+.cta b{color:var(--ink);font-weight:600}
+
+/* deporte: la elegida queda «pintada» de césped */
+.sp{background:#fff;border:1.5px solid var(--rule);border-radius:16px;padding:14px 12px}
+.sp::before{display:none}
+.sp .ic{background:var(--cream);color:var(--turf);border-radius:12px;box-shadow:none}
+.sp b{font-family:var(--f-display);font-size:23px;font-weight:700}
+.sp small{font-size:13.5px;font-weight:500;color:var(--ink-2)}
+.sp[aria-checked="true"]{background:var(--turf);border-color:var(--turf);box-shadow:inset 0 -4px 0 var(--orange)}
+.sp[aria-checked="true"] b{color:var(--chalk)}
+.sp[aria-checked="true"] small{color:rgba(255,255,255,.8)}
+.sp[aria-checked="true"] .ic{background:rgba(255,255,255,.12);color:var(--chalk)}
+
+/* fecha */
+.field{border:1.5px solid var(--rule);border-radius:16px}
+.field .ic{background:var(--cream);color:var(--turf)}
+.field .ft small{text-transform:none;letter-spacing:0;font-size:13px;font-weight:500;color:var(--ink-2)}
+.field .ft b{font-size:17px}
+.field > svg{color:var(--ink-2)}
+.day[aria-selected="true"]{background:var(--turf);box-shadow:none}
+.day.today:not([aria-selected="true"]){box-shadow:inset 0 0 0 1.5px var(--orange)}
+
+/* horarios: una planilla, sin caja de color alrededor */
+.slots-wrap{background:transparent;border:0;border-radius:0;padding:0;gap:8px}
+.past-note{margin:0;font-size:14px;font-weight:500;color:var(--ink-2)}
+.slots{gap:8px}
+.slot{grid-template-columns:1fr auto 118px;border:1.5px solid var(--rule);border-radius:14px;padding:12px 12px 12px 16px;box-shadow:none}
+.slot::before{background:var(--orange)}
+.slot .t{font-family:var(--f-display);font-size:28px;font-weight:700;letter-spacing:0;line-height:1}
+.slot .t i{font-family:var(--f-body);font-size:14px;color:var(--ink-2)}
+.slot .p{font-size:15px;font-weight:600;color:var(--ink)}
+.slot .st{font-size:13px;font-weight:600;padding:6px 10px;background:var(--ok-soft);color:var(--ok)}
+@media (hover:hover) and (pointer:fine){.slot:hover:not(:disabled):not([aria-pressed="true"]){border-color:var(--turf);box-shadow:none}}
+.slot:active:not(:disabled):not([aria-pressed="true"]){background:var(--cream)}
+.slot:disabled{background:repeating-linear-gradient(135deg,#F7F1ED 0 8px,#F0E7E1 8px 16px);border-color:transparent}
+.slot:disabled .st{background:transparent;color:var(--ink-2);padding-inline:0}
+.slot.res .t{text-decoration-thickness:2px;text-decoration-color:var(--ink-2)}
+.slot[aria-pressed="true"]{border-color:var(--orange);box-shadow:none}
+.slot[aria-pressed="true"] .st{background:rgba(255,255,255,.2)}
+.slot[aria-pressed="true"] + .slot[aria-pressed="true"]{margin-top:-8px}
+
+/* ---------- canchas: el plano de Sport 3 ---------- */
+.courts{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;padding:14px;border-radius:18px;background:var(--cream)}
+.court{
+  aspect-ratio:3/4;justify-content:flex-start;align-items:center;text-align:center;gap:2px;
+  border:0;border-radius:10px;padding:14px 6px 12px;color:var(--chalk);
+  background:
+    repeating-linear-gradient(0deg,rgba(255,255,255,.045) 0 14px,transparent 14px 28px),
+    var(--turf);
+  box-shadow:inset 0 0 0 5px var(--turf),inset 0 0 0 7px var(--line-c);
+  transition:transform 140ms var(--ease-out),box-shadow 150ms ease;
+}
+/* línea de medio campo y círculo central, en tiza */
+.court::before{inset:auto 7px 50% 7px;height:2px;background:var(--line-c);opacity:1;transition:none}
+.court::after{content:"";position:absolute;left:50%;top:50%;width:26%;aspect-ratio:1;border:2px solid var(--line-c);border-radius:50%;transform:translate(-50%,-50%)}
+.court > *{position:relative;z-index:1}
+.court .cn{font-family:var(--f-display);font-size:19px;font-weight:700;color:var(--chalk);line-height:1}
+.court .cd{font-size:12px;color:rgba(255,255,255,.82);line-height:1.2}
+.court .cs{margin-top:auto;font-size:12px;font-weight:600;background:rgba(255,255,255,.16);color:var(--chalk);padding:3px 9px}
+.court:active:not(:disabled){transform:scale(.97)}
+@media (hover:hover) and (pointer:fine){.court:hover:not(:disabled):not(.on){border:0;box-shadow:inset 0 0 0 5px var(--turf),inset 0 0 0 7px var(--chalk)}}
+.court:disabled{
+  background:repeating-linear-gradient(135deg,#F2E8E1 0 7px,#E9DDD4 7px 14px);
+  box-shadow:inset 0 0 0 5px #EEE3DB,inset 0 0 0 7px rgba(43,23,13,.12);
+}
+.court:disabled::before{background:rgba(43,23,13,.12)}
+.court:disabled::after{border-color:rgba(43,23,13,.12)}
+.court:disabled .cn,.court:disabled .cd{color:var(--ink-2)}
+.court:disabled .cs{background:transparent;color:var(--ink-2)}
+.court.on{border:0;box-shadow:inset 0 0 0 5px var(--turf),inset 0 0 0 7px var(--chalk),0 0 0 3px var(--orange)}
+.court.on::before{background:var(--chalk)}
+.court.on::after{border-color:var(--chalk)}
+.court.on .cs{background:var(--orange);color:#fff}
+
+/* ---------- barra de reserva ---------- */
+.dock{background:var(--turf);border:0;color:var(--chalk);box-shadow:0 14px 34px rgba(43,23,13,.3)}
+.sum .what b{font-family:var(--f-display);font-size:24px;font-weight:700;color:var(--chalk)}
+.sum .what small{color:rgba(255,255,255,.75);font-size:14px}
+.sum .price b{font-family:var(--f-display);font-size:32px;color:var(--chalk)}
+.primary{background:var(--orange);color:#fff;border-radius:14px;height:56px;font-size:17px;font-weight:600;box-shadow:none}
+.primary:disabled{background:rgba(255,255,255,.12);color:rgba(255,255,255,.55)}
+main .primary:disabled{background:#F1E8E2;color:#A38D80}
+.primary.wa{box-shadow:none;border-radius:14px}
+@media (max-width:600px){
+  .dock{border-radius:22px 22px 0 0;box-shadow:0 -12px 30px rgba(43,23,13,.25)}
+}
+
+/* ---------- pasos 2, 3 y 4 ---------- */
+.back{color:var(--ink-2);font-weight:500}
+.recap{border:1.5px solid var(--rule);border-radius:16px;font-size:15.5px}
+.recap dt{color:var(--ink-2);font-weight:500}
+.recap dd{color:var(--ink)}
+.recap .tot{font-family:var(--f-display);font-size:28px}
+.inp label{font-size:14px;font-weight:600;color:var(--ink)}
+.inp input{border:1.5px solid var(--rule);border-radius:14px;font-size:17px}
+.inp input:focus{border-color:var(--turf);box-shadow:0 0 0 3px rgba(43,23,13,.14)}
+.pre span{background:var(--cream);border-color:var(--rule);color:var(--ink-2)}
+.paysel legend{font-size:14px}
+.payopt{border:1.5px solid var(--rule);border-radius:14px}
+.payopt:has(input:checked){border-color:var(--turf);background:#FFF4EC;box-shadow:inset 4px 0 0 var(--turf)}
+.payopt input,.check input{accent-color:var(--turf)}
+.warnbox{background:#FFF4EC;color:var(--ink);border-left:4px solid var(--orange);border-radius:10px}
+.dl,.paybox{border:1.5px solid var(--rule);border-radius:16px}
+.paybox b,.dl dd.hi{font-family:var(--f-display);font-size:30px;color:var(--ink)}
+.dl dt{color:var(--ink-2)}
+.preview{border:1.5px solid var(--rule)}
+.tick{background:var(--turf);color:var(--chalk)}
+.code-big{font-family:var(--f-display)}
+.note{font-size:14px;color:var(--ink-2)}
+.demo-band{color:var(--ink-2)}
+
+/* asistente */
+.fab{background:var(--turf);box-shadow:0 10px 24px rgba(43,23,13,.35)}
+.chat{border:1.5px solid var(--rule)}
+.chat-h{background:var(--turf)}
+.msgs{background:var(--paper)}
+.m.me{background:var(--turf)}
+.chip{border-color:var(--rule);color:var(--ink)}
+.chip.solid,.send{background:var(--orange)}
+.chat-f input{border-color:var(--rule);background:#fff}
+.chat-f input:focus{border-color:var(--turf)}
+.toast{background:var(--turf)}
+
+@media (max-width:420px){
+  .intro h1{font-size:56px}
+  /* en celular solo se ve la mitad de la cancha: el círculo central asoma a la derecha y no cruza el texto */
+  .band{background-image:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='760' height='440' viewBox='0 0 760 440' fill='none' stroke='%23FFFFFF' stroke-opacity='.22' stroke-width='3'%3E%3Cpath d='M380 0v440'/%3E%3Ccircle cx='380' cy='220' r='70'/%3E%3Ccircle cx='380' cy='220' r='4' fill='%23FFFFFF' fill-opacity='.4'/%3E%3C/svg%3E"),
+      repeating-linear-gradient(90deg,rgba(255,255,255,.035) 0 48px,transparent 48px 96px);
+    background-position:right -340px top 96px,0 0}
+  main{padding:24px 14px 26px}
+  .slot{grid-template-columns:1fr auto 106px;padding:11px 8px 11px 12px}
+  .slot .t{font-size:26px}
+  .courts{padding:10px;gap:8px}
+  .court .cn{font-size:17px}
+  .court .cd{font-size:11px}
+}
+@media (prefers-reduced-motion:reduce){.court{transition:none}}
+
+/* =====================================================================
+   Propuesta v2 «Partido de noche» · se suma a tema-cancha.css
+   Idea: en Sport 3 se juega sobre todo de noche. La página cuenta el día:
+   la planilla de horarios pasa de la tarde a la noche y desde las 19:00
+   se encienden las luces (por eso sube el precio). La reserva termina en un pase.
+   ===================================================================== */
+:root{
+  --night:#2B170D;       /* cancha de noche */
+  --night-2:#3D2416;
+  --flood:#FFF1C9;       /* luz de reflector */
+  --dusk:#F4EFE3;
+}
+
+/* portada: dos reflectores encendidos sobre la cancha */
+.band{
+  background-image:
+    radial-gradient(ellipse 60% 70% at 100% -12%,rgba(255,241,201,.34),rgba(255,241,201,0) 62%),
+    radial-gradient(ellipse 45% 55% at 0% -18%,rgba(255,241,201,.16),rgba(255,241,201,0) 60%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='760' height='440' viewBox='0 0 760 440' fill='none' stroke='%23FFFFFF' stroke-opacity='.22' stroke-width='3'%3E%3Crect x='40' y='30' width='680' height='380' rx='4'/%3E%3Cpath d='M380 30v380'/%3E%3Ccircle cx='380' cy='220' r='70'/%3E%3Ccircle cx='380' cy='220' r='4' fill='%23FFFFFF' fill-opacity='.4'/%3E%3Crect x='40' y='120' width='90' height='200'/%3E%3Crect x='630' y='120' width='90' height='200'/%3E%3C/svg%3E"),
+    repeating-linear-gradient(90deg,rgba(255,255,255,.035) 0 48px,transparent 48px 96px);
+  background-position:0 0,0 0,right -260px top 34px,0 0;
+  background-repeat:no-repeat,no-repeat,no-repeat,repeat;
+  background-size:auto,auto,760px 440px,auto;
+  background-color:var(--night-2);
+}
+.intro h1{font-size:76px;max-width:none}
+/* disponibilidad de hoy, en vivo, en la portada */
+.hoy{margin:6px 0 0;max-width:32ch;font-family:var(--f-display);font-size:24px;font-weight:600;line-height:1.15;color:var(--chalk)}
+.hoy b{font-weight:700;color:#fff;box-shadow:inset 0 -.32em 0 rgba(242,107,29,.85);padding:0 .05em}
+.abierto{font-weight:500;color:rgba(255,255,255,.8);font-size:14.5px}
+
+/* ---------- la planilla: de la tarde a la noche ---------- */
+.slot{transition:background-color 200ms ease,border-color 150ms ease}
+.slot.noche{background:var(--night);border-color:var(--night)}
+.slot.noche .t{color:var(--chalk)}
+.slot.noche .t i{color:rgba(255,255,255,.66)}
+.slot.noche .p{color:var(--flood)}
+.slot.noche .st{background:rgba(255,201,77,.14);color:#FFD36E}
+.slot.noche:disabled{background:repeating-linear-gradient(135deg,#3D2416 0 8px,#341E12 8px 16px);border-color:transparent}
+.slot.noche:disabled .t,.slot.noche:disabled .t i,.slot.noche:disabled .p,.slot.noche:disabled .st{color:rgba(255,255,255,.42)}
+.slot.noche.res .t{text-decoration-color:rgba(255,255,255,.5)}
+@media (hover:hover) and (pointer:fine){.slot.noche:hover:not(:disabled):not([aria-pressed="true"]){border-color:var(--flood)}}
+.slot.noche:active:not(:disabled):not([aria-pressed="true"]){background:var(--night-2)}
+.slot.noche[aria-pressed="true"]{border-color:var(--orange)}
+.slot.noche[aria-pressed="true"] .p{color:#fff}
+/* el aviso donde se encienden las luces */
+.luces{display:flex;align-items:center;gap:10px;margin:6px 0 0;padding:12px 14px;border-radius:14px 14px 4px 4px;
+  background:linear-gradient(180deg,rgba(43,23,13,0) 0%,rgba(43,23,13,.08) 100%);
+  font-size:14.5px;line-height:1.35;color:var(--ink)}
+.luces svg{flex:none;color:#D99A00}
+.luces b{font-weight:600}
+
+/* ---------- canchas: la elegida se «pinta» al tocarla ---------- */
+.court.on::after{animation:circulo 320ms var(--ease-out)}
+.court.on::before{animation:linea 320ms var(--ease-out)}
+@keyframes circulo{from{transform:translate(-50%,-50%) scale(.2);opacity:0}to{transform:translate(-50%,-50%) scale(1);opacity:1}}
+@keyframes linea{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+
+/* ---------- la reserva como pase de entrada ---------- */
+.dl{
+  position:relative;background:var(--night);border:0;border-radius:18px;padding:18px 18px 20px;color:var(--chalk);
+  -webkit-mask:radial-gradient(circle 11px at 0 calc(100% - 58px),#0000 98%,#000) left/51% 100% no-repeat,
+               radial-gradient(circle 11px at 100% calc(100% - 58px),#0000 98%,#000) right/51% 100% no-repeat;
+          mask:radial-gradient(circle 11px at 0 calc(100% - 58px),#0000 98%,#000) left/51% 100% no-repeat,
+               radial-gradient(circle 11px at 100% calc(100% - 58px),#0000 98%,#000) right/51% 100% no-repeat;
+}
+.dl::after{content:"";position:absolute;left:18px;right:18px;bottom:57px;border-top:2px dashed rgba(255,255,255,.22)}
+.dl dt{color:rgba(255,255,255,.62)}
+.dl dd{color:var(--chalk)}
+.dl dd.hi{color:var(--chalk)}
+.dl dt:last-of-type,.dl dd:last-of-type{padding-top:18px}
+.tick{background:var(--orange);color:#fff}
+
+/* la barra de abajo también es de noche */
+.dock{background:var(--night)}
+
+@media (max-width:420px){
+  .intro h1{font-size:66px}
+  .hoy{font-size:22px}
+  .band{background-image:
+      radial-gradient(ellipse 80% 60% at 100% -12%,rgba(255,241,201,.34),rgba(255,241,201,0) 62%),
+      radial-gradient(ellipse 60% 50% at 0% -18%,rgba(255,241,201,.16),rgba(255,241,201,0) 60%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='760' height='440' viewBox='0 0 760 440' fill='none' stroke='%23FFFFFF' stroke-opacity='.22' stroke-width='3'%3E%3Cpath d='M380 0v440'/%3E%3Ccircle cx='380' cy='220' r='70'/%3E%3Ccircle cx='380' cy='220' r='4' fill='%23FFFFFF' fill-opacity='.4'/%3E%3C/svg%3E"),
+      repeating-linear-gradient(90deg,rgba(255,255,255,.035) 0 48px,transparent 48px 96px);
+    background-position:0 0,0 0,right -340px top 120px,0 0}
+}
+@media (prefers-reduced-motion:reduce){.court.on::after,.court.on::before{animation:none}}
+
+/* botón apagado dentro de la barra de noche */
+main .dock .primary:disabled{background:rgba(255,255,255,.1);color:rgba(255,255,255,.5)}
+
+/* =====================================================================
+   Propuesta v3 «Cancha naranja» · sin verde
+   La página entera es del color de Sport 3: fondo naranja como piso de cancha techada,
+   líneas blancas, letra condensada en cursiva como el logo, y café tostado para la noche.
+   ===================================================================== */
+:root{--orange:#F26B1D;--espresso:#2B170D;--flood:#FFC94D}
+html,body{background:var(--orange)}
+body::before{background:var(--orange)}
+.band{
+  background-color:var(--orange);
+  background-image:
+    radial-gradient(ellipse 60% 70% at 100% -12%,rgba(255,255,255,.28),rgba(255,255,255,0) 62%),
+    radial-gradient(ellipse 45% 55% at 0% -18%,rgba(255,255,255,.14),rgba(255,255,255,0) 60%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='760' height='440' viewBox='0 0 760 440' fill='none' stroke='%23FFFFFF' stroke-opacity='.42' stroke-width='3'%3E%3Crect x='40' y='30' width='680' height='380' rx='4'/%3E%3Cpath d='M380 30v380'/%3E%3Ccircle cx='380' cy='220' r='70'/%3E%3Ccircle cx='380' cy='220' r='4' fill='%23FFFFFF'/%3E%3Cpath d='M40 120a100 100 0 0 1 0 200M720 120a100 100 0 0 0 0 200'/%3E%3C/svg%3E");
+  background-position:0 0,0 0,right -260px top 34px;
+  background-repeat:no-repeat;
+  background-size:auto,auto,760px 440px;
+}
+/* letra del logo: condensada y en cursiva */
+.intro h1,h2,.bh h3,.slot .t,.court .cn,.sum .what b,.sum .price b,.recap .tot,.dl dd.hi,.paybox b,.sp b,.hoy,.num{font-style:italic}
+.intro h1{font-weight:800;letter-spacing:-.01em}
+.lede{color:rgba(255,255,255,.92)}
+.hoy b{box-shadow:inset 0 -.32em 0 rgba(43,23,13,.55)}
+.abierto{color:#fff}
+.abierto i{background:#fff;box-shadow:0 0 0 4px rgba(255,255,255,.25)}
+main{box-shadow:0 2px 0 rgba(43,23,13,.08),0 24px 60px rgba(120,40,0,.28)}
+.num{background:var(--espresso)}
+/* deporte elegido: naranja lleno */
+.sp[aria-checked="true"]{background:var(--orange);border-color:var(--orange);box-shadow:none}
+.sp[aria-checked="true"] small{color:rgba(255,255,255,.88)}
+.sp[aria-checked="true"] .ic{background:rgba(255,255,255,.2);color:#fff}
+.sp .ic,.field .ic{color:var(--orange-ink)}
+/* horarios */
+.slot .st{background:#FFEBDD;color:#A3410A}
+.slot.noche .p{color:var(--flood)}
+.slot.noche .st{background:rgba(255,201,77,.14);color:var(--flood)}
+.luces{background:#FFF7EA;border-left:4px solid var(--flood);border-radius:6px 14px 14px 6px}
+/* canchas: piso naranja con líneas blancas */
+.courts{background:#FFF1E7}
+.court{
+  background:repeating-linear-gradient(90deg,rgba(255,255,255,.06) 0 12px,transparent 12px 24px),var(--orange);
+  box-shadow:inset 0 0 0 5px var(--orange),inset 0 0 0 7px var(--line-c);
+}
+@media (hover:hover) and (pointer:fine){.court:hover:not(:disabled):not(.on){box-shadow:inset 0 0 0 5px var(--orange),inset 0 0 0 7px #fff}}
+.court.on{box-shadow:inset 0 0 0 5px var(--orange),inset 0 0 0 7px #fff,0 0 0 3px var(--espresso)}
+.court.on .cs{background:var(--espresso);color:#fff}
+.court .cd{color:rgba(255,255,255,.9)}
+.court:disabled{background:repeating-linear-gradient(135deg,#F2E8E1 0 7px,#E9DDD4 7px 14px)}
+/* barra, pase y asistente en café tostado */
+.dock{background:var(--espresso)}
+.dl{background:var(--espresso)}
+.fab{background:var(--espresso)}
+.tick{background:var(--orange)}
+@media (max-width:420px){
+  .intro h1{font-size:68px}
+  .band{background-image:
+      radial-gradient(ellipse 80% 60% at 100% -12%,rgba(255,255,255,.28),rgba(255,255,255,0) 62%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='760' height='440' viewBox='0 0 760 440' fill='none' stroke='%23FFFFFF' stroke-opacity='.42' stroke-width='3'%3E%3Cpath d='M380 0v440'/%3E%3Ccircle cx='380' cy='220' r='70'/%3E%3Ccircle cx='380' cy='220' r='4' fill='%23FFFFFF'/%3E%3C/svg%3E");
+    background-position:0 0,right -340px top 120px;background-size:auto,760px 440px}
+}

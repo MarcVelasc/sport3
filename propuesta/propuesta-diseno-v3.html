@@ -1,0 +1,2026 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sport 3 · Propuesta de diseño</title>
+<meta name="description" content="Reserva cancha de fútbol 6 o wally en Sport 3, Miraflores, Tarija. Mira los horarios libres y envía tu reserva por WhatsApp.">
+<meta name="theme-color" content="#E57B37">
+<meta property="og:title" content="Sport 3 · Reserva tu cancha">
+<meta property="og:description" content="Fútbol 6 y wally en Miraflores, Tarija. Elige tu horario y reserva por WhatsApp.">
+<meta property="og:type" content="website">
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:ital,wght@0,600;0,700;1,600;1,700;1,800&display=swap">
+<style>
+/* Base */
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0}
+img{max-width:100%}
+[hidden]{display:none!important}
+
+/* Layout: a blurred night-stadium photo fills the page; logo, title and the map sit on it; one white sheet holds the form,
+   where every block carries the brand's oranges and the time list is the most prominent element. Light form only, by request. */
+:root{
+  --page:#0E140F; --bg:#FFFFFF; --surface:#F7F1E8; --surface-2:#EFE6D8; --line:#EEE3D3;
+  --cream:#FFF6EC; --cream-2:#FFEFDD; --line-warm:#F2DCC4;
+  --fg:#2B1B0D; --mut:#857766; --faint:#BDB2A3;
+  --amber:#EAB155; --tang:#E89739; --accent:#E57B37; --clay:#DC8549;
+  --accent-ink:#B4561B; --accent-soft:#FCEBDD; --on-accent:#FFFFFF; --on-gold:#2B1B0D;
+  --grad:linear-gradient(135deg,var(--tang) 0%,var(--accent) 60%,var(--clay) 100%);
+  --gold:linear-gradient(90deg,var(--tang),var(--amber));
+  --ok:#24804a; --ok-soft:#E3F3E8; --warn:#9c5f08; --warn-soft:#FCEFD6; --bad:#b4442f; --bad-soft:#f9e9e5;
+  --wa:#1f9d55;
+  --scrim:rgba(43,27,13,.32); --shadow:0 1px 2px rgba(43,27,13,.06),0 14px 34px rgba(43,27,13,.14);
+  --f-display:"League Spartan",system-ui,sans-serif;
+  --f-body:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --ease-out:cubic-bezier(0.23,1,0.32,1);
+  --ease-in-out:cubic-bezier(0.77,0,0.175,1);
+  --r:14px;
+  color-scheme:light;
+}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{background:var(--page)}
+body{color:var(--fg);font:15px/1.5 var(--f-body);-webkit-font-smoothing:antialiased;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--page)}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer;-webkit-tap-highlight-color:transparent}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:8px}
+
+/* stadium photo, pre-blurred so it stays behind the content without competing with it */
+.bgimg{position:fixed;inset:0;z-index:0;background:var(--page) none center 35%/cover no-repeat;transform:scale(1.04);pointer-events:none}
+.bgimg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.35) 0%,rgba(0,0,0,0) 45%)}
+
+/* hero */
+.band{position:relative;z-index:1;color:#fff;
+  margin-left:calc(-1 * max(16px,env(safe-area-inset-left,0px)));margin-right:calc(-1 * max(16px,env(safe-area-inset-right,0px)));
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 52px}
+.top-in{max-width:560px;margin:0 auto;height:72px;display:flex;align-items:center;justify-content:space-between}
+.brand{display:inline-flex;align-items:center;background:#fff;border-radius:999px;padding:9px 18px;box-shadow:0 4px 16px rgba(0,0,0,.3);transition:transform 140ms var(--ease-out)}
+.brand:active{transform:scale(.97)}
+.brand img{display:block;height:24px;width:auto}
+.intro{max-width:560px;margin:0 auto;padding:10px 0 0;display:flex;flex-direction:column;gap:14px}
+.intro h1{font-family:var(--f-display);font-weight:700;font-size:40px;line-height:1;letter-spacing:-.02em;margin:0;text-wrap:balance;color:#fff;text-shadow:0 2px 18px rgba(0,0,0,.45)}
+.intro h1 span{background:linear-gradient(90deg,var(--amber),var(--tang));-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:none}
+.hero-chips{display:flex;flex-wrap:wrap;gap:8px}
+.hchip{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;border-radius:999px;padding:6px 12px;background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.3);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.hchip i{width:7px;height:7px;border-radius:50%;background:#6fdc8c}
+
+/* map */
+.map{position:relative;height:184px;border-radius:20px;overflow:hidden;background:#EDE5D6;box-shadow:0 14px 36px rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.35);color:var(--fg)}
+.map canvas,.map iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block}
+.map iframe{opacity:0;transition:opacity 300ms ease}
+.map iframe.ready{opacity:1}
+.map-open{position:absolute;inset:0;z-index:1}
+.pin{position:absolute;left:50%;top:42%;z-index:2;transform:translate(-50%,-100%);pointer-events:none}
+.pin svg{display:block;filter:drop-shadow(0 4px 6px rgba(0,0,0,.3))}
+.pin::after{content:"";position:absolute;left:50%;bottom:-6px;width:14px;height:6px;margin-left:-7px;border-radius:50%;background:rgba(0,0,0,.25)}
+.pulse{position:absolute;left:50%;top:42%;z-index:1;width:56px;height:56px;margin:-28px 0 0 -28px;border-radius:50%;background:rgba(229,123,55,.28);animation:pulse 2.4s var(--ease-out) infinite;pointer-events:none}
+@keyframes pulse{0%{transform:scale(.4);opacity:.9}100%{transform:scale(1.6);opacity:0}}
+.map.live .pin,.map.live .pulse{display:none}
+.map-bar{position:absolute;left:10px;right:10px;bottom:10px;z-index:3;display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.96);border-radius:14px;padding:8px 8px 8px 12px;box-shadow:0 4px 14px rgba(0,0,0,.15)}
+.map-bar div{min-width:0;flex:1}
+.map-bar b{display:block;font-family:var(--f-display);font-size:15.5px;line-height:1.15}
+.map-bar small{display:block;color:var(--mut);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.go-btn{flex:none;display:inline-flex;align-items:center;gap:6px;background:var(--gold);color:var(--on-gold);font-weight:700;font-size:13px;border-radius:10px;padding:9px 12px;text-decoration:none;box-shadow:0 4px 10px rgba(232,151,57,.35);transition:transform 120ms var(--ease-out)}
+.go-btn:active{transform:scale(.96)}
+
+/* sheet */
+main{position:relative;z-index:1;max-width:560px;margin:-32px auto 120px;background:var(--bg);border-radius:26px;box-shadow:0 1px 2px rgba(0,0,0,.2),0 18px 50px rgba(0,0,0,.35);
+  padding:24px 20px 28px}
+.step{display:flex;flex-direction:column;gap:26px}
+h2{font-family:var(--f-display);font-weight:700;font-size:28px;line-height:1.1;letter-spacing:-.015em;margin:0;text-wrap:balance;color:var(--fg)}
+h2 span{color:var(--accent)}
+
+.block{display:flex;flex-direction:column;gap:12px}
+.bh{display:flex;align-items:center;gap:10px}
+.num{width:26px;height:26px;border-radius:50%;background:var(--grad);color:#fff;font:700 13px/1 var(--f-display);display:grid;place-items:center;flex:none;box-shadow:0 3px 8px rgba(229,123,55,.35)}
+.bh h3{margin:0;font-family:var(--f-display);font-weight:700;font-size:18px;color:var(--fg);letter-spacing:-.01em}
+.bh .meta{margin-left:auto;font-size:13px;font-weight:600;color:var(--accent-ink)}
+.cta{margin:-6px 0 2px 36px;font-size:14.5px;line-height:1.4;font-weight:500;color:#5C4A38}
+.cta b{color:var(--accent-ink);font-weight:700}
+
+/* sport tiles */
+.sports{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sp{position:relative;overflow:hidden;display:flex;align-items:center;gap:12px;text-align:left;border:1.5px solid var(--line-warm);background:var(--cream);border-radius:18px;padding:14px 12px;
+  transition:transform 140ms var(--ease-out),border-color 200ms ease,box-shadow 200ms ease}
+.sp::before{content:"";position:absolute;inset:0;background:var(--grad);opacity:0;transition:opacity 200ms ease}
+.sp > *{position:relative}
+.sp:active{transform:scale(.97)}
+.sp .ic{width:44px;height:44px;border-radius:14px;background:#fff;color:var(--accent);display:grid;place-items:center;flex:none;box-shadow:0 2px 8px rgba(229,123,55,.18);transition:background-color 200ms ease,color 200ms ease}
+.sp b{display:block;font-family:var(--f-display);font-weight:700;font-size:19px;line-height:1.1;color:var(--fg);transition:color 200ms ease}
+.sp small{display:block;font-size:12.5px;font-weight:600;color:var(--accent-ink);transition:color 200ms ease}
+.sp[aria-checked="true"]{border-color:transparent;box-shadow:0 10px 24px rgba(229,123,55,.34)}
+.sp[aria-checked="true"]::before{opacity:1}
+.sp[aria-checked="true"] b,.sp[aria-checked="true"] small{color:#fff}
+.sp[aria-checked="true"] .ic{background:rgba(255,255,255,.22);color:#fff;box-shadow:none}
+
+/* generic segmented control (owner screen) */
+.seg{position:relative;display:grid;grid-template-columns:1fr 1fr;background:var(--surface);border-radius:14px;padding:4px}
+.seg-ind{position:absolute;top:4px;bottom:4px;left:4px;width:calc(50% - 4px);border-radius:10px;background:var(--grad);box-shadow:0 4px 10px rgba(229,123,55,.3);transition:transform 260ms var(--ease-in-out)}
+.seg[data-v="1"] .seg-ind{transform:translateX(100%)}
+.seg button{position:relative;border:0;background:transparent;border-radius:10px;padding:11px 10px;text-align:center;transition:color 200ms ease}
+.seg b{font-family:var(--f-display);font-weight:700;font-size:17px}
+.seg button[aria-checked="true"]{color:#fff}
+.seg button[aria-checked="false"]{color:var(--mut)}
+
+/* date */
+.datewrap{position:relative}
+.field{width:100%;display:flex;align-items:center;gap:12px;border:1.5px solid var(--line-warm);background:#fff;border-radius:18px;padding:10px 14px 10px 10px;text-align:left;
+  box-shadow:0 2px 8px rgba(120,60,20,.06);transition:border-color 150ms ease,box-shadow 150ms ease}
+.field .ic{width:44px;height:44px;border-radius:14px;background:var(--gold);color:#fff;display:grid;place-items:center;flex:none;box-shadow:0 3px 8px rgba(232,151,57,.35)}
+.field .ft{flex:1;min-width:0;display:flex;flex-direction:column}
+.field .ft small{font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--accent-ink)}
+.field .ft b{font-size:16.5px;font-weight:600;color:var(--fg);text-transform:none}
+.field > svg{color:var(--accent);flex:none;transition:transform 200ms var(--ease-out)}
+.field[aria-expanded="true"]{border-color:var(--accent);box-shadow:0 0 0 3px rgba(229,123,55,.15)}
+.field[aria-expanded="true"] > svg{transform:rotate(180deg)}
+.pop{position:absolute;left:0;top:calc(100% + 8px);z-index:6;width:min(340px,100%);background:#fff;border:1px solid var(--line-warm);border-radius:18px;
+  box-shadow:var(--shadow);padding:14px;transform-origin:top left;
+  opacity:0;transform:scale(.97) translateY(-4px);visibility:hidden;pointer-events:none;
+  transition:opacity 150ms var(--ease-out),transform 150ms var(--ease-out),visibility 0s linear 150ms}
+.pop[data-open]{opacity:1;transform:none;visibility:visible;pointer-events:auto;transition:opacity 200ms var(--ease-out),transform 200ms var(--ease-out),visibility 0s}
+.cal-h{display:flex;justify-content:space-between;align-items:baseline;padding:2px 4px 10px}
+.cal-h b{font-family:var(--f-display);font-size:17px;text-transform:capitalize;color:var(--fg)}
+.cal-h small{color:var(--accent-ink);font-size:12px;font-weight:600}
+.cal-g{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center;font-variant-numeric:tabular-nums}
+.cal-g .dow{font-size:11.5px;font-weight:600;color:var(--accent-ink);padding:4px 0 6px}
+.day{border:0;background:transparent;border-radius:10px;aspect-ratio:1;max-width:100%;font-size:14px;font-weight:500;transition:background-color 120ms ease,transform 120ms var(--ease-out)}
+.day:disabled{color:var(--faint);cursor:default;font-weight:400}
+.day:active:not(:disabled){transform:scale(.94)}
+@media (hover:hover) and (pointer:fine){.day:hover:not(:disabled):not([aria-selected="true"]){background:var(--cream-2)}}
+.day.today:not([aria-selected="true"]){box-shadow:inset 0 0 0 1.5px var(--line-warm)}
+.day[aria-selected="true"]{background:var(--grad);color:#fff;font-weight:700;box-shadow:0 4px 10px rgba(229,123,55,.35)}
+
+/* time slots: the most prominent block (naranja más intenso, no pastel) */
+.slots-wrap{background:#F7C08A;border:1.5px solid #EEA563;border-radius:22px;padding:12px;display:flex;flex-direction:column;gap:10px}
+.slots{display:flex;flex-direction:column;gap:6px}
+.slot{position:relative;overflow:hidden;display:grid;grid-template-columns:1fr auto 122px;align-items:center;gap:12px;width:100%;
+  border:1px solid #F0C597;background:#fff;border-radius:14px;padding:11px 12px 11px 14px;text-align:left;font-variant-numeric:tabular-nums;
+  box-shadow:0 1px 3px rgba(120,60,20,.14);transition:border-color 150ms ease,box-shadow 150ms ease}
+.slot::before{content:"";position:absolute;inset:0;background:var(--grad);opacity:0;transition:opacity 150ms ease}
+.slot > *{position:relative}
+.slot .t{font-family:var(--f-display);font-size:21px;font-weight:700;letter-spacing:-.01em;color:var(--fg);line-height:1.1;transition:color 150ms ease}
+.slot .t i{font-family:var(--f-body);font-style:normal;font-size:13.5px;font-weight:500;color:var(--mut);letter-spacing:0;transition:color 150ms ease}
+.slot .p{font-size:14px;font-weight:700;color:var(--accent-ink);transition:color 150ms ease}
+.slot .st{display:inline-flex;align-items:center;justify-content:center;gap:6px;border-radius:999px;padding:5px 9px;font-size:12.5px;font-weight:700;white-space:nowrap;background:var(--ok-soft);color:var(--ok);transition:background-color 150ms ease,color 150ms ease}
+.slot.low .st{background:var(--warn-soft);color:var(--warn)}
+.slot .ck{width:16px;height:16px;border-radius:50%;background:#fff;color:var(--accent);display:grid;place-items:center;flex:none}
+@media (hover:hover) and (pointer:fine){.slot:hover:not(:disabled):not([aria-pressed="true"]){border-color:#EBC59E;box-shadow:0 4px 12px rgba(229,123,55,.14)}}
+.slot:active:not(:disabled):not([aria-pressed="true"]){background:var(--cream)}
+.slot:disabled{cursor:default;background:#FBE3CA;border-color:#F3D0AC;box-shadow:none}
+.slot:disabled .t,.slot:disabled .t i,.slot:disabled .p{color:var(--faint)}
+.slot:disabled .st{background:#ECE5DA;color:#9C9286}
+.slot.res .t{text-decoration:line-through;text-decoration-thickness:2px}
+.slot.loading:disabled{background:#fff}
+.slot[aria-pressed="true"]{border-color:transparent;box-shadow:0 8px 20px rgba(229,123,55,.3)}
+.slot[aria-pressed="true"]::before{opacity:1}
+.slot[aria-pressed="true"] .t,.slot[aria-pressed="true"] .t i,.slot[aria-pressed="true"] .p{color:#fff}
+.slot[aria-pressed="true"] .st{background:rgba(255,255,255,.22);color:#fff}
+.slot[aria-pressed="true"] + .slot[aria-pressed="true"]{margin-top:-6px;border-top-left-radius:0;border-top-right-radius:0}
+.slot[aria-pressed="true"]:has(+ .slot[aria-pressed="true"]){border-bottom-left-radius:0;border-bottom-right-radius:0}
+.slot:focus-visible{outline-offset:-3px}
+.hint{margin:0;padding:0 4px;font-size:13px;font-weight:500;color:var(--accent-ink);display:flex;gap:6px;align-items:center}
+
+/* summary + buttons */
+.sum{display:flex;justify-content:space-between;align-items:center;gap:14px;background:var(--cream);border:1.5px dashed #EDC49B;border-radius:18px;padding:14px 16px;font-variant-numeric:tabular-nums}
+.sum .what{min-width:0}
+.sum .what b{display:block;font-family:var(--f-display);font-size:17px;color:var(--fg);line-height:1.2}
+.sum .what small{display:block;color:var(--mut);font-size:13px}
+.sum .price{text-align:right;flex:none}
+.sum .price b{display:block;font-family:var(--f-display);font-weight:700;font-size:28px;line-height:1;letter-spacing:-.02em;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sum .price small{display:inline-block;margin-top:5px;font-size:11.5px;font-weight:700;color:var(--ok);background:var(--ok-soft);border-radius:999px;padding:2px 8px}
+.primary{display:flex;align-items:center;justify-content:center;gap:10px;border:0;border-radius:16px;background:var(--gold);color:var(--on-gold);height:54px;width:100%;
+  font-weight:700;font-size:16.5px;text-decoration:none;box-shadow:0 8px 20px rgba(232,151,57,.38);transition:transform 140ms var(--ease-out),opacity 150ms ease,box-shadow 150ms ease}
+.primary:active:not(:disabled){transform:scale(.98)}
+.primary:disabled{opacity:.45;filter:saturate(.3);box-shadow:none;cursor:default}
+.primary.wa{background:var(--grad);color:#fff;height:50px;width:auto;align-self:center;padding:0 30px;font-size:16px;border-radius:999px;box-shadow:0 10px 24px rgba(229,123,55,.42)}
+.below-sum{display:flex;flex-direction:column;gap:12px;margin-top:-10px}
+.note{font-size:13px;color:var(--mut);margin:0}
+.back{align-self:flex-start;border:0;background:var(--cream);color:var(--accent-ink);font-size:14px;font-weight:600;padding:7px 12px 7px 8px;border-radius:999px;display:flex;gap:4px;align-items:center;transition:background-color 150ms ease,transform 120ms var(--ease-out)}
+.back:active{transform:scale(.97)}
+@media (hover:hover) and (pointer:fine){.back:hover{background:var(--cream-2)}}
+.btn2{display:flex;align-items:center;justify-content:center;gap:8px;height:48px;border-radius:14px;border:1.5px solid var(--line-warm);background:#fff;
+  font-weight:600;text-decoration:none;color:var(--accent-ink);transition:transform 140ms var(--ease-out),background-color 150ms ease}
+.btn2:active{transform:scale(.98)}
+@media (hover:hover) and (pointer:fine){.btn2:hover{background:var(--cream)}}
+
+/* recap */
+.recap{display:grid;grid-template-columns:auto 1fr;gap:0;background:#fff;border:1px solid #E4DED4;border-radius:14px;padding:4px 14px;font-size:14.5px;font-variant-numeric:tabular-nums}
+.recap dt,.recap dd{margin:0;padding:10px 0;border-bottom:1px solid #EFEBE4}
+.recap dt{color:#7A736B;font-size:13px;font-weight:600;padding-right:16px;display:flex;align-items:center}
+.recap dd{color:#1F1A15;font-weight:600;text-align:right;display:flex;flex-direction:column;justify-content:center;align-items:flex-end}
+.recap dd small{display:block;font-weight:500;color:#7A736B;font-size:12.5px}
+.recap dt:nth-last-of-type(1),.recap dd:last-child{border-bottom:0}
+.recap .tot{font-family:var(--f-display);font-size:20px;font-weight:700;color:#1F1A15}
+
+/* inputs */
+.inp{display:flex;flex-direction:column;gap:6px}
+.inp label{font-size:13px;font-weight:700;color:var(--accent-ink)}
+.inp input{border:1.5px solid var(--line-warm);background:#fff;border-radius:14px;padding:13px 14px;font-size:16px;transition:border-color 150ms ease,box-shadow 150ms ease;width:100%;min-width:0}
+.inp input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(229,123,55,.15)}
+.pre{display:flex;align-items:stretch;min-width:0}
+.pre span{display:flex;align-items:center;padding:0 12px;border:1.5px solid var(--line-warm);border-right:0;border-radius:14px 0 0 14px;color:var(--accent-ink);font-weight:600;background:var(--cream);font-size:15px}
+.pre input{border-radius:0 14px 14px 0!important}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:15px;font-weight:500;cursor:pointer}
+.check input{width:20px;height:20px;margin:1px 0 0;accent-color:var(--accent);flex:none}
+.check small{display:block;color:var(--mut);font-size:13px;font-weight:400}
+.err{margin:0;background:var(--bad-soft);color:var(--bad);border-radius:12px;padding:10px 12px;font-size:13.5px}
+.warnbox{margin:0;background:var(--warn-soft);color:var(--fg);border-radius:12px;padding:10px 12px;font-size:13.5px}
+
+/* amount due at the court */
+.paybox{display:grid;grid-template-columns:1fr auto;align-items:center;gap:2px 12px;background:var(--cream);border:1.5px solid var(--line-warm);border-radius:16px;padding:14px 16px;font-variant-numeric:tabular-nums}
+.paybox span{font-weight:600;color:var(--fg)}
+.paybox b{font-family:var(--f-display);font-weight:700;font-size:26px;letter-spacing:-.02em;line-height:1;color:var(--accent-ink)}
+.paybox small{grid-column:1/-1;color:var(--mut);font-size:13px}
+.preview{border:1.5px solid var(--line-warm);border-radius:14px;font-size:13.5px;background:#fff}
+.preview summary{cursor:pointer;padding:11px 14px;color:var(--accent-ink);font-weight:600;list-style:none;display:flex;justify-content:space-between;align-items:center}
+.preview summary::-webkit-details-marker{display:none}
+.preview summary svg{transition:transform 200ms var(--ease-out)}
+.preview[open] summary svg{transform:rotate(180deg)}
+.preview pre{margin:0;padding:0 14px 14px;white-space:pre-wrap;font:13.5px/1.55 var(--f-body);overflow-wrap:anywhere}
+
+/* confirmation */
+.done{display:flex;flex-direction:column;gap:6px;align-items:flex-start}
+.tick{width:48px;height:48px;border-radius:50%;background:var(--ok-soft);display:grid;place-items:center;color:var(--ok);margin-bottom:6px}
+.code-big{font-family:var(--f-display);font-weight:700;font-size:44px;letter-spacing:-.01em;line-height:1;font-variant-numeric:tabular-nums;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;align-self:flex-start}
+.dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:10px 16px;background:var(--cream);border:1.5px solid var(--line-warm);border-radius:16px;padding:14px 16px;font-variant-numeric:tabular-nums}
+.dl dt{color:var(--accent-ink);font-size:13.5px;font-weight:600}
+.dl dd{margin:0;text-align:right;font-weight:600;min-width:0;overflow-wrap:anywhere}
+.dl dd.hi{font-family:var(--f-display);font-size:18px;color:var(--accent-ink)}
+
+/* owner screen (reached with #dueno) */
+.days{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;scrollbar-width:thin}
+.dchip{flex:none;border:1.5px solid var(--line-warm);background:#fff;border-radius:12px;padding:8px 0;width:52px;display:flex;flex-direction:column;align-items:center;font-variant-numeric:tabular-nums;
+  transition:background-color 150ms ease,border-color 150ms ease,color 150ms ease}
+.dchip small{font-size:11px;color:var(--accent-ink);text-transform:capitalize}
+.dchip b{font-size:16px;font-weight:700}
+.dchip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.dchip[aria-pressed="true"] small{color:#fff;opacity:.85}
+.olist{display:flex;flex-direction:column;border:1.5px solid var(--line-warm);border-radius:16px;overflow:hidden}
+.orow{display:grid;grid-template-columns:1fr auto;align-items:center;gap:12px;padding:10px 12px 10px 16px;border-top:1px solid var(--line);font-variant-numeric:tabular-nums}
+.orow:first-child{border-top:0}
+.orow .t{font-family:var(--f-display);font-weight:700;font-size:17px}
+.orow .t i{font-family:var(--f-body);font-style:normal;font-weight:400;font-size:13.5px;color:var(--mut)}
+.orow.full{background:var(--cream)}
+.stp{display:flex;align-items:center;gap:4px}
+.stp button{width:36px;height:36px;border-radius:10px;border:1.5px solid var(--line-warm);background:#fff;color:var(--accent-ink);display:grid;place-items:center;transition:transform 120ms var(--ease-out),opacity 150ms ease}
+.stp button:active:not(:disabled){transform:scale(.94)}
+.stp button:disabled{opacity:.3;cursor:default}
+.stp output{min-width:76px;text-align:center;font-size:13.5px;color:var(--mut)}
+.stp output b{color:var(--fg);font-weight:700}
+.orow.full .stp output b{color:var(--bad)}
+.saved{font-size:12.5px;color:var(--mut);min-height:18px}
+.owner-pill{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;color:var(--accent-ink)}
+.owner-pill i{width:6px;height:6px;border-radius:50%;background:var(--ok)}
+
+/* chat */
+.fab{position:fixed;right:calc(20px + env(safe-area-inset-right,0px));bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:20;width:58px;height:58px;border-radius:50%;border:0;
+  background:var(--grad);color:#fff;box-shadow:0 8px 22px rgba(229,123,55,.45);display:grid;place-items:center;transition:transform 140ms var(--ease-out)}
+.fab:active{transform:scale(.94)}
+.fab svg{grid-area:1/1;transition:opacity 160ms ease,transform 200ms var(--ease-out),filter 160ms ease}
+.fab .i-x{opacity:0;transform:rotate(-45deg) scale(.8);filter:blur(2px)}
+.fab[aria-expanded="true"] .i-chat{opacity:0;transform:rotate(45deg) scale(.8);filter:blur(2px)}
+.fab[aria-expanded="true"] .i-x{opacity:1;transform:none;filter:none}
+.chat{position:fixed;z-index:19;right:calc(20px + env(safe-area-inset-right,0px));bottom:calc(90px + env(safe-area-inset-bottom,0px));
+  width:min(380px,calc(100vw - 32px - env(safe-area-inset-left,0px) - env(safe-area-inset-right,0px)));height:min(560px,calc(100dvh - 120px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px)));
+  background:#fff;border:1px solid var(--line-warm);border-radius:22px;box-shadow:var(--shadow);display:flex;flex-direction:column;overflow:hidden;
+  transform-origin:bottom right;opacity:0;transform:scale(.96) translateY(8px);visibility:hidden;pointer-events:none;
+  transition:opacity 160ms var(--ease-out),transform 160ms var(--ease-out),visibility 0s linear 160ms}
+.chat[data-open]{opacity:1;transform:none;visibility:visible;pointer-events:auto;transition:opacity 220ms var(--ease-out),transform 220ms var(--ease-out),visibility 0s}
+.chat-h{display:flex;align-items:center;gap:10px;padding:14px 16px;background:var(--grad);color:#fff}
+.av{width:34px;height:34px;border-radius:50%;background:#fff;display:grid;place-items:center;flex:none;overflow:hidden}
+.av{font-family:var(--f-display);font-weight:700;font-size:14px;color:var(--accent);font-style:italic}
+.chat-h b{display:block;font-family:var(--f-display);font-size:16px}
+.chat-h small{display:flex;align-items:center;gap:6px;color:rgba(255,255,255,.9);font-size:12px}
+.chat-h small i{width:6px;height:6px;border-radius:50%;background:#b7f5c8}
+.msgs{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:8px;overscroll-behavior:contain;background:#FFFBF6}
+.m{max-width:86%;padding:9px 12px;border-radius:16px;font-size:14px;line-height:1.45;overflow-wrap:anywhere}
+.m.bot{background:#fff;border:1px solid var(--line);border-bottom-left-radius:5px;align-self:flex-start}
+.m.me{background:var(--accent);color:#fff;border-bottom-right-radius:5px;align-self:flex-end}
+.m a{color:inherit}
+.acts{display:flex;flex-wrap:wrap;gap:6px;align-self:flex-start;max-width:100%}
+.chip{border:1.5px solid var(--line-warm);background:#fff;border-radius:999px;padding:6px 11px;font-size:13px;font-weight:600;color:var(--accent-ink);text-decoration:none;transition:transform 120ms var(--ease-out),background-color 150ms ease}
+.chip:active{transform:scale(.96)}
+@media (hover:hover) and (pointer:fine){.chip:hover{background:var(--cream)}}
+.chip.solid{background:var(--grad);color:#fff;border-color:transparent}
+.chip.wa{background:var(--wa);color:#fff;border-color:var(--wa)}
+.typing{display:flex;gap:4px;padding:12px 14px}
+.typing i{width:6px;height:6px;border-radius:50%;background:var(--faint);animation:blink 1s ease infinite}
+.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+@keyframes blink{0%,100%{opacity:.3}50%{opacity:1}}
+.chat-f{display:flex;gap:8px;padding:10px;border-top:1px solid var(--line)}
+.chat-f input{flex:1;min-width:0;border:1.5px solid var(--line-warm);background:var(--cream);border-radius:999px;padding:10px 14px;font-size:15px}
+.chat-f input:focus{outline:none;border-color:var(--accent)}
+.send{width:42px;height:42px;border-radius:50%;border:0;background:var(--grad);color:#fff;display:grid;place-items:center;flex:none;transition:transform 120ms var(--ease-out),opacity 150ms ease}
+.send:active{transform:scale(.94)}
+.send:disabled{opacity:.35}
+
+/* toast */
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));z-index:40;background:var(--fg);color:#fff;border-radius:999px;padding:10px 16px;font-size:14px;font-weight:500;
+  transform:translate(-50%,calc(100% + 32px));opacity:0;transition:transform 260ms var(--ease-out),opacity 200ms ease;pointer-events:none;white-space:nowrap;max-width:calc(100vw - 32px);overflow:hidden;text-overflow:ellipsis}
+.toast[data-show]{transform:translate(-50%,0);opacity:1}
+
+.demo-band{font-size:12px;color:var(--mut);text-align:center;margin:24px 0 0}
+
+@media (max-width:420px){
+  .intro h1{font-size:34px}
+  main{padding:20px 14px 24px;border-radius:22px}
+  .slot{grid-template-columns:1fr auto 112px;gap:8px;padding:11px 8px 11px 10px}
+  .slot .t{font-size:19px}
+  .sp{padding:12px 10px;gap:10px}
+  .sp .ic{width:38px;height:38px;border-radius:12px}
+  .sp b{font-size:17px}
+  .sp small{font-size:11.5px}
+  .stp output{min-width:64px}
+}
+@media (max-width:420px){
+  .slot .t i{display:block;margin-top:2px}
+}
+@media (prefers-reduced-motion: reduce){
+  .seg-ind,.slot,.slot::before,.sp,.sp::before,.pop,.chat,.toast,.fab svg,.field > svg,.primary,.day,.chip,.btn2,.stp button,.preview summary svg,.back,.go-btn,.brand{transition-property:opacity,background-color,border-color,color,visibility!important}
+  .pop,.chat{transform:none!important}
+  .toast{transform:translate(-50%,0)!important}
+  .pulse{animation:none;opacity:0}
+  .primary:active,.fab:active,.chip:active,.sp:active,.back:active,.go-btn:active{transform:none!important}
+}
+
+/* ===== Ajustes de diseño =====
+   Regla: el naranja se reserva para acciones, selección y marca. Textos, etiquetas y fondos pasan a neutros cálidos.
+   Sin texto en degradado; el degradado queda solo en lo seleccionado (deporte, fecha, horario). */
+:root{--line-warm:#E7DFD3;--cream:#FAF7F2;--cream-2:#F2EDE5;--mut:#7C7064}
+.step{gap:28px}
+.cta{color:#6B5D4F;font-weight:400}
+.cta b{color:var(--fg);font-weight:600}
+h2 span{color:inherit}
+.intro h1 span{background:none;color:var(--tang);-webkit-background-clip:border-box;background-clip:border-box}
+.num{background:var(--fg);box-shadow:none;font-size:12.5px}
+.bh .meta{color:var(--mut);font-weight:500}
+/* deporte */
+.sp{background:#fff;border-color:var(--line-warm)}
+.sp small{color:var(--mut)}
+.sp .ic{background:var(--cream-2);box-shadow:none}
+@media (hover:hover) and (pointer:fine){.sp:hover:not([aria-checked="true"]){border-color:#CDBFAE}}
+/* fecha */
+.field{border-color:var(--line-warm);box-shadow:none}
+.field .ic{background:var(--cream-2);color:var(--accent-ink);box-shadow:none}
+.field .ft small{color:var(--mut)}
+.field > svg{color:var(--mut)}
+/* horarios */
+.past-note{margin:2px 4px 2px;font-size:13px;font-weight:600;color:#7A3F12}
+/* barra de acción fija */
+.dock{position:sticky;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:4;display:flex;flex-direction:column;gap:10px;
+  background:#fff;border:1px solid var(--line-warm);border-radius:20px;padding:10px;box-shadow:0 -2px 0 rgba(255,255,255,.9),0 12px 30px rgba(43,27,13,.16)}
+.dock .below-sum{margin-top:0}
+.sum{background:transparent;border:0;border-radius:0;padding:4px 6px}
+.sum .what b{font-size:19px;font-variant-numeric:tabular-nums}
+.sum .price b{background:none;-webkit-background-clip:border-box;background-clip:border-box;color:var(--fg);font-size:24px}
+/* botones */
+.primary{background:var(--accent);color:#fff;box-shadow:0 6px 16px rgba(229,123,55,.28)}
+.primary:disabled{opacity:1;filter:none;background:#EEE8DF;color:#A3978A;box-shadow:none}
+.primary.wa{background:var(--wa);color:#fff;width:100%;height:54px;border-radius:16px;padding:0 20px;box-shadow:0 6px 16px rgba(31,157,85,.28)}
+.go-btn{background:var(--accent);color:#fff;box-shadow:0 3px 8px rgba(229,123,55,.3)}
+.back{background:transparent;color:var(--mut);padding-left:0}
+@media (hover:hover) and (pointer:fine){.back:hover{background:transparent;color:var(--fg)}}
+.btn2{color:var(--fg);border-color:var(--line-warm)}
+.linkbtn{align-self:center;border:0;background:transparent;color:var(--accent-ink);font-weight:600;font-size:15px;padding:10px 12px;text-decoration:underline;text-underline-offset:3px}
+/* datos y resúmenes */
+.inp label{color:var(--fg);font-weight:600}
+.pre span{color:var(--mut)}
+.dl{background:#fff;border:1px solid var(--line-warm)}
+.dl dt{color:var(--mut);font-weight:500}
+.dl dd.hi{color:var(--fg)}
+.paybox{background:#fff;border:1px solid var(--line-warm)}
+.paybox b{color:var(--fg)}
+.preview{border-color:var(--line-warm)}
+.preview summary{color:var(--fg)}
+.code-big{background:none;-webkit-background-clip:border-box;background-clip:border-box;color:var(--fg)}
+/* asistente */
+.fab{background:var(--accent);box-shadow:0 8px 20px rgba(229,123,55,.38)}
+.chat-h{background:var(--fg)}
+.chat-h small i{background:#6fdc8c}
+.msgs{background:#FAF8F5}
+.chip{color:var(--fg)}
+.chip.solid{background:var(--accent)}
+.send{background:var(--accent)}
+.chat-f input{background:#fff}
+/* celular: la barra de acción queda pegada abajo y el asistente se ubica justo encima */
+@media (max-width:600px){
+  .dock{position:fixed;left:0;right:0;bottom:0;z-index:15;border-radius:20px 20px 0 0;border-width:1px 0 0;
+    padding:10px max(16px,env(safe-area-inset-right,0px)) calc(10px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));
+    box-shadow:0 -10px 30px rgba(43,27,13,.18)}
+  body:has(#step1:not([hidden])) main{padding-bottom:calc(var(--dockh,150px) + 12px)}
+  body:has(#step1:not([hidden])) .fab{bottom:calc(var(--dockh,150px) + 12px)}
+  body:has(#step1:not([hidden])) .chat{bottom:calc(var(--dockh,150px) + 82px);height:min(460px,calc(100dvh - var(--dockh,150px) - 110px - env(safe-area-inset-top,0px)))}
+}
+
+/* ===== Correcciones de la revisión de diseño ===== */
+.hchip.zona{background:transparent;border-color:rgba(255,255,255,.22);color:rgba(255,255,255,.85);font-weight:500}
+.courts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.court{position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;border:1.5px solid var(--line-warm);background:#fff;border-radius:16px;padding:12px;min-width:0}
+.court::before{content:"";position:absolute;inset:0;background:var(--grad);opacity:0;transition:opacity 150ms ease}
+.court > *{position:relative}
+.court .cn{font-family:var(--f-display);font-weight:700;font-size:17px;line-height:1.1;color:var(--fg)}
+.court .cd{font-size:12.5px;color:var(--mut);line-height:1.25}
+.court .cs{margin-top:6px;font-size:12px;font-weight:700;color:var(--ok);background:var(--ok-soft);border-radius:999px;padding:3px 8px}
+.court:disabled{cursor:default;background:var(--cream);border-color:transparent}
+.court:disabled .cn,.court:disabled .cd{color:var(--faint)}
+.court:disabled .cs{background:#ECE5DA;color:#9C9286}
+.court.on{border-color:transparent;box-shadow:0 8px 20px rgba(229,123,55,.3)}
+.court.on::before{opacity:1}
+.court.on .cn,.court.on .cd{color:#fff}
+.court.on .cs{background:rgba(255,255,255,.22);color:#fff}
+@media (hover:hover) and (pointer:fine){.court:hover:not(:disabled):not(.on){border-color:var(--accent)}}
+.paysel{border:0;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;min-width:0}
+.paysel legend{font-size:13px;font-weight:600;color:var(--fg);margin-bottom:6px;padding:0}
+.payopt{display:flex;gap:12px;align-items:flex-start;border:1.5px solid var(--line-warm);border-radius:14px;padding:12px 14px;cursor:pointer;background:#fff}
+.payopt input{width:20px;height:20px;margin:1px 0 0;accent-color:var(--accent);flex:none}
+.payopt b{display:block;font-weight:600}
+.payopt small{display:block;color:var(--mut);font-size:13px}
+.payopt:has(input:checked){border-color:var(--accent);background:#FFF8F1}
+.qrbox{grid-column:1/-1;display:flex;justify-content:center;padding:10px 0 2px}
+.qrbox canvas,.qrbox img{width:168px;height:168px;image-rendering:pixelated;border:8px solid #fff;border-radius:12px;box-shadow:0 0 0 1px var(--line-warm)}
+#step4 .map{height:168px;box-shadow:none;border:1px solid var(--line-warm)}
+@media (max-width:420px){.courts{gap:6px}.court{padding:10px}.court .cn{font-size:16px}.court .cd{font-size:11.5px}}
+
+/* Pantalla del dueño: acceso con correo y contraseña (Supabase Auth) */
+#oLogin h3{margin:0;font-size:16px}
+#oLogin .note:empty{display:none}
+#oLogout{padding:0;font-size:inherit;vertical-align:baseline}
+
+/* Pantalla del dueño: reservas de la página */
+.osec{margin:18px 0 0;font-size:16px}
+.ores{display:grid;gap:10px}
+.ores .empty{margin:0;color:var(--mut);font-size:14px}
+.rcard{border:1.5px solid var(--line-warm);background:#fff;border-radius:14px;padding:12px 14px;display:grid;gap:8px}
+.rcard.off{opacity:.6}
+.rcard .rtop{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.rcard .rname{font-weight:700;font-size:15px}
+.rcard .rmeta{font-size:13px;color:var(--mut);line-height:1.45}
+.rcard .rbadges{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.badge{display:inline-block;font-size:11.5px;font-weight:700;border-radius:999px;padding:2px 8px;white-space:nowrap}
+.badge.pend{background:var(--warn-soft);color:var(--warn)}
+.badge.ok{background:var(--ok-soft);color:var(--ok)}
+.badge.off{background:#EEE8DF;color:var(--mut)}
+.badge.bad{background:var(--bad-soft);color:var(--bad)}
+.ract{display:flex;gap:8px;flex-wrap:wrap}
+.ract button,.ract a{flex:1 1 auto;display:inline-flex;align-items:center;justify-content:center;min-height:38px;padding:0 12px;border-radius:10px;border:1.5px solid var(--line-warm);background:#fff;color:var(--fg);font:inherit;font-size:13.5px;font-weight:600;text-decoration:none;cursor:pointer}
+.ract .go{background:var(--accent);border-color:var(--accent);color:#fff}
+.ract .wa{border-color:var(--wa);color:var(--wa)}
+.ract button:disabled{opacity:.5;cursor:default}
+.dchip{position:relative}
+.dchip .pdot{position:absolute;top:4px;right:6px;width:7px;height:7px;border-radius:50%;background:var(--bad)}
+.orow output small{display:block;font-size:11px;color:var(--mut);font-weight:500}
+.note.hold{color:var(--ok);font-weight:600}
+
+/* En la pantalla del dueño no se muestra el chat de ayuda */
+body:has(#owner:not([hidden])) #fab{display:none}
+
+/* Reserva abierta desde el enlace de WhatsApp: botones grandes */
+#owner.focus .done .note{display:none}
+.fcard{border:1.5px solid var(--line-warm);background:#fff;border-radius:18px;padding:18px;display:grid;gap:12px}
+.fbad{display:flex;gap:6px;flex-wrap:wrap}
+.fbad .badge{font-size:13px;padding:4px 10px}
+.fname{font-family:var(--f-display);font-weight:700;font-size:26px;line-height:1.1}
+.fdl{display:grid;grid-template-columns:auto 1fr;gap:8px 14px;margin:0;font-size:17px}
+.fdl dt{color:var(--mut)}
+.fdl dd{margin:0;font-weight:600}
+.facts{display:grid;gap:10px;margin-top:4px}
+.fbig{width:100%;height:58px;font-size:18px;border-radius:16px;text-decoration:none}
+.btn2.fbig{display:flex;align-items:center;justify-content:center;font-weight:700}
+.fno{color:var(--bad)}
+.fall{display:block;text-align:center;margin-top:14px;color:var(--accent-ink);font-weight:600}
+
+</style>
+<style>
+/* =====================================================================
+   Propuesta de diseño «Líneas de tiza» · Sport 3
+   Idea: la página se dibuja con el lenguaje de la cancha. Césped sintético de fondo,
+   líneas de tiza como estructura y el naranja de la marca solo para lo que se toca.
+   Lo memorable: las canchas se eligen sobre un plano dibujado como cancha de verdad.
+   ===================================================================== */
+:root{
+  --turf:#2B170D;        /* césped */
+  --turf-2:#3D2416;      /* césped iluminado */
+  --chalk:#FFFFFF;       /* tiza */
+  --line-c:rgba(255,255,255,.78);
+  --paper:#F26B1D;       /* fondo de página: blanco frío, no crema */
+  --ink:#2B170D;         /* texto */
+  --ink-2:#7A5A48;       /* texto secundario */
+  --rule:#F0E1D6;        /* bordes */
+  --orange:#F26B1D;      /* naranja Sport 3 */
+  --orange-ink:#B44A0B;  /* naranja para texto sobre blanco (contraste AA) */
+  --taken:#E3D6CD;
+
+  /* se reasignan los tokens del diseño original */
+  --page:var(--paper); --bg:#fff; --fg:var(--ink); --mut:var(--ink-2); --faint:#B9A193;
+  --line:var(--rule); --line-warm:var(--rule); --cream:#FFF1E7; --cream-2:#FDE4D3;
+  --accent:var(--orange); --accent-ink:var(--orange-ink); --accent-soft:#FDE9DC;
+  --grad:var(--orange); --gold:var(--orange); --on-gold:#fff;
+  --ok:#A3410A; --ok-soft:#FFE8D9;
+  --f-display:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
+  --f-body:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+html,body{background:var(--paper)}
+body{font:16px/1.5 var(--f-body);color:var(--ink)}
+body::before{background:var(--turf)}
+:focus-visible{outline:3px solid var(--orange);outline-offset:2px}
+.bgimg{display:none}
+
+/* ---------- portada: una cancha vista desde arriba ---------- */
+.band{
+  background-color:var(--turf);
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='760' height='440' viewBox='0 0 760 440' fill='none' stroke='%23FFFFFF' stroke-opacity='.22' stroke-width='3'%3E%3Crect x='40' y='30' width='680' height='380' rx='4'/%3E%3Cpath d='M380 30v380'/%3E%3Ccircle cx='380' cy='220' r='70'/%3E%3Ccircle cx='380' cy='220' r='4' fill='%23FFFFFF' fill-opacity='.4'/%3E%3Crect x='40' y='120' width='90' height='200'/%3E%3Crect x='630' y='120' width='90' height='200'/%3E%3C/svg%3E"),
+    repeating-linear-gradient(90deg,rgba(255,255,255,.035) 0 48px,transparent 48px 96px);
+  background-position:right -260px top 34px,0 0;
+  background-repeat:no-repeat,repeat;
+  background-size:760px 440px,auto;
+  padding-block:0 64px;
+}
+.top-in{height:76px}
+.brand{background:var(--chalk);box-shadow:none;padding:9px 16px}
+.intro{gap:12px;padding-top:18px}
+.intro h1{font-family:var(--f-display);font-weight:700;font-size:64px;line-height:.92;letter-spacing:-.005em;color:var(--chalk);text-shadow:none;max-width:9ch}
+.intro h1 span{color:inherit;background:none}
+.lede{margin:0;max-width:34ch;font-size:17px;line-height:1.45;color:rgba(255,255,255,.86)}
+.abierto{display:inline-flex;align-items:center;gap:8px;margin-top:4px;font-size:15px;font-weight:600;color:var(--chalk)}
+.abierto i{width:9px;height:9px;border-radius:50%;background:#FFD36E;box-shadow:0 0 0 4px rgba(255,211,110,.18)}
+.hero-chips{display:none}
+
+/* ---------- la hoja ---------- */
+main{margin-top:-30px;border-radius:28px;box-shadow:0 1px 0 rgba(43,23,13,.06),0 20px 50px rgba(43,23,13,.14);padding:28px 20px 30px}
+.step{gap:32px}
+h2{font-family:var(--f-display);font-size:38px;font-weight:700;line-height:1;letter-spacing:0}
+.block{gap:12px}
+.bh{gap:12px}
+.num{width:30px;height:30px;background:var(--turf);color:var(--chalk);font:700 17px/1 var(--f-display);box-shadow:none}
+.bh h3{font-family:var(--f-display);font-size:24px;font-weight:700;letter-spacing:0}
+.bh .meta{font-size:14px;color:var(--ink-2);font-weight:500}
+.cta{margin:-6px 0 0 42px;font-size:15.5px;color:var(--ink-2)}
+.cta b{color:var(--ink);font-weight:600}
+
+/* deporte: la elegida queda «pintada» de césped */
+.sp{background:#fff;border:1.5px solid var(--rule);border-radius:16px;padding:14px 12px}
+.sp::before{display:none}
+.sp .ic{background:var(--cream);color:var(--turf);border-radius:12px;box-shadow:none}
+.sp b{font-family:var(--f-display);font-size:23px;font-weight:700}
+.sp small{font-size:13.5px;font-weight:500;color:var(--ink-2)}
+.sp[aria-checked="true"]{background:var(--turf);border-color:var(--turf);box-shadow:inset 0 -4px 0 var(--orange)}
+.sp[aria-checked="true"] b{color:var(--chalk)}
+.sp[aria-checked="true"] small{color:rgba(255,255,255,.8)}
+.sp[aria-checked="true"] .ic{background:rgba(255,255,255,.12);color:var(--chalk)}
+
+/* fecha */
+.field{border:1.5px solid var(--rule);border-radius:16px}
+.field .ic{background:var(--cream);color:var(--turf)}
+.field .ft small{text-transform:none;letter-spacing:0;font-size:13px;font-weight:500;color:var(--ink-2)}
+.field .ft b{font-size:17px}
+.field > svg{color:var(--ink-2)}
+.day[aria-selected="true"]{background:var(--turf);box-shadow:none}
+.day.today:not([aria-selected="true"]){box-shadow:inset 0 0 0 1.5px var(--orange)}
+
+/* horarios: una planilla, sin caja de color alrededor */
+.slots-wrap{background:transparent;border:0;border-radius:0;padding:0;gap:8px}
+.past-note{margin:0;font-size:14px;font-weight:500;color:var(--ink-2)}
+.slots{gap:8px}
+.slot{grid-template-columns:1fr auto 118px;border:1.5px solid var(--rule);border-radius:14px;padding:12px 12px 12px 16px;box-shadow:none}
+.slot::before{background:var(--orange)}
+.slot .t{font-family:var(--f-display);font-size:28px;font-weight:700;letter-spacing:0;line-height:1}
+.slot .t i{font-family:var(--f-body);font-size:14px;color:var(--ink-2)}
+.slot .p{font-size:15px;font-weight:600;color:var(--ink)}
+.slot .st{font-size:13px;font-weight:600;padding:6px 10px;background:var(--ok-soft);color:var(--ok)}
+@media (hover:hover) and (pointer:fine){.slot:hover:not(:disabled):not([aria-pressed="true"]){border-color:var(--turf);box-shadow:none}}
+.slot:active:not(:disabled):not([aria-pressed="true"]){background:var(--cream)}
+.slot:disabled{background:repeating-linear-gradient(135deg,#F7F1ED 0 8px,#F0E7E1 8px 16px);border-color:transparent}
+.slot:disabled .st{background:transparent;color:var(--ink-2);padding-inline:0}
+.slot.res .t{text-decoration-thickness:2px;text-decoration-color:var(--ink-2)}
+.slot[aria-pressed="true"]{border-color:var(--orange);box-shadow:none}
+.slot[aria-pressed="true"] .st{background:rgba(255,255,255,.2)}
+.slot[aria-pressed="true"] + .slot[aria-pressed="true"]{margin-top:-8px}
+
+/* ---------- canchas: el plano de Sport 3 ---------- */
+.courts{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;padding:14px;border-radius:18px;background:var(--cream)}
+.court{
+  aspect-ratio:3/4;justify-content:flex-start;align-items:center;text-align:center;gap:2px;
+  border:0;border-radius:10px;padding:14px 6px 12px;color:var(--chalk);
+  background:
+    repeating-linear-gradient(0deg,rgba(255,255,255,.045) 0 14px,transparent 14px 28px),
+    var(--turf);
+  box-shadow:inset 0 0 0 5px var(--turf),inset 0 0 0 7px var(--line-c);
+  transition:transform 140ms var(--ease-out),box-shadow 150ms ease;
+}
+/* línea de medio campo y círculo central, en tiza */
+.court::before{inset:auto 7px 50% 7px;height:2px;background:var(--line-c);opacity:1;transition:none}
+.court::after{content:"";position:absolute;left:50%;top:50%;width:26%;aspect-ratio:1;border:2px solid var(--line-c);border-radius:50%;transform:translate(-50%,-50%)}
+.court > *{position:relative;z-index:1}
+.court .cn{font-family:var(--f-display);font-size:19px;font-weight:700;color:var(--chalk);line-height:1}
+.court .cd{font-size:12px;color:rgba(255,255,255,.82);line-height:1.2}
+.court .cs{margin-top:auto;font-size:12px;font-weight:600;background:rgba(255,255,255,.16);color:var(--chalk);padding:3px 9px}
+.court:active:not(:disabled){transform:scale(.97)}
+@media (hover:hover) and (pointer:fine){.court:hover:not(:disabled):not(.on){border:0;box-shadow:inset 0 0 0 5px var(--turf),inset 0 0 0 7px var(--chalk)}}
+.court:disabled{
+  background:repeating-linear-gradient(135deg,#F2E8E1 0 7px,#E9DDD4 7px 14px);
+  box-shadow:inset 0 0 0 5px #EEE3DB,inset 0 0 0 7px rgba(43,23,13,.12);
+}
+.court:disabled::before{background:rgba(43,23,13,.12)}
+.court:disabled::after{border-color:rgba(43,23,13,.12)}
+.court:disabled .cn,.court:disabled .cd{color:var(--ink-2)}
+.court:disabled .cs{background:transparent;color:var(--ink-2)}
+.court.on{border:0;box-shadow:inset 0 0 0 5px var(--turf),inset 0 0 0 7px var(--chalk),0 0 0 3px var(--orange)}
+.court.on::before{background:var(--chalk)}
+.court.on::after{border-color:var(--chalk)}
+.court.on .cs{background:var(--orange);color:#fff}
+
+/* ---------- barra de reserva ---------- */
+.dock{background:var(--turf);border:0;color:var(--chalk);box-shadow:0 14px 34px rgba(43,23,13,.3)}
+.sum .what b{font-family:var(--f-display);font-size:24px;font-weight:700;color:var(--chalk)}
+.sum .what small{color:rgba(255,255,255,.75);font-size:14px}
+.sum .price b{font-family:var(--f-display);font-size:32px;color:var(--chalk)}
+.primary{background:var(--orange);color:#fff;border-radius:14px;height:56px;font-size:17px;font-weight:600;box-shadow:none}
+.primary:disabled{background:rgba(255,255,255,.12);color:rgba(255,255,255,.55)}
+main .primary:disabled{background:#F1E8E2;color:#A38D80}
+.primary.wa{box-shadow:none;border-radius:14px}
+@media (max-width:600px){
+  .dock{border-radius:22px 22px 0 0;box-shadow:0 -12px 30px rgba(43,23,13,.25)}
+}
+
+/* ---------- pasos 2, 3 y 4 ---------- */
+.back{color:var(--ink-2);font-weight:500}
+.recap{border:1.5px solid var(--rule);border-radius:16px;font-size:15.5px}
+.recap dt{color:var(--ink-2);font-weight:500}
+.recap dd{color:var(--ink)}
+.recap .tot{font-family:var(--f-display);font-size:28px}
+.inp label{font-size:14px;font-weight:600;color:var(--ink)}
+.inp input{border:1.5px solid var(--rule);border-radius:14px;font-size:17px}
+.inp input:focus{border-color:var(--turf);box-shadow:0 0 0 3px rgba(43,23,13,.14)}
+.pre span{background:var(--cream);border-color:var(--rule);color:var(--ink-2)}
+.paysel legend{font-size:14px}
+.payopt{border:1.5px solid var(--rule);border-radius:14px}
+.payopt:has(input:checked){border-color:var(--turf);background:#FFF4EC;box-shadow:inset 4px 0 0 var(--turf)}
+.payopt input,.check input{accent-color:var(--turf)}
+.warnbox{background:#FFF4EC;color:var(--ink);border-left:4px solid var(--orange);border-radius:10px}
+.dl,.paybox{border:1.5px solid var(--rule);border-radius:16px}
+.paybox b,.dl dd.hi{font-family:var(--f-display);font-size:30px;color:var(--ink)}
+.dl dt{color:var(--ink-2)}
+.preview{border:1.5px solid var(--rule)}
+.tick{background:var(--turf);color:var(--chalk)}
+.code-big{font-family:var(--f-display)}
+.note{font-size:14px;color:var(--ink-2)}
+.demo-band{color:var(--ink-2)}
+
+/* asistente */
+.fab{background:var(--turf);box-shadow:0 10px 24px rgba(43,23,13,.35)}
+.chat{border:1.5px solid var(--rule)}
+.chat-h{background:var(--turf)}
+.msgs{background:var(--paper)}
+.m.me{background:var(--turf)}
+.chip{border-color:var(--rule);color:var(--ink)}
+.chip.solid,.send{background:var(--orange)}
+.chat-f input{border-color:var(--rule);background:#fff}
+.chat-f input:focus{border-color:var(--turf)}
+.toast{background:var(--turf)}
+
+@media (max-width:420px){
+  .intro h1{font-size:56px}
+  /* en celular solo se ve la mitad de la cancha: el círculo central asoma a la derecha y no cruza el texto */
+  .band{background-image:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='760' height='440' viewBox='0 0 760 440' fill='none' stroke='%23FFFFFF' stroke-opacity='.22' stroke-width='3'%3E%3Cpath d='M380 0v440'/%3E%3Ccircle cx='380' cy='220' r='70'/%3E%3Ccircle cx='380' cy='220' r='4' fill='%23FFFFFF' fill-opacity='.4'/%3E%3C/svg%3E"),
+      repeating-linear-gradient(90deg,rgba(255,255,255,.035) 0 48px,transparent 48px 96px);
+    background-position:right -340px top 96px,0 0}
+  main{padding:24px 14px 26px}
+  .slot{grid-template-columns:1fr auto 106px;padding:11px 8px 11px 12px}
+  .slot .t{font-size:26px}
+  .courts{padding:10px;gap:8px}
+  .court .cn{font-size:17px}
+  .court .cd{font-size:11px}
+}
+@media (prefers-reduced-motion:reduce){.court{transition:none}}
+
+/* =====================================================================
+   Propuesta v2 «Partido de noche» · se suma a tema-cancha.css
+   Idea: en Sport 3 se juega sobre todo de noche. La página cuenta el día:
+   la planilla de horarios pasa de la tarde a la noche y desde las 19:00
+   se encienden las luces (por eso sube el precio). La reserva termina en un pase.
+   ===================================================================== */
+:root{
+  --night:#2B170D;       /* cancha de noche */
+  --night-2:#3D2416;
+  --flood:#FFF1C9;       /* luz de reflector */
+  --dusk:#F4EFE3;
+}
+
+/* portada: dos reflectores encendidos sobre la cancha */
+.band{
+  background-image:
+    radial-gradient(ellipse 60% 70% at 100% -12%,rgba(255,241,201,.34),rgba(255,241,201,0) 62%),
+    radial-gradient(ellipse 45% 55% at 0% -18%,rgba(255,241,201,.16),rgba(255,241,201,0) 60%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='760' height='440' viewBox='0 0 760 440' fill='none' stroke='%23FFFFFF' stroke-opacity='.22' stroke-width='3'%3E%3Crect x='40' y='30' width='680' height='380' rx='4'/%3E%3Cpath d='M380 30v380'/%3E%3Ccircle cx='380' cy='220' r='70'/%3E%3Ccircle cx='380' cy='220' r='4' fill='%23FFFFFF' fill-opacity='.4'/%3E%3Crect x='40' y='120' width='90' height='200'/%3E%3Crect x='630' y='120' width='90' height='200'/%3E%3C/svg%3E"),
+    repeating-linear-gradient(90deg,rgba(255,255,255,.035) 0 48px,transparent 48px 96px);
+  background-position:0 0,0 0,right -260px top 34px,0 0;
+  background-repeat:no-repeat,no-repeat,no-repeat,repeat;
+  background-size:auto,auto,760px 440px,auto;
+  background-color:var(--night-2);
+}
+.intro h1{font-size:76px;max-width:none}
+/* disponibilidad de hoy, en vivo, en la portada */
+.hoy{margin:6px 0 0;max-width:32ch;font-family:var(--f-display);font-size:24px;font-weight:600;line-height:1.15;color:var(--chalk)}
+.hoy b{font-weight:700;color:#fff;box-shadow:inset 0 -.32em 0 rgba(242,107,29,.85);padding:0 .05em}
+.abierto{font-weight:500;color:rgba(255,255,255,.8);font-size:14.5px}
+
+/* ---------- la planilla: de la tarde a la noche ---------- */
+.slot{transition:background-color 200ms ease,border-color 150ms ease}
+.slot.noche{background:var(--night);border-color:var(--night)}
+.slot.noche .t{color:var(--chalk)}
+.slot.noche .t i{color:rgba(255,255,255,.66)}
+.slot.noche .p{color:var(--flood)}
+.slot.noche .st{background:rgba(255,201,77,.14);color:#FFD36E}
+.slot.noche:disabled{background:repeating-linear-gradient(135deg,#3D2416 0 8px,#341E12 8px 16px);border-color:transparent}
+.slot.noche:disabled .t,.slot.noche:disabled .t i,.slot.noche:disabled .p,.slot.noche:disabled .st{color:rgba(255,255,255,.42)}
+.slot.noche.res .t{text-decoration-color:rgba(255,255,255,.5)}
+@media (hover:hover) and (pointer:fine){.slot.noche:hover:not(:disabled):not([aria-pressed="true"]){border-color:var(--flood)}}
+.slot.noche:active:not(:disabled):not([aria-pressed="true"]){background:var(--night-2)}
+.slot.noche[aria-pressed="true"]{border-color:var(--orange)}
+.slot.noche[aria-pressed="true"] .p{color:#fff}
+/* el aviso donde se encienden las luces */
+.luces{display:flex;align-items:center;gap:10px;margin:6px 0 0;padding:12px 14px;border-radius:14px 14px 4px 4px;
+  background:linear-gradient(180deg,rgba(43,23,13,0) 0%,rgba(43,23,13,.08) 100%);
+  font-size:14.5px;line-height:1.35;color:var(--ink)}
+.luces svg{flex:none;color:#D99A00}
+.luces b{font-weight:600}
+
+/* ---------- canchas: la elegida se «pinta» al tocarla ---------- */
+.court.on::after{animation:circulo 320ms var(--ease-out)}
+.court.on::before{animation:linea 320ms var(--ease-out)}
+@keyframes circulo{from{transform:translate(-50%,-50%) scale(.2);opacity:0}to{transform:translate(-50%,-50%) scale(1);opacity:1}}
+@keyframes linea{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+
+/* ---------- la reserva como pase de entrada ---------- */
+.dl{
+  position:relative;background:var(--night);border:0;border-radius:18px;padding:18px 18px 20px;color:var(--chalk);
+  -webkit-mask:radial-gradient(circle 11px at 0 calc(100% - 58px),#0000 98%,#000) left/51% 100% no-repeat,
+               radial-gradient(circle 11px at 100% calc(100% - 58px),#0000 98%,#000) right/51% 100% no-repeat;
+          mask:radial-gradient(circle 11px at 0 calc(100% - 58px),#0000 98%,#000) left/51% 100% no-repeat,
+               radial-gradient(circle 11px at 100% calc(100% - 58px),#0000 98%,#000) right/51% 100% no-repeat;
+}
+.dl::after{content:"";position:absolute;left:18px;right:18px;bottom:57px;border-top:2px dashed rgba(255,255,255,.22)}
+.dl dt{color:rgba(255,255,255,.62)}
+.dl dd{color:var(--chalk)}
+.dl dd.hi{color:var(--chalk)}
+.dl dt:last-of-type,.dl dd:last-of-type{padding-top:18px}
+.tick{background:var(--orange);color:#fff}
+
+/* la barra de abajo también es de noche */
+.dock{background:var(--night)}
+
+@media (max-width:420px){
+  .intro h1{font-size:66px}
+  .hoy{font-size:22px}
+  .band{background-image:
+      radial-gradient(ellipse 80% 60% at 100% -12%,rgba(255,241,201,.34),rgba(255,241,201,0) 62%),
+      radial-gradient(ellipse 60% 50% at 0% -18%,rgba(255,241,201,.16),rgba(255,241,201,0) 60%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='760' height='440' viewBox='0 0 760 440' fill='none' stroke='%23FFFFFF' stroke-opacity='.22' stroke-width='3'%3E%3Cpath d='M380 0v440'/%3E%3Ccircle cx='380' cy='220' r='70'/%3E%3Ccircle cx='380' cy='220' r='4' fill='%23FFFFFF' fill-opacity='.4'/%3E%3C/svg%3E"),
+      repeating-linear-gradient(90deg,rgba(255,255,255,.035) 0 48px,transparent 48px 96px);
+    background-position:0 0,0 0,right -340px top 120px,0 0}
+}
+@media (prefers-reduced-motion:reduce){.court.on::after,.court.on::before{animation:none}}
+
+/* botón apagado dentro de la barra de noche */
+main .dock .primary:disabled{background:rgba(255,255,255,.1);color:rgba(255,255,255,.5)}
+
+/* =====================================================================
+   Propuesta v3 «Cancha naranja» · sin verde
+   La página entera es del color de Sport 3: fondo naranja como piso de cancha techada,
+   líneas blancas, letra condensada en cursiva como el logo, y café tostado para la noche.
+   ===================================================================== */
+:root{--orange:#F26B1D;--espresso:#2B170D;--flood:#FFC94D}
+html,body{background:var(--orange)}
+body::before{background:var(--orange)}
+.band{
+  background-color:var(--orange);
+  background-image:
+    radial-gradient(ellipse 60% 70% at 100% -12%,rgba(255,255,255,.28),rgba(255,255,255,0) 62%),
+    radial-gradient(ellipse 45% 55% at 0% -18%,rgba(255,255,255,.14),rgba(255,255,255,0) 60%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='760' height='440' viewBox='0 0 760 440' fill='none' stroke='%23FFFFFF' stroke-opacity='.42' stroke-width='3'%3E%3Crect x='40' y='30' width='680' height='380' rx='4'/%3E%3Cpath d='M380 30v380'/%3E%3Ccircle cx='380' cy='220' r='70'/%3E%3Ccircle cx='380' cy='220' r='4' fill='%23FFFFFF'/%3E%3Cpath d='M40 120a100 100 0 0 1 0 200M720 120a100 100 0 0 0 0 200'/%3E%3C/svg%3E");
+  background-position:0 0,0 0,right -260px top 34px;
+  background-repeat:no-repeat;
+  background-size:auto,auto,760px 440px;
+}
+/* letra del logo: condensada y en cursiva */
+.intro h1,h2,.bh h3,.slot .t,.court .cn,.sum .what b,.sum .price b,.recap .tot,.dl dd.hi,.paybox b,.sp b,.hoy,.num{font-style:italic}
+.intro h1{font-weight:800;letter-spacing:-.01em}
+.lede{color:rgba(255,255,255,.92)}
+.hoy b{box-shadow:inset 0 -.32em 0 rgba(43,23,13,.55)}
+.abierto{color:#fff}
+.abierto i{background:#fff;box-shadow:0 0 0 4px rgba(255,255,255,.25)}
+main{box-shadow:0 2px 0 rgba(43,23,13,.08),0 24px 60px rgba(120,40,0,.28)}
+.num{background:var(--espresso)}
+/* deporte elegido: naranja lleno */
+.sp[aria-checked="true"]{background:var(--orange);border-color:var(--orange);box-shadow:none}
+.sp[aria-checked="true"] small{color:rgba(255,255,255,.88)}
+.sp[aria-checked="true"] .ic{background:rgba(255,255,255,.2);color:#fff}
+.sp .ic,.field .ic{color:var(--orange-ink)}
+/* horarios */
+.slot .st{background:#FFEBDD;color:#A3410A}
+.slot.noche .p{color:var(--flood)}
+.slot.noche .st{background:rgba(255,201,77,.14);color:var(--flood)}
+.luces{background:#FFF7EA;border-left:4px solid var(--flood);border-radius:6px 14px 14px 6px}
+/* canchas: piso naranja con líneas blancas */
+.courts{background:#FFF1E7}
+.court{
+  background:repeating-linear-gradient(90deg,rgba(255,255,255,.06) 0 12px,transparent 12px 24px),var(--orange);
+  box-shadow:inset 0 0 0 5px var(--orange),inset 0 0 0 7px var(--line-c);
+}
+@media (hover:hover) and (pointer:fine){.court:hover:not(:disabled):not(.on){box-shadow:inset 0 0 0 5px var(--orange),inset 0 0 0 7px #fff}}
+.court.on{box-shadow:inset 0 0 0 5px var(--orange),inset 0 0 0 7px #fff,0 0 0 3px var(--espresso)}
+.court.on .cs{background:var(--espresso);color:#fff}
+.court .cd{color:rgba(255,255,255,.9)}
+.court:disabled{background:repeating-linear-gradient(135deg,#F2E8E1 0 7px,#E9DDD4 7px 14px)}
+/* barra, pase y asistente en café tostado */
+.dock{background:var(--espresso)}
+.dl{background:var(--espresso)}
+.fab{background:var(--espresso)}
+.tick{background:var(--orange)}
+@media (max-width:420px){
+  .intro h1{font-size:68px}
+  .band{background-image:
+      radial-gradient(ellipse 80% 60% at 100% -12%,rgba(255,255,255,.28),rgba(255,255,255,0) 62%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='760' height='440' viewBox='0 0 760 440' fill='none' stroke='%23FFFFFF' stroke-opacity='.42' stroke-width='3'%3E%3Cpath d='M380 0v440'/%3E%3Ccircle cx='380' cy='220' r='70'/%3E%3Ccircle cx='380' cy='220' r='4' fill='%23FFFFFF'/%3E%3C/svg%3E");
+    background-position:0 0,right -340px top 120px;background-size:auto,760px 440px}
+}
+
+</style>
+</head>
+<body>
+
+<div class="bgimg" aria-hidden="true"></div>
+<div class="band">
+  <header class="top-in">
+    <a class="brand" href="#" id="home" aria-label="Sport 3, inicio"><img src="data:image/png;base64,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" alt="Sport 3"></a>
+  </header>
+  <div class="intro" id="intro">
+    <h1 id="t1">Reserva<br>tu cancha</h1>
+    <p class="lede">Fútbol 6 y wally en Miraflores, Tarija.</p>
+    <p class="hoy" id="hoy" aria-live="polite"></p>
+    <p class="abierto"><i aria-hidden="true"></i>Abierto todos los días de 15:00 a 22:00</p>
+  </div>
+</div>
+
+<main>
+  <!-- STEP 1: choose -->
+  <section class="step" id="step1" aria-labelledby="t1">
+    <div class="block">
+      <div class="bh"><span class="num">1</span><h3>Deporte</h3></div>
+      <p class="cta">Elige qué vas a <b>jugar hoy</b>: fútbol 6 o wally.</p>
+      <div class="sports" id="sport" role="radiogroup" aria-label="Deporte" data-v="0">
+        <button type="button" class="sp" role="radio" aria-checked="true" data-sport="futbol" id="sp-futbol">
+          <span class="ic"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7l4.76 3.45-1.76 5.55h-6l-1.76-5.55z" fill="currentColor" fill-opacity=".9"/><path d="M12 7V3m3 13 2.5 3m-.74-8.55 3.74-1.45m-11.44 7.05L6.5 19m.74-8.55L3.5 9"/></svg></span>
+          <span><b>Fútbol 6</b><small>Desde Bs 120</small></span>
+        </button>
+        <button type="button" class="sp" role="radio" aria-checked="false" data-sport="wally" id="sp-wally" tabindex="-1">
+          <span class="ic"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 12a8 8 0 0 0 8 4"/><path d="M7.5 13.5a12 12 0 0 0 8.5 6.5"/><path d="M12 12a8 8 0 0 0-7.464 4.928"/><path d="M12.951 7.353a12 12 0 0 0-9.88 4.111"/><path d="M12 12a8 8 0 0 0-.536-8.928"/><path d="M15.549 15.147a12 12 0 0 0 1.38-10.611"/></svg></span>
+          <span><b>Wally</b><small>Bs 60 la hora</small></span>
+        </button>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="bh"><span class="num">2</span><h3>Fecha</h3></div>
+      <p class="cta">¿Qué <b>día</b> quieres jugar? Toca la fecha para cambiarla.</p>
+      <div class="datewrap">
+        <button type="button" class="field" id="dateBtn" aria-haspopup="dialog" aria-expanded="false" aria-controls="cal">
+          <span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M16 3v4M8 3v4M3 10h18"/></svg></span>
+          <span class="ft"><small id="dateTag">Hoy</small><b id="dateTxt"></b></span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+        <div class="pop" id="cal" role="dialog" aria-label="Elegir fecha"></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="bh"><span class="num">3</span><h3>Horarios</h3><span class="meta" id="slotsCap"></span></div>
+      <p class="cta">Elige una hora <b>disponible</b>. Para jugar más tiempo, toca horas seguidas.</p>
+      <div class="slots-wrap">
+        <div class="slots" id="slots" role="group" aria-label="Turnos del día"></div>
+      </div>
+    </div>
+
+    <div class="block" id="courtBlock" hidden>
+      <div class="bh"><span class="num">4</span><h3>Cancha</h3></div>
+      <p class="cta">Elige en qué cancha quieres jugar.</p>
+      <div class="courts" id="courts" role="radiogroup" aria-label="Cancha"></div>
+    </div>
+
+    <div class="dock">
+    <div class="sum" id="sum" aria-live="polite"></div>
+    <div class="below-sum">
+      <button type="button" class="primary" id="btnContinue" disabled>Reservar esta cancha<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></button>
+    </div>
+    </div>
+  </section>
+
+  <!-- STEP 2: details -->
+  <section class="step" id="step2" hidden aria-labelledby="t2">
+    <button type="button" class="back" data-go="1"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>Cambiar horario</button>
+    <h2 id="t2">Resumen de la reserva</h2>
+    <p class="cta" style="margin:-14px 0 0">Revisa tu reserva y deja tus datos de contacto.</p>
+    <dl class="recap" id="recap2" aria-label="Tu reserva"></dl>
+    <form id="form2" class="block" novalidate>
+      <div class="bh"><h3>Datos de contacto</h3></div>
+      <div class="inp"><label for="nombre">Nombre</label><input id="nombre" autocomplete="name" placeholder="Ej. Carlos Mendoza"></div>
+      <div class="inp"><label for="celular">Celular (WhatsApp)</label><div class="pre"><span>+591</span><input id="celular" inputmode="numeric" autocomplete="tel-national" placeholder="7XXXXXXX" maxlength="8"></div></div>
+      <fieldset class="paysel">
+        <legend>¿Cómo vas a pagar?</legend>
+        <label class="payopt"><input type="radio" name="pago" value="qr"><span><b>Pagar ahora con QR</b><small>Tu cancha queda asegurada.</small></span></label>
+        <label class="payopt"><input type="radio" name="pago" value="cancha"><span><b>Pagar en la cancha</b><small>Efectivo o QR al llegar.</small></span></label>
+        <p class="warnbox" id="warnCancha" hidden>Pasados 15 minutos de la hora reservada sin pago ni llegada, la cancha vuelve a quedar disponible para otros clientes.</p>
+      </fieldset>
+      <label class="check"><input type="checkbox" id="cumple"><span>Es para un cumpleaños<small>Los cumpleaños se reservan con mínimo 3 horas seguidas.</small></span></label>
+      <p class="err" id="err2" hidden></p>
+      <button type="submit" class="primary">Confirmar reserva<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></button>
+    </form>
+  </section>
+
+  <!-- STEP 3: review + send -->
+  <section class="step" id="step3" hidden aria-labelledby="t3">
+    <button type="button" class="back" data-go="2"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>Cambiar datos</button>
+    <div class="done">
+      <h2 id="t3">Envía tu <span>reserva</span></h2>
+      <p class="note">Se abre un chat con el dueño con tu reserva ya escrita. Solo tienes que tocar enviar.</p>
+      <p class="note hold" id="holdNote" hidden>Tu cancha queda apartada 2 horas. Envía el mensaje para que el dueño la confirme.</p>
+    </div>
+    <dl class="dl" id="dl3"></dl>
+    <div class="paybox" id="paybox3"><span id="payLbl3">Total</span><b id="total3">Bs 0</b><small id="payNote3"></small><div class="qrbox" id="qrbox" hidden><canvas id="qrCanvas" width="29" height="29" aria-label="Código QR de pago"></canvas><img id="qrImg" alt="Código QR de pago de Sport 3" hidden></div></div>
+    <div class="block" style="gap:10px">
+      <a class="primary wa" id="btnWa" target="_blank" rel="noopener">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.3a.5.5 0 0 0 0-.5l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.2 2.2 2.2 0 0 0 .1-1.3c0-.1-.2-.2-.5-.3z"/></svg>
+        Enviar reserva por WhatsApp
+      </a>
+      <details class="preview"><summary>Ver el mensaje que se enviará<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary><pre id="msgPreview"></pre></details>
+    </div>
+  </section>
+
+  <!-- STEP 4: sent -->
+  <section class="step" id="step4" hidden aria-labelledby="t4">
+    <div class="done">
+      <div class="tick"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path id="tickPath" d="M5 12.5 10 17.5 19 7"/></svg></div>
+      <h2 id="t4">Reserva <span>enviada</span></h2>
+      <p class="note">El dueño te confirma por WhatsApp. Tu reserva queda firme con esa confirmación.</p>
+    </div>
+    <dl class="dl" id="dl4"></dl>
+    <p class="warnbox" id="warn4" hidden></p>
+    <div class="block" style="gap:10px">
+      <div class="bh"><h3>Cómo llegar</h3></div>
+      <div class="map" id="map">
+      <canvas id="mapCanvas" aria-hidden="true"></canvas>
+      <a class="map-open" id="mapOpen" target="_blank" rel="noopener" aria-label="Abrir Sport 3 en Google Maps"></a>
+      <span class="pulse" aria-hidden="true"></span>
+      <span class="pin" aria-hidden="true"><svg width="34" height="44" viewBox="0 0 34 44"><defs><linearGradient id="pg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E89739"/><stop offset=".6" stop-color="#E57B37"/><stop offset="1" stop-color="#DC8549"/></linearGradient></defs><path d="M17 43C17 43 32 27.5 32 16.5A15 15 0 0 0 2 16.5C2 27.5 17 43 17 43Z" fill="url(#pg)" stroke="#fff" stroke-width="2.5"/><circle cx="17" cy="16.5" r="5.5" fill="#fff"/></svg></span>
+      <div class="map-bar">
+        <div><b>Sport 3</b><small>Miraflores, Tarija</small></div>
+        <a class="go-btn" id="mapGo" target="_blank" rel="noopener"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 21 3l-8 18-2-8-8-2z"/></svg>Cómo llegar</a>
+      </div>
+    </div>
+    </div>
+    <p class="note">¿No llegaste a enviar el mensaje? Vuelve a enviarlo. Si no puedes ir, avísale al dueño por WhatsApp hasta las 12:00 del día del partido para liberar la cancha.</p>
+    <div class="block" style="gap:10px">
+      <a class="btn2" id="btnWa2" target="_blank" rel="noopener">Volver a enviar por WhatsApp</a>
+      <a class="btn2" id="gcal" target="_blank" rel="noopener">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg>
+        Agregar a mi calendario
+      </a>
+      <button type="button" class="linkbtn" data-go="1">Hacer otra reserva</button>
+    </div>
+  </section>
+
+  <!-- OWNER -->
+  <section class="step" id="owner" hidden aria-labelledby="t5">
+    <button type="button" class="back" data-go="1"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>Ver la página de reservas</button>
+    <div class="done">
+      <span class="owner-pill"><i></i>Pantalla del dueño · los clientes no la ven</span>
+      <h2 id="t5">Reservas</h2>
+      <p class="note">Aquí llegan las reservas de la página. Toque <b>Confirmar</b> cuando el cliente le escriba y <b>Pagó</b> cuando vea el comprobante o le pague en la cancha. Si una reserva pendiente no se confirma en 2 horas, la cancha vuelve a quedar libre.</p>
+    </div>
+    <div id="oFocus" hidden></div>
+    <form class="block" id="oLogin" novalidate>
+      <h3>Entrar como dueño</h3>
+      <p class="note">Solo la primera vez en este celular. Después se abre directo.</p>
+      <div class="inp"><label for="oEmail">Correo</label><input id="oEmail" type="email" autocomplete="username" inputmode="email"></div>
+      <div class="inp"><label for="oPass">Contraseña</label><input id="oPass" type="password" autocomplete="current-password"></div>
+      <button type="submit" class="primary">Entrar</button>
+      <p class="note" id="oLoginMsg" aria-live="polite"></p>
+    </form>
+    <div id="oPanel" hidden>
+    <p class="note">Sesión: <span id="oUser"></span> · <button type="button" class="linkbtn" id="oLogout">Cerrar sesión</button></p>
+    <div class="days" id="oDays" role="group" aria-label="Día"></div>
+    <h3 class="osec">Reservas de la página</h3>
+    <div class="ores" id="oRes" aria-live="polite"></div>
+    <h3 class="osec">Por teléfono o en persona</h3>
+    <p class="note">Marque cuántas canchas quedan ocupadas en cada turno. Las reservas de la página ya se cuentan solas.</p>
+    <div class="seg" id="oSport" role="radiogroup" aria-label="Deporte" data-v="0">
+      <span class="seg-ind" aria-hidden="true"></span>
+      <button type="button" role="radio" aria-checked="true" data-sport="futbol"><b>Fútbol 6</b></button>
+      <button type="button" role="radio" aria-checked="false" data-sport="wally" tabindex="-1"><b>Wally</b></button>
+    </div>
+    <div class="olist" id="oList"></div>
+    <div class="saved" id="oSaved" aria-live="polite"></div>
+    <form class="block" id="oPhoneForm" novalidate>
+      <div class="inp"><label for="oPhone">Su WhatsApp personal, donde llegan las reservas</label>
+        <div style="display:flex;gap:8px"><div class="pre" style="flex:1"><span>+591</span><input id="oPhone" inputmode="numeric" placeholder="7XXXXXXX" maxlength="15"></div>
+        <button type="submit" class="btn2" style="height:auto;padding:0 16px">Guardar</button></div></div>
+      <p class="note">Los clientes envían su reserva a este número. Si usa el bot de WhatsApp, ponga aquí el número del bot con código de país.</p>
+    </form>
+    </div>
+  </section>
+
+  <p class="demo-band" id="band">Versión de demostración · los horarios ocupados son de ejemplo</p>
+</main>
+
+<!-- chat -->
+<button class="fab" id="fab" type="button" aria-label="Abrir el asistente" aria-expanded="false" aria-controls="chat">
+  <svg class="i-chat" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a8 8 0 1 1 3.3 6.5L4 20l1.2-3.6A8 8 0 0 1 4 12z"/></svg>
+  <svg class="i-x" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+</button>
+<div class="chat" id="chat" role="dialog" aria-label="Asistente de Sport 3">
+  <div class="chat-h"><div class="av" aria-hidden="true">S3</div><div><b>Asistente Sport 3</b><small><i></i>Responde al instante</small></div></div>
+  <div class="msgs" id="msgs" aria-live="polite"></div>
+  <form class="chat-f" id="chatForm"><input id="chatIn" placeholder="Escriba su pregunta" autocomplete="off" aria-label="Escriba su pregunta"><button class="send" id="chatSend" type="submit" aria-label="Enviar" disabled><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5m0 0-6 6m6-6 6 6"/></svg></button></form>
+</div>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+/* Datos del negocio y de la base de datos.
+   Es el único archivo que hay que tocar para cambiar horario, canchas, QR o claves. */
+window.SPORT3 = {
+  /* Supabase · Project Settings → API. Solo la URL y la clave publishable (sb_publishable_…).
+     NUNCA poner aquí la clave secret (sb_secret_…) ni la service_role.
+     Si quedan vacías, la página funciona en modo demostración con horarios de ejemplo. */
+  supabaseUrl: '', // propuesta de diseño: horarios de ejemplo
+  supabaseKey: 'sb_publishable_dtreP_da977x-c5ElRPp7g_i4_2nRXH',
+
+  /* WhatsApp del dueño (8 dígitos, sin +591). Se usa si no hay otro guardado en la pantalla del dueño. */
+  telefono: '57905773',
+
+  /* Turnos: hora de inicio de cada uno (el último, 21 → termina a las 22:00) */
+  horas: [15, 16, 17, 18, 19, 20, 21],
+
+  /* Nombre y ubicación de cada cancha (CONFIRMAR CON EL DUEÑO) */
+  canchas: {
+    futbol: [{n: 'Cancha A', d: 'Junto a la entrada'}, {n: 'Cancha B', d: 'Al centro'}, {n: 'Cancha C', d: 'Al fondo'}],
+    wally:  [{n: 'Cancha A', d: 'Junto a la entrada'}, {n: 'Cancha B', d: 'Al centro'}, {n: 'Cancha C', d: 'Al fondo'}]
+  },
+
+  /* QR de cobro del dueño: ruta de la imagen, por ejemplo 'img/qr.png'. Vacío = QR de ejemplo. */
+  qr: ''
+};
+
+</script>
+<script>
+(() => {
+'use strict';
+const $ = s => document.querySelector(s);
+/* Datos del negocio: js/config.js */
+const CFG = window.SPORT3 || {};
+const HOURS = CFG.horas || [15,16,17,18,19,20,21];
+const CANCHA_INFO = CFG.canchas;
+const CANCHAS = CANCHA_INFO.futbol.length;
+const QR_IMG = CFG.qr || '';
+const DIAS = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+const DIAS_C = ['dom','lun','mar','mié','jue','vie','sáb'];
+const DIAS_N = ['domingo','lunes','martes','miercoles','jueves','viernes','sabado'];
+const MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+const SPORT = {futbol:'Fútbol 6', wally:'Wally'};
+const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+const EASE_OUT = 'cubic-bezier(0.23,1,0.32,1)';
+
+/* ---------- dates ---------- */
+const now = () => new Date();
+const d0 = d => new Date(d.getFullYear(), d.getMonth(), d.getDate());
+const key = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+const fromKey = k => { const [y,m,dd] = k.split('-').map(Number); return new Date(y, m-1, dd); };
+const today = () => d0(now());
+const monthEnd = () => { const t = today(); return new Date(t.getFullYear(), t.getMonth()+1, 0); };
+const inWindow = d => d >= today() && d <= monthEnd();
+const fmtLong = d => `${DIAS[d.getDay()]}, ${d.getDate()} de ${MESES[d.getMonth()]}`;
+const fmtShort = d => `${DIAS[d.getDay()]} ${d.getDate()}`;
+const hh = h => `${String(h).padStart(2,'0')}:00`;
+const sameDay = (a,b) => key(a) === key(b);
+const onlyDigits = v => v.replace(/\D/g,'');
+function cap1(s){ return s.replace(/^./, c => c.toUpperCase()); }
+
+/* ---------- availability source ----------
+   'loading' hasta que responde Supabase; 'live' = lo que marca el dueño; 'demo' = datos de ejemplo
+   (solo si js/config.js no tiene las claves de Supabase). */
+const SRC = { mode:'loading', db:null, canWrite:false, phone:'', occ:{}, res:[], mine:[] };
+const PEND_MIN = 120; // minutos que una reserva pendiente aparta la cancha (igual que en supabase/reservas-v2.sql)
+/* Canchas apartadas por reservas de la página en ese turno */
+function reservedAt(dk, sport, h){
+  return SRC.res.filter(r => r.fecha === dk && r.deporte === sport && r.desde <= h && r.hasta > h).map(r => r.cancha);
+}
+/* Las marcadas a mano por el dueño ocupan las primeras canchas sin reserva */
+function manualAt(dk, sport, h){ return Math.min(CANCHAS, +(SRC.occ[dk]?.[sport]?.[h] || 0)); }
+function hash(s){ let h = 2166136261; for (let i=0;i<s.length;i++){ h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; }
+function exampleTaken(dk, sport, h){
+  if (dk === key(today()) && ((sport === 'futbol' && h === 18) || (sport === 'wally' && h === 20))) return CANCHAS;
+  const wd = fromKey(dk).getDay();
+  const p = .24 + ([5,6,0].includes(wd) ? .22 : 0) + (h >= 19 ? .2 : 0) + (sport === 'futbol' ? .06 : 0);
+  let n = 0; for (let i=0;i<CANCHAS;i++) if (hash(`${dk}|${sport}|${h}|${i}`) % 1000 < p*1000) n++;
+  return n;
+}
+function courtTaken(dk, sport, h, i){
+  if (SRC.mode === 'live'){
+    const r = reservedAt(dk, sport, h); if (r.includes(i)) return true;
+    const libres = [...Array(CANCHAS).keys()].filter(x => !r.includes(x));
+    return libres.slice(0, manualAt(dk, sport, h)).includes(i);
+  }
+  if (dk === key(today()) && ((sport === 'futbol' && h === 18) || (sport === 'wally' && h === 20))) return true;
+  const wd = fromKey(dk).getDay();
+  const p = .24 + ([5,6,0].includes(wd) ? .22 : 0) + (h >= 19 ? .2 : 0) + (sport === 'futbol' ? .06 : 0);
+  return hash(`${dk}|${sport}|${h}|${i}`) % 1000 < p*1000;
+}
+function freeCourts(d, sport, from, to){
+  const out = [];
+  for (let i=0;i<CANCHAS;i++){ let ok = true; for (let h=from; h<to; h++) if (courtTaken(key(d), sport, h, i)) { ok = false; break; } if (ok) out.push(i); }
+  return out;
+}
+function takenCount(dk, sport, h){
+  if (SRC.mode === 'live') return Math.min(CANCHAS, new Set(reservedAt(dk, sport, h)).size + manualAt(dk, sport, h));
+  return exampleTaken(dk, sport, h);
+}
+function slotState(d, sport, h){
+  if (SRC.mode === 'loading') return {s:'loading', free:0};
+  const n = now();
+  if (sameDay(d, n) && n.getHours() >= h) return {s:'past', free:0};
+  const free = CANCHAS - takenCount(key(d), sport, h);
+  if (free <= 0) return {s:'res', free:0};
+  return {s:'free', free};
+}
+const price = (sport, h) => sport === 'wally' ? 60 : (h >= 19 ? 150 : 120);
+const totalFor = (sport, from, to) => { let t = 0; for (let h=from; h<to; h++) t += price(sport, h); return t; };
+
+/* ---------- state ---------- */
+const S = { sport:'futbol', date: today(), sel:null, court:null, step:1, cur:null };
+if (now().getHours() >= 21) { const t = new Date(today()); t.setDate(t.getDate()+1); if (inWindow(t)) S.date = t; }
+
+/* ---------- motion ---------- */
+function enter(el, {x=0, y=0, dur=240, delay=0} = {}){
+  if (!el || !el.animate) return;
+  const from = reduce.matches ? {opacity:0} : {opacity:0, transform:`translate(${x}px,${y}px)`};
+  const to = reduce.matches ? {opacity:1} : {opacity:1, transform:'translate(0,0)'};
+  el.animate([from, to], {duration: reduce.matches ? 160 : dur, easing: EASE_OUT, delay, fill:'backwards'});
+}
+// softened swap: starts at half opacity so fast toggles never flash empty
+function swap(el){
+  if (!el.animate) return;
+  el.animate(reduce.matches ? [{opacity:.5},{opacity:1}] : [{opacity:.5, filter:'blur(2px)', transform:'translateY(3px)'},{opacity:1, filter:'blur(0)', transform:'translateY(0)'}], {duration:200, easing:EASE_OUT});
+}
+function segSet(seg, idx){
+  seg.dataset.v = idx;
+  seg.querySelectorAll('button').forEach((b,i) => { b.setAttribute('aria-checked', i === idx); b.tabIndex = i === idx ? 0 : -1; });
+}
+
+/* ---------- step 1: sport ---------- */
+const sportSeg = $('#sport');
+sportSeg.addEventListener('click', e => { const b = e.target.closest('button[data-sport]'); if (b) setSport(b.dataset.sport); });
+sportSeg.addEventListener('keydown', e => {
+  if (!['ArrowLeft','ArrowRight'].includes(e.key)) return;
+  e.preventDefault(); setSport(S.sport === 'futbol' ? 'wally' : 'futbol'); $('#sp-'+S.sport).focus();
+});
+function setSport(sp, {silent=false} = {}){
+  if (sp === S.sport && !silent) return;
+  S.sport = sp; segSet(sportSeg, sp === 'wally' ? 1 : 0);
+  keepSelIfValid(); renderSlots(true); renderSum();
+}
+
+/* ---------- step 1: slots ---------- */
+const slotsEl = $('#slots');
+function keepSelIfValid(){
+  if (!S.sel || SRC.mode === 'loading') return;
+  for (let i=S.sel[0]; i<=S.sel[1]; i++){ const st = slotState(S.date, S.sport, HOURS[i]).s; if (st === 'res' || st === 'past') { S.sel = null; return; } }
+}
+const CK = '<span class="ck"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5 10 17.5 19 7"/></svg></span>';
+function renderSlots(animate){
+  $('#slotsCap').textContent = `${SPORT[S.sport]} · ${fmtShort(S.date)}`;
+  slotsEl.innerHTML = '';
+  const past = HOURS.filter(h => slotState(S.date, S.sport, h).s === 'past');
+  if (past.length){
+    const n = document.createElement('p'); n.className = 'past-note';
+    n.textContent = past.length === HOURS.length ? 'Por hoy ya no quedan horarios. Elige otra fecha.' : `Los horarios antes de las ${hh(past[past.length-1] + 1)} ya pasaron.`;
+    slotsEl.appendChild(n);
+  }
+  HOURS.forEach((h, i) => {
+    const st = slotState(S.date, S.sport, h);
+    if (st.s === 'past') return;
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'slot ' + st.s; b.dataset.i = i;
+    const on = !!(S.sel && i >= S.sel[0] && i <= S.sel[1]);
+    b.setAttribute('aria-pressed', on);
+    const lbl = st.s === 'loading' ? 'Cargando' : st.s === 'past' ? 'Ya pasó' : st.s === 'res' ? 'Reservada' : on ? 'Elegido' : 'Disponible';
+    b.innerHTML = `<span class="t">${hh(h)} <i>a ${hh(h+1)}</i></span><span class="p">Bs ${price(S.sport,h)}</span><span class="st">${on ? CK : ''}${lbl}</span>`;
+    b.setAttribute('aria-label', `${hh(h)} a ${hh(h+1)}, Bs ${price(S.sport,h)}, ${lbl}`);
+    if (['past','res','loading'].includes(st.s)) b.disabled = true;
+    slotsEl.appendChild(b);
+  });
+  if (animate) swap(slotsEl);
+}
+slotsEl.addEventListener('click', e => {
+  const b = e.target.closest('.slot'); if (!b || b.disabled) return;
+  const i = +b.dataset.i, sel = S.sel;
+  if (!sel) S.sel = [i,i];
+  else if (i === sel[1] + 1) S.sel = [sel[0], i];
+  else if (i === sel[0] - 1) S.sel = [i, sel[1]];
+  else if (i === sel[0] && i === sel[1]) S.sel = null;
+  else if (i === sel[1]) S.sel = [sel[0], i-1];
+  else if (i === sel[0]) S.sel = [i+1, sel[1]];
+  else S.sel = [i,i];
+  renderSlots(false); renderSum();
+  slotsEl.querySelector(`[data-i="${i}"]`)?.focus();
+});
+
+/* ---------- step 1: date ---------- */
+const dateBtn = $('#dateBtn'), cal = $('#cal');
+function renderDate(){
+  const t = today(), tm = new Date(t); tm.setDate(tm.getDate()+1);
+  $('#dateTag').textContent = sameDay(S.date, t) ? 'Hoy' : sameDay(S.date, tm) ? 'Mañana' : DIAS[S.date.getDay()];
+  $('#dateTxt').textContent = cap1(fmtLong(S.date));
+}
+function renderCal(){
+  const t = today(), end = monthEnd();
+  const first = new Date(t.getFullYear(), t.getMonth(), 1);
+  const off = (first.getDay() + 6) % 7;
+  let h = `<div class="cal-h"><b>${MESES[t.getMonth()]} ${t.getFullYear()}</b><small>Hasta el ${end.getDate()} de ${MESES[t.getMonth()]}</small></div><div class="cal-g">`;
+  ['lu','ma','mi','ju','vi','sá','do'].forEach(d => h += `<div class="dow" aria-hidden="true">${d}</div>`);
+  for (let i=0;i<off;i++) h += '<div></div>';
+  for (let dd=1; dd<=end.getDate(); dd++){
+    const d = new Date(t.getFullYear(), t.getMonth(), dd), ok = inWindow(d);
+    h += `<button type="button" class="day${sameDay(d,t)?' today':''}" data-k="${key(d)}" ${ok?'':'disabled'} aria-selected="${sameDay(d,S.date)}" aria-label="${fmtLong(d)}${ok?'':', no disponible'}">${dd}</button>`;
+  }
+  cal.innerHTML = h + '</div>';
+}
+function openCal(){ renderCal(); cal.setAttribute('data-open',''); dateBtn.setAttribute('aria-expanded','true'); requestAnimationFrame(() => cal.querySelector('[aria-selected="true"]')?.focus()); }
+function closeCal(focus){ if (!cal.hasAttribute('data-open')) return; cal.removeAttribute('data-open'); dateBtn.setAttribute('aria-expanded','false'); if (focus) dateBtn.focus(); }
+dateBtn.addEventListener('click', () => cal.hasAttribute('data-open') ? closeCal() : openCal());
+cal.addEventListener('click', e => { const b = e.target.closest('.day'); if (!b || b.disabled) return; setDate(fromKey(b.dataset.k)); closeCal(true); });
+cal.addEventListener('keydown', e => {
+  const map = {ArrowLeft:-1, ArrowRight:1, ArrowUp:-7, ArrowDown:7};
+  if (e.key === 'Escape') { e.preventDefault(); closeCal(true); return; }
+  if (!(e.key in map)) return;
+  e.preventDefault();
+  const days = [...cal.querySelectorAll('.day:not(:disabled)')];
+  const i = days.indexOf(document.activeElement);
+  days[Math.max(0, Math.min(days.length-1, (i<0?0:i) + map[e.key]))]?.focus();
+});
+document.addEventListener('pointerdown', e => { if (!e.target.closest('.datewrap')) closeCal(); });
+function setDate(d){ if (sameDay(d, S.date)) return; S.date = d; keepSelIfValid(); renderDate(); renderSlots(true); renderSum(); }
+
+/* ---------- step 1: summary ---------- */
+function selInfo(){
+  if (!S.sel) return null;
+  const from = HOURS[S.sel[0]], to = HOURS[S.sel[1]] + 1, total = totalFor(S.sport, from, to);
+  return {from, to, hours: to - from, total};
+}
+function renderCourts(){
+  const s = selInfo(), blk = $('#courtBlock');
+  if (!s){ blk.hidden = true; S.court = null; return; }
+  const free = freeCourts(S.date, S.sport, s.from, s.to);
+  if (S.court !== null && !free.includes(S.court)) S.court = null;
+  if (S.court === null && free.length === 1) S.court = free[0];
+  blk.hidden = false;
+  $('#courts').innerHTML = CANCHA_INFO[S.sport].map((c, i) => {
+    const ok = free.includes(i), on = S.court === i;
+    return `<button type="button" class="court${on ? ' on' : ''}" role="radio" aria-checked="${on}" data-c="${i}" ${ok ? '' : 'disabled'}>
+      <span class="cn">${c.n}</span><span class="cd">${c.d}</span><span class="cs">${ok ? (on ? 'Elegida' : 'Disponible') : 'Ocupada'}</span></button>`;
+  }).join('');
+}
+$('#courts').addEventListener('click', e => { const b = e.target.closest('.court'); if (!b || b.disabled) return; S.court = +b.dataset.c; renderSum(); });
+function renderSum(){
+  renderCourts();
+  const s = selInfo(), ready = !!s && S.court !== null;
+  $('#btnContinue').disabled = !ready;
+  $('#sum').innerHTML = s
+    ? `<div class="what"><b>${hh(s.from)} a ${hh(s.to)}</b><small>${SPORT[S.sport]} · ${S.court !== null ? CANCHA_INFO[S.sport][S.court].n : 'elige una cancha'} · ${fmtShort(S.date)}</small></div><div class="price"><b>Bs ${s.total}</b></div>`
+    : `<div class="what"><b>Elige un horario disponible</b><small>${SPORT[S.sport]} · ${S.sport==='wally'?'Bs 60 la hora':'desde Bs 120 la hora'}</small></div>`;
+}
+$('#btnContinue').addEventListener('click', () => go(2));
+if ('ResizeObserver' in window) new ResizeObserver(([e]) => document.documentElement.style.setProperty('--dockh', Math.ceil(e.target.getBoundingClientRect().height) + 'px')).observe(document.querySelector('.dock'));
+
+/* ---------- navigation ---------- */
+const ORDER = {1:1, 2:2, 3:3, 4:4, owner:5};
+function go(n){
+  const prev = S.step; if (n === prev) return;
+  if (n === 1 && prev === 4) S.sel = null;
+  ['step1','step2','step3','step4','owner'].forEach(id => $('#'+id).hidden = true);
+  const el = n === 'owner' ? $('#owner') : $('#step'+n);
+  el.hidden = false; S.step = n;
+  if (n === 1) { keepSelIfValid(); renderSlots(false); renderSum(); }
+  if (n === 2) renderRecap();
+  if (n === 4) setTimeout(drawMap, 30);
+  if (n === 'owner') { renderOwner(false); $('#oPhone').value = SRC.phone; }
+  closeCal();
+  window.scrollTo({top:0, behavior:'instant'});
+  enter(el, {x: ORDER[n] > ORDER[prev] ? 16 : -16, dur: 260});
+  $('#intro').hidden = n !== 1;
+  const h = n === 1 ? $('#t1') : el.querySelector('h2'); if (h){ h.tabIndex = -1; h.focus({preventScroll:true}); }
+}
+document.addEventListener('click', e => { const b = e.target.closest('[data-go]'); if (b) go(+b.dataset.go); });
+$('#home').addEventListener('click', e => { e.preventDefault(); go(1); });
+
+/* ---------- step 2 ---------- */
+function renderRecap(){
+  const s = selInfo(); if (!s || S.court === null) return go(1);
+  const horas = s.to - s.from;
+  $('#recap2').innerHTML = `<dt>Deporte</dt><dd>${SPORT[S.sport]}</dd>`
+    + `<dt>Cancha</dt><dd>${CANCHA_INFO[S.sport][S.court].n}<small>${CANCHA_INFO[S.sport][S.court].d}</small></dd>`
+    + `<dt>Día</dt><dd>${fmtLong(S.date).replace(/^./, c => c.toUpperCase())}</dd>`
+    + `<dt>Horario</dt><dd>${hh(s.from)} a ${hh(s.to)}<small>${horas === 1 ? '1 hora' : horas + ' horas'}</small></dd>`
+    + `<dt>Total</dt><dd class="tot">Bs ${s.total}</dd>`;
+  $('#err2').hidden = true;
+}
+document.querySelectorAll('input[name="pago"]').forEach(r => r.addEventListener('change', () => { $('#warnCancha').hidden = document.querySelector('input[name="pago"]:checked')?.value !== 'cancha'; }));
+$('#celular').addEventListener('input', e => { e.target.value = onlyDigits(e.target.value).slice(0,8); });
+let sending = false;
+$('#form2').addEventListener('submit', async e => {
+  e.preventDefault();
+  if (sending) return;
+  const err = $('#err2'), s = selInfo(); if (!s) return go(1);
+  const nombre = $('#nombre').value.trim(), cel = onlyDigits($('#celular').value);
+  const fail = (msg, el) => { err.textContent = msg; err.hidden = false; enter(err, {y:-4, dur:200}); el?.focus(); };
+  if (nombre.length < 2) return fail('Escribe tu nombre para la reserva.', $('#nombre'));
+  if (!/^[67]\d{7}$/.test(cel)) return fail('El celular debe tener 8 dígitos y empezar con 6 o 7.', $('#celular'));
+  const pago = document.querySelector('input[name="pago"]:checked')?.value;
+  if (!pago) return fail('Elige cómo vas a pagar.', document.querySelector('input[name="pago"]'));
+  if ($('#cumple').checked && s.hours < 3) return fail(`Para cumpleaños se reservan mínimo 3 horas seguidas. Vuelve a Horarios y elige 3 horas, por ejemplo de ${hh(Math.min(19, s.from))} a ${hh(Math.min(19, s.from)+3)}.`);
+  for (let h=s.from; h<s.to; h++){
+    if (slotState(S.date, S.sport, h).s === 'res'){ toast('Ese horario se acaba de ocupar. Elige otro.'); S.sel = null; go(1); return; }
+  }
+  if (!freeCourts(S.date, S.sport, s.from, s.to).includes(S.court)){ toast('Esa cancha se acaba de ocupar. Elige otra.'); go(1); return; }
+  S.cur = {nombre, cel, sport:S.sport, date:key(S.date), from:s.from, to:s.to, total:s.total, cumple:$('#cumple').checked, court:S.court, pago, saved:false};
+  if (SRC.mode === 'live' && SRC.db){
+    const btn = $('#form2 button[type="submit"]'), label = btn.innerHTML;
+    sending = true; btn.disabled = true; btn.textContent = 'Guardando tu reserva…';
+    let res = null;
+    try {
+      const { data, error } = await SRC.db.rpc('reservar', {
+        p_fecha:S.cur.date, p_deporte:S.cur.sport, p_desde:S.cur.from, p_hasta:S.cur.to, p_cancha:S.cur.court,
+        p_nombre:nombre, p_celular:cel, p_pago:pago, p_total:S.cur.total, p_cumple:S.cur.cumple });
+      if (error) throw error; res = data;
+    } catch { res = null; }
+    sending = false; btn.disabled = false; btn.innerHTML = label;
+    if (res === 'ocupada'){ toast('Esa cancha se acaba de ocupar. Elige otra.'); S.court = null; await loadAll().catch(() => {}); go(1); return; }
+    if (res === 'invalida') return fail('No pudimos guardar la reserva. Revisa tus datos; si ya tienes reservas pendientes, espera a que el dueño las confirme.');
+    if (typeof res === 'string' && res.startsWith('ok')){ S.cur.saved = true; S.cur.codigo = res.split(':')[1] || ''; loadAll().catch(() => {}); }
+    else toast('No pudimos apartar la cancha. Envía igual la reserva por WhatsApp.');
+  }
+  renderSend();
+  go(3);
+});
+
+/* ---------- step 3 ---------- */
+function ownerMessage(r){
+  const d = fromKey(r.date);
+  return [
+    `Nueva reserva Sport 3`,
+    `Deporte: ${SPORT[r.sport]}${r.cumple ? ' (cumpleaños)' : ''}`,
+    `Fecha: ${fmtLong(d)}`,
+    `Cancha: ${CANCHA_INFO[r.sport][r.court].n} (${CANCHA_INFO[r.sport][r.court].d})`,
+    `Horario: ${hh(r.from)} a ${hh(r.to)} (${r.to - r.from} h)`,
+    `Nombre: ${r.nombre}`,
+    `Celular: ${r.cel}`,
+    `Total: Bs ${r.total}`,
+    r.pago === 'qr' ? `Pago: QR (envío el comprobante en este chat)` : `Pago: en la cancha`,
+    ...(r.codigo ? ['', `Para Sport 3, confirmar aquí: ${location.href.split('#')[0]}#r=${r.codigo}`] : [])
+  ].join('\n');
+}
+// WhatsApp del dueño: el guardado en Supabase o, si no hay, el de js/config.js
+const DUENO_TEL = CFG.telefono || '';
+function waLink(text){
+  // 8 dígitos = celular de Bolivia (+591); más largo = número con código de país (ej. el número de prueba de Meta, +1 555…)
+  const tel = String(SRC.phone || DUENO_TEL).replace(/\D/g, '');
+  const base = `https://wa.me/${tel.length > 8 ? tel : '591' + tel}`;
+  return `${base}?text=${encodeURIComponent(text)}`;
+}
+function detailRows(r){
+  const d = fromKey(r.date);
+  return `
+    <dt>Deporte</dt><dd>${SPORT[r.sport]}${r.cumple?' · cumpleaños':''}</dd>
+    <dt>Fecha</dt><dd>${fmtLong(d)}</dd>
+    <dt>Cancha</dt><dd>${CANCHA_INFO[r.sport][r.court].n}</dd>
+    <dt>Horario</dt><dd>${hh(r.from)} a ${hh(r.to)}</dd>
+    <dt>A nombre de</dt><dd>${esc(r.nombre)}</dd>`;
+}
+function renderSend(){
+  $('#holdNote').hidden = !S.cur?.saved;
+  const r = S.cur; if (!r) return;
+  $('#dl3').innerHTML = detailRows(r);
+  $('#total3').textContent = `Bs ${r.total}`;
+  const qr = r.pago === 'qr';
+  $('#payLbl3').textContent = qr ? 'Paga ahora con QR' : 'A pagar en la cancha';
+  $('#payNote3').textContent = qr ? 'Escanea o guarda el QR, paga y envía la captura del comprobante en el chat de WhatsApp.' : 'Pasados 15 minutos de la hora reservada sin pago ni llegada, la cancha vuelve a quedar disponible para otros clientes.';
+  $('#qrbox').hidden = !qr; if (qr) drawQR();
+  const msg = ownerMessage(r);
+  $('#msgPreview').textContent = msg;
+  $('#btnWa').href = waLink(msg);
+}
+$('#btnWa').addEventListener('click', () => {
+  if (!S.cur) return;
+  S.last = {...S.cur};
+  renderDone(S.cur);
+  setTimeout(() => {
+    go(4);
+    const p = $('#tickPath');
+    if (p.animate && !reduce.matches){
+      const L = p.getTotalLength(); p.style.strokeDasharray = L;
+      p.animate([{strokeDashoffset:L},{strokeDashoffset:0}], {duration:420, delay:120, easing:EASE_OUT, fill:'backwards'});
+    }
+  }, 250);
+});
+
+
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function renderDone(r){
+  $('#dl4').innerHTML = detailRows(r) + `<dt>${r.pago === 'qr' ? 'Pago' : 'A pagar en la cancha'}</dt><dd class="hi">${r.pago === 'qr' ? 'Por QR' : 'Bs ' + r.total}</dd>`;
+  $('#warn4').hidden = r.pago === 'qr'; $('#warn4').textContent = 'Pasados 15 minutos de la hora reservada sin pago ni llegada, la cancha vuelve a quedar disponible para otros clientes.';
+  $('#btnWa2').href = waLink(ownerMessage(r));
+  const ymd = r.date.replace(/-/g,'');
+  const q = new URLSearchParams({action:'TEMPLATE', text:`Sport 3 · ${SPORT[r.sport]}`, dates:`${ymd}T${String(r.from).padStart(2,'0')}0000/${ymd}T${String(r.to).padStart(2,'0')}0000`, ctz:'America/La_Paz', details:`${CANCHA_INFO[r.sport][r.court].n}. Total: Bs ${r.total}${r.pago === 'qr' ? ' (pago por QR)' : ' (pago en la cancha)'}.`, location:'Sport 3, Miraflores, Tarija'});
+  $('#gcal').href = 'https://calendar.google.com/calendar/render?' + q.toString();
+}
+
+
+const O = { sport:'futbol', date: S.date };
+const oSport = $('#oSport');
+oSport.addEventListener('click', e => { const b = e.target.closest('button[data-sport]'); if (!b || b.dataset.sport === O.sport) return; O.sport = b.dataset.sport; segSet(oSport, O.sport === 'wally' ? 1 : 0); renderOwner(true); });
+$('#oDays').addEventListener('click', e => { const b = e.target.closest('.dchip'); if (!b) return; O.date = fromKey(b.dataset.k); renderOwner(true); });
+function renderOwner(animate){
+  $('#owner').classList.toggle('focus', !!O.focus);
+  $('#oFocus').hidden = !(O.focus && SRC.canWrite);
+  $('#oPanel').hidden = !SRC.canWrite || !!O.focus;
+  $('#oLogin').hidden = SRC.canWrite;
+  if (O.focus && SRC.canWrite) renderFocus();
+  // day chips: today → end of month
+  const days = $('#oDays'); days.innerHTML = '';
+  for (let d = new Date(today()); d <= monthEnd(); d.setDate(d.getDate()+1)){
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'dchip'; b.dataset.k = key(d);
+    b.setAttribute('aria-pressed', sameDay(d, O.date)); b.setAttribute('aria-label', fmtLong(d));
+    const pend = SRC.mine.some(r => r.fecha === key(d) && resState(r) === 'pendiente');
+    b.innerHTML = `<small>${sameDay(d,today()) ? 'hoy' : DIAS_C[d.getDay()]}</small><b>${d.getDate()}</b>${pend ? '<i class="pdot" aria-label="con reservas pendientes"></i>' : ''}`;
+    days.appendChild(b);
+  }
+  if (!inWindow(O.date)) O.date = today();
+  const list = $('#oList'), dk = key(O.date); list.innerHTML = '';
+  HOURS.forEach(h => {
+    const web = new Set(reservedAt(dk, O.sport, h)).size, man = manualAt(dk, O.sport, h), n = Math.min(CANCHAS, web + man);
+    const row = document.createElement('div'); row.className = 'orow' + (n >= CANCHAS ? ' full' : '');
+    row.innerHTML = `<span class="t">${hh(h)} <i>– ${hh(h+1)}</i></span>
+      <div class="stp"><button type="button" data-h="${h}" data-d="-1" ${man<=0?'disabled':''} aria-label="Una cancha menos a las ${hh(h)}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14"/></svg></button>
+      <output><b>${n}</b> de ${CANCHAS}${web ? `<small>${web} por la página</small>` : ''}</output>
+      <button type="button" data-h="${h}" data-d="1" ${n>=CANCHAS?'disabled':''} aria-label="Una cancha más a las ${hh(h)}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button></div>`;
+    list.appendChild(row);
+  });
+  renderResList();
+  if (animate) swap(list);
+}
+function resState(r){
+  if (r.estado === 'pendiente' && Date.now() - new Date(r.creada).getTime() > PEND_MIN*60000) return 'vencida';
+  return r.estado;
+}
+function renderResList(){
+  const box = $('#oRes'), dk = key(O.date);
+  const rows = SRC.mine.filter(r => r.fecha === dk).sort((a,b) => a.desde - b.desde || a.creada.localeCompare(b.creada));
+  if (!rows.length){ box.innerHTML = `<p class="empty">No hay reservas de la página para ${sameDay(O.date, today()) ? 'hoy' : fmtLong(O.date)}.</p>`; return; }
+  const BADGE = {pendiente:['pend','Pendiente'], confirmada:['ok','Confirmada'], cancelada:['off','Cancelada'], vencida:['bad','Vencida']};
+  box.innerHTML = rows.map(r => {
+    const st = resState(r), [cls, txt] = BADGE[st], cancha = CANCHA_INFO[r.deporte][r.cancha]?.n || `Cancha ${r.cancha+1}`;
+    const off = st === 'cancelada' || st === 'vencida';
+    const aviso = avisoCliente(r);
+    return `<article class="rcard${off ? ' off' : ''}" data-id="${r.id}">
+      <div class="rtop"><div><div class="rname">${esc(r.nombre)}</div>
+        <div class="rmeta">${hh(r.desde)} a ${hh(r.hasta)} · ${SPORT[r.deporte]} · ${esc(cancha)}<br>Bs ${r.total} · ${r.pago === 'qr' ? 'Paga por QR' : 'Paga en la cancha'}${r.cumple ? ' · Cumpleaños' : ''}<br>Cel. ${r.celular}</div></div>
+        <div class="rbadges"><span class="badge ${cls}">${txt}</span>${r.pagado ? '<span class="badge ok">Pagado</span>' : ''}</div></div>
+      <div class="ract">
+        ${st === 'pendiente' || st === 'vencida' ? '<button type="button" class="go" data-act="confirmar">Confirmar</button>' : ''}
+        ${!r.pagado && st !== 'cancelada' ? '<button type="button" data-act="pago">Pagó</button>' : ''}
+        ${st !== 'cancelada' ? '<button type="button" data-act="cancelar">Cancelar</button>' : ''}
+        <a class="wa" href="https://wa.me/591${r.celular}?text=${encodeURIComponent(aviso)}" target="_blank" rel="noopener">WhatsApp</a>
+      </div></article>`;
+  }).join('');
+}
+$('#oRes').addEventListener('click', async e => {
+  const b = e.target.closest('button[data-act]'); if (!b || !SRC.db) return;
+  const id = b.closest('.rcard').dataset.id, r = SRC.mine.find(x => x.id === id); if (!r) return;
+  const act = b.dataset.act;
+  if (act === 'cancelar' && !confirmCancel(b)) return;
+  const patch = act === 'confirmar' ? {estado:'confirmada'} : act === 'pago' ? {pagado:true} : {estado:'cancelada'};
+  b.disabled = true;
+  const { error } = await SRC.db.from('reservas').update(patch).eq('id', id);
+  if (error){ b.disabled = false; toast('No se pudo guardar. Revise su conexión.'); return; }
+  Object.assign(r, patch); renderOwner(false);
+  toast(act === 'confirmar' ? 'Reserva confirmada. Avísele por WhatsApp.' : act === 'pago' ? 'Marcada como pagada' : 'Reserva cancelada. La cancha quedó libre.');
+  loadAll().catch(() => {});
+});
+/* Una sola reserva, abierta desde el enlace del mensaje de WhatsApp (#r=CODIGO) */
+let focusLookup = '';
+function avisoCliente(r){
+  const cancha = CANCHA_INFO[r.deporte][r.cancha]?.n || `Cancha ${r.cancha+1}`;
+  return `Hola ${r.nombre}, tu reserva en Sport 3 está confirmada: ${SPORT[r.deporte]}, ${fmtLong(fromKey(r.fecha))}, de ${hh(r.desde)} a ${hh(r.hasta)}, ${cancha}. ¡Te esperamos!`;
+}
+async function renderFocus(){
+  const box = $('#oFocus'), code = O.focus;
+  let r = SRC.mine.find(x => x.codigo === code);
+  if (!r && SRC.db && focusLookup !== code){
+    focusLookup = code;
+    const { data } = await SRC.db.from('reservas').select('*').eq('codigo', code).limit(1);
+    if (data && data[0]){ SRC.mine = SRC.mine.filter(x => x.id !== data[0].id).concat(data[0]); if (O.focus === code) renderFocus(); return; }
+  }
+  if (!r){ box.innerHTML = `<p class="note">${focusLookup === code ? `No se encontró la reserva ${esc(code)}.` : 'Buscando la reserva…'}</p><a class="fall" href="#dueno">Ver todas las reservas</a>`; return; }
+  const st = resState(r), cancha = CANCHA_INFO[r.deporte][r.cancha] || {n:`Cancha ${r.cancha+1}`, d:''};
+  const BADGE = {pendiente:['pend','Pendiente de confirmar'], confirmada:['ok','Confirmada'], cancelada:['off','Cancelada'], vencida:['bad','Vencida: la cancha se liberó']};
+  const [cls, txt] = BADGE[st];
+  box.innerHTML = `<div class="fcard" data-id="${r.id}">
+      <div class="fbad"><span class="badge ${cls}">${txt}</span>${r.pagado ? '<span class="badge ok">Pagado</span>' : ''}</div>
+      <div class="fname">${esc(r.nombre)}</div>
+      <dl class="fdl">
+        <dt>Día</dt><dd>${cap1(fmtLong(fromKey(r.fecha)))}</dd>
+        <dt>Hora</dt><dd>${hh(r.desde)} a ${hh(r.hasta)}</dd>
+        <dt>Cancha</dt><dd>${SPORT[r.deporte]} · ${esc(cancha.n)}</dd>
+        <dt>Pago</dt><dd>Bs ${r.total} · ${r.pago === 'qr' ? 'por QR' : 'en la cancha'}</dd>
+        <dt>Celular</dt><dd>${r.celular}</dd>
+      </dl>
+      <div class="facts">
+        ${st === 'pendiente' || st === 'vencida' ? '<button type="button" class="primary fbig" data-act="confirmar">Confirmar reserva</button>' : ''}
+        ${st === 'confirmada' ? `<a class="primary wa fbig" href="https://wa.me/591${r.celular}?text=${encodeURIComponent(avisoCliente(r))}" target="_blank" rel="noopener">Avisar al cliente por WhatsApp</a>` : ''}
+        ${!r.pagado && st !== 'cancelada' ? '<button type="button" class="btn2 fbig" data-act="pago">Ya pagó</button>' : ''}
+        ${st !== 'cancelada' ? '<button type="button" class="btn2 fbig fno" data-act="cancelar">Cancelar reserva</button>' : ''}
+      </div>
+    </div>
+    <a class="fall" href="#dueno">Ver todas las reservas</a>`;
+}
+$('#oFocus').addEventListener('click', async e => {
+  const b = e.target.closest('button[data-act]'); if (!b || !SRC.db) return;
+  const id = b.closest('.fcard').dataset.id, r = SRC.mine.find(x => x.id === id); if (!r) return;
+  const act = b.dataset.act;
+  if (act === 'cancelar' && !confirmCancel(b)) return;
+  const patch = act === 'confirmar' ? {estado:'confirmada'} : act === 'pago' ? {pagado:true} : {estado:'cancelada'};
+  b.disabled = true;
+  const { error } = await SRC.db.from('reservas').update(patch).eq('id', id);
+  if (error){ b.disabled = false; toast('No se pudo guardar. Revise su conexión.'); return; }
+  Object.assign(r, patch); renderFocus();
+  toast(act === 'confirmar' ? 'Confirmada. Ahora avísele al cliente.' : act === 'pago' ? 'Marcada como pagada' : 'Reserva cancelada. La cancha quedó libre.');
+  loadAll().catch(() => {});
+});
+/* Cancelar pide un segundo toque (sin ventanas emergentes) */
+function confirmCancel(b){
+  if (b.dataset.sure) return true;
+  const label = b.textContent; b.dataset.sure = '1'; b.textContent = '¿Seguro? Toque otra vez';
+  setTimeout(() => { if (b.isConnected){ delete b.dataset.sure; b.textContent = label; } }, 3500);
+  return false;
+}
+$('#oList').addEventListener('click', e => {
+  const b = e.target.closest('button[data-h]'); if (!b || b.disabled) return;
+  const dk = key(O.date), h = +b.dataset.h;
+  const day = SRC.occ[dk] = structuredClone(SRC.occ[dk] || {futbol:{}, wally:{}});
+  day[O.sport] = day[O.sport] || {};
+  const tope = CANCHAS - new Set(reservedAt(dk, O.sport, h)).size;
+  day[O.sport][h] = Math.max(0, Math.min(tope, (+day[O.sport][h] || 0) + +b.dataset.d));
+  renderOwner(false);
+  $(`#oList button[data-h="${h}"][data-d="${b.dataset.d}"]`)?.focus();
+  writeDay(dk);
+});
+// one write at a time per day document; later clicks fold into the next write
+const writing = {}, dirty = {};
+async function writeDay(dk){
+  if (!SRC.db) return;
+  if (writing[dk]) { dirty[dk] = true; return; }
+  writing[dk] = true; $('#oSaved').textContent = 'Guardando…';
+  try {
+    do { dirty[dk] = false; await saveDay(dk, structuredClone(SRC.occ[dk])); } while (dirty[dk]);
+    $('#oSaved').textContent = 'Guardado. Los clientes ya lo ven.';
+  } catch (err) {
+    $('#oSaved').textContent = /permission|policy|JWT|401|403/i.test(String(err?.message || err?.code)) ? 'Su sesión venció. Vuelva a entrar.' : 'No se pudo guardar. Revise su conexión e inténtelo de nuevo.';
+  } finally { writing[dk] = false; }
+}
+$('#oPhone').addEventListener('input', e => { e.target.value = onlyDigits(e.target.value).slice(0,15); });
+$('#oPhoneForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const v = onlyDigits($('#oPhone').value);
+  if (!/^(\d{8}|\d{10,15})$/.test(v)) { toast('Escriba 8 dígitos, o el número completo con código de país.'); return; }
+  if (!SRC.db) return;
+  const prev = SRC.phone; SRC.phone = v;
+  try { const { error } = await SRC.db.from('config').upsert({clave:'telefono', valor:v}); if (error) throw error; toast('Número guardado'); }
+  catch { SRC.phone = prev; toast('No se pudo guardar el número.'); }
+});
+function ownerFromHash(){
+  const m = location.hash.match(/^#r=([A-Za-z0-9]{4,12})$/);
+  O.focus = m ? m[1].toUpperCase() : null;
+  if (!(m || location.hash === '#dueno') || !SRC.db) return;
+  if (S.step !== 'owner') go('owner'); else renderOwner(false);
+}
+window.addEventListener('hashchange', ownerFromHash);
+
+/* ---------- connect the shared store ---------- */
+function refreshAll(){
+  if (S.step === 1){ keepSelIfValid(); renderSlots(false); renderSum(); }
+  if (S.step === 3) renderSend();
+  if (S.step === 'owner' && !Object.values(writing).some(Boolean)) renderOwner(false);
+  $('#band').textContent = SRC.mode === 'live' ? 'Los horarios ocupados los marca el dueño de Sport 3.' : 'Versión de demostración · los horarios ocupados son de ejemplo';
+}
+function toDemo(){ if (SRC.mode !== 'loading') return; SRC.mode = 'demo'; refreshAll(); }
+/* Supabase: tabla ocupados (fecha, deporte, hora, canchas) y tabla config (clave, valor) */
+function rowsToOcc(rows){
+  const occ = {};
+  rows.forEach(r => { const d = occ[r.fecha] = occ[r.fecha] || {futbol:{}, wally:{}}; (d[r.deporte] = d[r.deporte] || {})[r.hora] = r.canchas; });
+  return occ;
+}
+async function saveDay(dk, day){
+  const rows = [];
+  ['futbol','wally'].forEach(sp => HOURS.forEach(h => rows.push({fecha:dk, deporte:sp, hora:h, canchas:+(day?.[sp]?.[h] || 0)})));
+  const { error } = await SRC.db.from('ocupados').upsert(rows, {onConflict:'fecha,deporte,hora'});
+  if (error) throw error;
+}
+async function loadAll(){
+  const db = SRC.db;
+  const desde = key(today()), hasta = key(monthEnd());
+  const [o, c, rs, mine] = await Promise.all([
+    db.from('ocupados').select('fecha,deporte,hora,canchas').gte('fecha', desde).lte('fecha', hasta),
+    db.from('config').select('clave,valor'),
+    db.rpc('ocupacion', {p_desde:desde, p_hasta:hasta}),
+    SRC.canWrite ? db.from('reservas').select('*').gte('fecha', desde).lte('fecha', hasta) : Promise.resolve({data:[]})
+  ]);
+  if (o.error) throw o.error;
+  SRC.res = rs.error ? [] : (rs.data || []);
+  SRC.mine = mine.error ? [] : (mine.data || []);
+  const occ = rowsToOcc(o.data || []);
+  Object.keys(writing).forEach(k => { if (writing[k] && SRC.occ[k]) occ[k] = SRC.occ[k]; });
+  SRC.occ = occ; SRC.mode = 'live';
+  const tel = (c.data || []).find(r => r.clave === 'telefono');
+  SRC.phone = tel ? String(tel.valor || '') : '';
+  const f = $('#oPhone'); if (document.activeElement !== f) f.value = SRC.phone;
+  refreshAll();
+}
+let reloadT;
+function reloadSoon(){ clearTimeout(reloadT); reloadT = setTimeout(() => loadAll().catch(() => {}), 250); }
+function setSession(session){
+  const before = SRC.canWrite;
+  SRC.canWrite = !!session;
+  if (!SRC.canWrite) SRC.mine = [];
+  if (SRC.canWrite !== before) reloadSoon();
+  $('#oLogin').hidden = SRC.canWrite;
+  $('#oPanel').hidden = !SRC.canWrite || !!O.focus;
+  $('#oUser').textContent = session?.user?.email || '';
+  if (S.step === 'owner') renderOwner(false);
+}
+async function connect(){
+  const url = CFG.supabaseUrl, k = CFG.supabaseKey;
+  if (!url || !k || !window.supabase) { toDemo(); return; }
+  const db = SRC.db = window.supabase.createClient(url, k);
+  try { await loadAll(); }
+  catch { SRC.mode = 'live'; SRC.occ = {}; refreshAll(); toast('No se pudieron cargar los horarios. Inténtelo de nuevo en un momento.'); }
+  db.channel('sport3')
+    .on('postgres_changes', {event:'*', schema:'public', table:'ocupados'}, reloadSoon)
+    .on('postgres_changes', {event:'*', schema:'public', table:'config'}, reloadSoon)
+    .on('postgres_changes', {event:'*', schema:'public', table:'reservas'}, reloadSoon)
+    .subscribe();
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) reloadSoon(); });
+  // Los clientes no reciben avisos de reservas ajenas: se refresca cada 30 s
+  setInterval(() => { if (!document.hidden) reloadSoon(); }, 30000);
+  const { data } = await db.auth.getSession();
+  setSession(data.session);
+  db.auth.onAuthStateChange((_e, session) => setSession(session));
+  ownerFromHash();
+}
+$('#oLogin').addEventListener('submit', async e => {
+  e.preventDefault();
+  if (!SRC.db) return;
+  const email = $('#oEmail').value.trim(), password = $('#oPass').value;
+  if (!email || !password) { $('#oLoginMsg').textContent = 'Escriba su correo y contraseña.'; return; }
+  $('#oLoginMsg').textContent = 'Entrando…';
+  const { error } = await SRC.db.auth.signInWithPassword({email, password});
+  $('#oLoginMsg').textContent = error ? 'Correo o contraseña incorrectos.' : '';
+  if (!error) $('#oPass').value = '';
+});
+$('#oLogout').addEventListener('click', async () => { if (SRC.db) await SRC.db.auth.signOut(); });
+
+/* ---------- toast ---------- */
+let toastT;
+function toast(msg){ const t = $('#toast'); t.textContent = msg; t.setAttribute('data-show',''); clearTimeout(toastT); toastT = setTimeout(() => t.removeAttribute('data-show'), 2400); }
+
+/* ---------- chatbot ---------- */
+const chat = $('#chat'), fab = $('#fab'), msgs = $('#msgs'), chatIn = $('#chatIn');
+let chatStarted = false;
+function toggleChat(open){
+  open = open ?? !chat.hasAttribute('data-open');
+  chat.toggleAttribute('data-open', open);
+  fab.setAttribute('aria-expanded', open);
+  fab.setAttribute('aria-label', open ? 'Cerrar el asistente' : 'Abrir el asistente');
+  if (open){
+    if (!chatStarted){ chatStarted = true; bot('¡Hola! Soy el asistente de Sport 3. Los precios, el horario de atención y la ubicación los tiene arriba en la página; aquí le ayudo con sus dudas sobre la reserva.', {chips: MAIN_CHIPS, instant:true}); }
+    setTimeout(() => chatIn.focus({preventScroll:true}), 60);
+  }
+}
+fab.addEventListener('click', () => toggleChat());
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && chat.hasAttribute('data-open')) { toggleChat(false); fab.focus(); } });
+chatIn.addEventListener('input', () => $('#chatSend').disabled = !chatIn.value.trim());
+$('#chatForm').addEventListener('submit', e => {
+  e.preventDefault(); const v = chatIn.value.trim(); if (!v) return;
+  chatIn.value = ''; $('#chatSend').disabled = true; userSay(v);
+});
+msgs.addEventListener('click', e => {
+  const c = e.target.closest('button.chip'); if (!c) return;
+  if (c.dataset.book){ const [sp, dk, h, n] = c.dataset.book.split('|'); bookFromChat(sp, dk, +h, +n); return; }
+  userSay(c.dataset.q || c.textContent);
+});
+const MAIN_CHIPS = ['¿Cómo pago?','¿Quedó confirmada mi reserva?','Cambiar mi horario','Cancelar mi reserva','Mi horario está lleno','Cumpleaños','Torneos'];
+function addMsg(cls, html){
+  const m = document.createElement('div'); m.className = 'm ' + cls; m.innerHTML = html; msgs.appendChild(m);
+  enter(m, {y:6, dur:200}); msgs.scrollTop = msgs.scrollHeight; return m;
+}
+function addChips(list){
+  const w = document.createElement('div'); w.className = 'acts';
+  list.forEach(c => {
+    let b;
+    if (c.href){ b = document.createElement('a'); b.href = c.href; b.target = '_blank'; b.rel = 'noopener'; }
+    else { b = document.createElement('button'); b.type = 'button'; }
+    b.className = 'chip' + (c.solid ? ' solid' : '') + (c.wa ? ' wa' : '');
+    if (typeof c === 'string'){ b.textContent = c; } else { b.textContent = c.label; if (c.book) b.dataset.book = c.book; if (c.q) b.dataset.q = c.q; }
+    w.appendChild(b);
+  });
+  msgs.appendChild(w); enter(w, {y:6, dur:200, delay:60}); msgs.scrollTop = msgs.scrollHeight;
+}
+function userSay(text){ addMsg('me', esc(text)); setTimeout(() => answer(text), 120); }
+function bot(html, {chips, instant} = {}){
+  if (instant){ addMsg('bot', html); if (chips) addChips(chips); return; }
+  const t = document.createElement('div'); t.className = 'm bot typing'; t.innerHTML = '<i></i><i></i><i></i>'; msgs.appendChild(t); msgs.scrollTop = msgs.scrollHeight;
+  setTimeout(() => { t.remove(); addMsg('bot', html); if (chips) addChips(chips); }, 280 + Math.min(320, html.length * 1.5));
+}
+const norm = s => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[¿?¡!.,;]/g,' ').replace(/\s+/g,' ').trim();
+const has = (t, ...ws) => ws.some(w => new RegExp('\\b' + w).test(t));
+function parseSport(t){ if (has(t,'wally','voley','voli','volei','vole')) return 'wally'; if (has(t,'futbol','fut','fulbito','fubito','soccer')) return 'futbol'; return null; }
+function parseHour(t){
+  const m = t.match(/\b(?:a las|las|a la|desde las|tipo|como a las)\s*(\d{1,2})(?::(\d{2}))?/) || t.match(/\b(\d{1,2}):(\d{2})\b/) || t.match(/\b(\d{1,2})\s*(?:pm|hrs|horas|de la noche|de la tarde)\b/);
+  if (!m) return null; let h = +m[1]; if (h <= 11) h += 12; return h;
+}
+function parseDay(t){
+  const base = today(), plus = n => { const d = new Date(base); d.setDate(d.getDate()+n); return d; };
+  if (has(t,'pasado manana')) return plus(2);
+  if (/\bmanana\b/.test(t) && !/\b(en|por|de) la manana\b/.test(t)) return plus(1);
+  if (has(t,'hoy','esta noche','esta tarde','ahorita')) return plus(0);
+  for (let i=0;i<7;i++){ if (new RegExp('\\b' + DIAS_N[i]).test(t)) return plus((i - base.getDay() + 7) % 7); }
+  const m = t.match(/\b(?:el|dia)\s+(\d{1,2})\b(?!\s*:)/) || t.match(/\b(\d{1,2}) de (enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)\b/);
+  if (m){ const mi = m[2] ? MESES.indexOf(m[2]) : base.getMonth(); return new Date(base.getFullYear(), mi, +m[1]); }
+  return null;
+}
+const dayName = d => { if (sameDay(d, today())) return 'hoy'; const t = new Date(today()); t.setDate(t.getDate()+1); return sameDay(d,t) ? 'mañana' : `el ${fmtShort(d)}`; };
+const listH = hs => hs.length === 1 ? hs[0] : hs.slice(0,-1).join(', ') + ' y ' + hs[hs.length-1];
+const freeHours = (d, s) => HOURS.filter(x => ['free','low'].includes(slotState(d, s, x).s)).map(hh);
+
+function availability(t){
+  if (SRC.mode === 'loading') return bot('Estoy cargando los horarios. Pregúnteme de nuevo en un momento.');
+  const sp = parseSport(t), h = parseHour(t), d = parseDay(t) || today(), end = monthEnd();
+  if (d < today()) return bot('Esa fecha ya pasó. ¿Qué otro día le interesa?');
+  if (!inWindow(d)) return bot(`En la web se puede reservar desde hoy hasta el ${end.getDate()} de ${MESES[end.getMonth()]}. ¿Le busco un horario dentro de esas fechas?`);
+  if (h !== null && (h < 15 || h > 21)) return bot('Atendemos de 15:00 a 22:00; el último turno empieza a las 21:00. ¿Le busco otro horario?');
+  const sports = sp ? [sp] : ['futbol','wally'], chips = [], lines = [];
+  sports.forEach(s => {
+    const name = SPORT[s].toLowerCase();
+    if (h !== null){
+      const st = slotState(d, s, h);
+      if (st.s === 'free' || st.s === 'low'){
+        const p = price(s,h);
+        lines.push(`${cap1(dayName(d))} a las ${hh(h)} hay ${name} disponible. Son Bs ${p} la hora; puede pagar con QR al reservar o en la cancha.`);
+        chips.push({label: sports.length > 1 ? `Reservar ${SPORT[s]} ${hh(h)}` : 'Reservar este horario', book:`${s}|${key(d)}|${h}|1`, solid:true});
+      } else {
+        const alt = freeHours(d, s);
+        lines.push(st.s === 'past' ? `Ese turno de hoy ya empezó.${alt.length ? ` Para ${name} quedan libres: ${listH(alt)}.` : ''}` :
+          `${cap1(dayName(d))} a las ${hh(h)} ${name} está todo reservado.${alt.length ? ` Quedan libres: ${listH(alt)}.` : ' Ese día ya no quedan horarios libres.'}`);
+        if (alt.length) chips.push({label:`Ver ${SPORT[s]} ${dayName(d)}`, book:`${s}|${key(d)}|0|0`});
+      }
+    } else {
+      const free = freeHours(d, s);
+      lines.push(free.length ? `${cap1(dayName(d))} hay ${name} libre a las ${listH(free)}.` : `${cap1(dayName(d))} ya no queda ${name} libre.`);
+      if (free.length) chips.push({label:`Ver ${SPORT[s]} ${dayName(d)}`, book:`${s}|${key(d)}|0|0`});
+    }
+  });
+  bot(lines.map(esc).join('<br><br>'), {chips: chips.length ? chips : null});
+}
+function bookFromChat(sp, dk, h, n){
+  toggleChat(false);
+  if (S.step !== 1) go(1);
+  setSport(sp, {silent:true});
+  S.date = fromKey(dk); renderDate();
+  S.sel = n ? [HOURS.indexOf(h), HOURS.indexOf(h)] : null;
+  keepSelIfValid(); renderSlots(true); renderSum();
+  slotsEl.scrollIntoView({behavior: reduce.matches ? 'auto' : 'smooth', block:'center'});
+  toast(n ? 'Horario elegido. Ahora elige la cancha.' : 'Estos son los horarios de ese día.');
+}
+function ownerChip(label, text){ return {label, href: waLink(text), wa:true}; }
+
+// Topics come from the Sport 3 report: what customers struggle with (confirmation, changes, full slots, payment).
+// Prices, opening hours and location are already on the page, so they are answered briefly, not offered as buttons.
+function lastLine(){
+  const r = S.last; if (!r) return '';
+  return `Su última reserva enviada desde aquí: <b>${SPORT[r.sport].toLowerCase()}, ${fmtShort(fromKey(r.date))}, de ${hh(r.from)} a ${hh(r.to)}</b>.`;
+}
+function ownerAboutLast(intro){
+  const r = S.last;
+  return ownerChip('Escribir al dueño', r ? `${intro} Es la de ${SPORT[r.sport]}, ${fmtLong(fromKey(r.date))}, de ${hh(r.from)} a ${hh(r.to)}, a nombre de ${r.nombre}.` : intro);
+}
+function alternatives(){
+  if (SRC.mode === 'loading') return bot('Estoy cargando los horarios. Pregúnteme de nuevo en un momento.');
+  const s = S.sport, want = S.sel ? HOURS[S.sel[0]] : null, out = [];
+  for (let i=0; i<7 && out.length < 5; i++){
+    const d = new Date(S.date); d.setDate(d.getDate()+i); if (!inWindow(d)) break;
+    let hs = HOURS.filter(x => ['free','low'].includes(slotState(d, s, x).s));
+    if (want !== null) hs.sort((a,b) => Math.abs(a-want) - Math.abs(b-want));
+    hs.slice(0, i === 0 ? 3 : 2).forEach(h => out.length < 5 && out.push({label:`${cap1(dayName(d))} ${hh(h)}`, book:`${s}|${key(d)}|${h}|1`}));
+  }
+  if (!out.length) return bot(`No encontré horarios libres de ${SPORT[s].toLowerCase()} en los próximos días dentro de este mes. Puede probar con ${s === 'futbol' ? 'wally' : 'fútbol 6'} o escribirle al dueño.`, {chips:[ownerChip('Escribir al dueño','Hola, busco un horario en Sport 3 y la web muestra todo ocupado.')]});
+  bot(`Estos son los horarios de ${SPORT[s].toLowerCase()} libres más cercanos${want !== null ? ` a las ${hh(want)}` : ''}. Toque uno y queda elegido en el formulario.`, {chips: out});
+}
+
+const R = {
+  precios: 'Cada hora muestra su precio en la lista de Horarios. Fútbol 6: Bs 120 hasta las 19:00 y Bs 150 desde las 19:00. Wally: Bs 60 la hora. Si su reserva cruza las 19:00, cada hora se cobra con su tarifa.',
+  como: 'Elija el deporte, la fecha, una hora disponible y la cancha, y toque <b>Reservar esta cancha</b>. En el resumen deje su nombre y celular, elija cómo pagar y toque <b>Confirmar reserva</b>: se abre un chat con el dueño con su reserva ya escrita.',
+  pago: 'Puede pagar de dos formas: <b>con QR al reservar</b> (envía la captura del comprobante en el chat de WhatsApp y su cancha queda asegurada) o <b>en la cancha</b>, en efectivo o QR. Si elige pagar en la cancha: pasados 15 minutos de la hora reservada sin pago ni llegada, la cancha vuelve a quedar disponible para otros clientes.',
+  confirma: 'Su reserva queda confirmada cuando el dueño le responde por WhatsApp, en el mismo chat donde la envió. Hasta ese momento el horario no está apartado.<br><br>Si no tiene respuesta, revise que el mensaje se haya enviado; si no, vuelva a enviarlo desde la pantalla final. Si el horario se ocupó justo antes, el dueño le ofrece otro.',
+  cambio: 'Para cambiar el horario, escríbale al dueño por WhatsApp, en el mismo chat donde envió la reserva, hasta las 12:00 del día del partido. Si hay espacio, se lo cambia; si pasa a la noche, se cobra con la tarifa de noche.',
+  cancelar: 'Para cancelar, avísele al dueño por WhatsApp, en el mismo chat donde envió la reserva, hasta las 12:00 del día del partido. Así la cancha queda libre para otro equipo. Después de las 12:00 la reserva sigue en pie.',
+  cumple: 'Para cumpleaños reservamos mínimo 3 horas seguidas, con los mismos precios. Como cerramos a las 22:00, el último inicio posible es a las 19:00. Fútbol de 19:00 a 22:00: Bs 450; wally 3 horas: Bs 180. Al reservar, marque <b>Es para un cumpleaños</b>.',
+  clima: 'Si llueve se juega igual: las canchas de wally son techadas y las de fútbol no. Si hay granizo o tormenta, el dueño cancela la reserva y le avisa por WhatsApp.',
+  tarde: 'Si eligió pagar en la cancha y no llega, pasados 15 minutos de la hora reservada la cancha vuelve a quedar disponible para otros clientes. El horario termina a la hora reservada.',
+  ubic: 'Estamos en el barrio Miraflores, en Tarija. Al terminar su reserva le mostramos el mapa y el botón Cómo llegar.',
+  horario: 'Atendemos todos los días de 15:00 a 22:00, en turnos de una hora; en la web se reserva hasta fin de mes. Las tardes de 15:00 a 18:00 y las noches de 19:00 a 22:00 se llenan rápido, sobre todo los fines de semana.',
+  canchas: 'Tenemos 3 canchas de fútbol 6 de césped sintético, sin techo, para equipos de 5 o 6 jugadores, y 3 canchas de wally techadas, para equipos de hasta 5. Al reservar elige la cancha que prefiera.',
+  servicios: 'No tengo ese dato confirmado. Para no darle información equivocada, pregúntele directamente al dueño.',
+  bebidas: 'Las bebidas y otras consultas se atienden directamente en el complejo.',
+  extra: 'La hora adicional se pide en la cancha, si la hora siguiente está libre. Ahí le indican el precio.',
+  fijas: 'No hay reservas fijas: los equipos que juegan cada semana reservan aquí como cualquier cliente, para que nadie bloquee un horario que quizá no use.',
+  redes: 'Encuentre a Sport 3 en Instagram como <b>@sport3_bo</b> y en Facebook como <b>sport3tarija</b>.',
+  resena: '¡Gracias por jugar con nosotros! Su opinión en Google Maps ayuda a otros equipos a encontrarnos.',
+  gracias: '¡Con gusto! Lo esperamos en Sport 3.',
+  hola: '¡Hola! ¿En qué le puedo ayudar con su reserva?',
+  fallback: 'No tengo esa información. Puede escribirle al dueño por WhatsApp, o elegir una de estas dudas frecuentes.'
+};
+
+function answer(raw){
+  const t = norm(raw);
+  if (has(t,'torneo','campeonato','liga')) return bot('¡Qué bueno! Los torneos los coordina directamente el dueño. Escríbale por WhatsApp y él le responde.', {chips:[ownerChip('Escribir al dueño', 'Hola, quiero organizar un torneo en Sport 3.')]});
+  if (has(t,'varias canchas','dos canchas','las tres','tres canchas','2 canchas','3 canchas','todas las canchas')) return bot('Las reservas de varias canchas a la vez las coordina el dueño. Escríbale por WhatsApp.', {chips:[ownerChip('Escribir al dueño', 'Hola, quiero reservar varias canchas a la vez en Sport 3.')]});
+  if (has(t,'descuento','rebaja','promo','precio especial','mas barato')) return bot('Los precios especiales los ve directamente el dueño. Escríbale por WhatsApp.', {chips:[ownerChip('Escribir al dueño', 'Hola, quería consultar por un precio especial en Sport 3.')]});
+  if (has(t,'cancel','anular','no puedo ir','no vamos','no podemos ir')) return bot([R.cancelar, lastLine()].filter(Boolean).join('<br><br>'), {chips:[ownerAboutLast('Hola, quiero cancelar mi reserva en Sport 3.')]});
+  if (has(t,'cambiar','cambio','reprogram','mover mi','pasar mi')) return bot([R.cambio, lastLine()].filter(Boolean).join('<br><br>'), {chips:[ownerAboutLast('Hola, quiero cambiar el horario de mi reserva en Sport 3.')]});
+  if (has(t,'confirm','quedo','registr','llego mi','recibio','estado','respuesta','no me respond','no responde','firme','seguro')) return bot([R.confirma, lastLine()].filter(Boolean).join('<br><br>'), {chips: S.last ? [ownerAboutLast('Hola, quería confirmar mi reserva en Sport 3.')] : null});
+  if (has(t,'lleno','esta lleno','no hay','otra opcion','otras opciones','alternativ','todo ocupado','todo reservado')) return alternatives();
+  if (has(t,'pago','pagar','qr','efectivo','tarjeta','transferencia','anticipo','adelanto','comprobante')) return bot(R.pago);
+  const wantsAvail = has(t,'libre','disponib','hay cancha','hay espacio','hay lugar','ocupad','puedo reservar','quiero reservar','reservar para','quiero la cancha','quiero cancha','hay turno','hay horario');
+  const hasWhen = parseHour(t) !== null || parseDay(t) !== null;
+  if (has(t,'cumple')) return bot(R.cumple, {chips:[{label:'Ver horarios libres', q:'que horarios hay libres hoy'}]});
+  if (wantsAvail || (hasWhen && (parseSport(t) || has(t,'hay','cancha')))) return availability(t);
+  if (has(t,'vestuario','ducha','bano','parqueo','estacionamiento','parking','pelota','pechera','iluminacion','seguridad','wifi','kiosko','kiosco')) return bot(R.servicios, {chips:[ownerChip('Preguntar al dueño', 'Hola, tengo una consulta sobre las instalaciones de Sport 3.')]});
+  if (has(t,'jugadores','personas','cuantos juegan','equipo de')) return bot(R.canchas);
+  if (has(t,'precio','cuanto','costo','cuesta','tarifa','vale','cobran')) return bot(R.precios);
+  if (has(t,'lluvia','llueve','granizo','tormenta','clima')) return bot(R.clima);
+  if (has(t,'tarde','retras','tolerancia')) return bot(R.tarde);
+  if (has(t,'instagram','facebook','redes','tiktok')) return bot(R.redes, {chips:[{label:'Instagram', href:'https://www.instagram.com/sport3_bo/'}, {label:'Facebook', href:'https://www.facebook.com/sport3tarija'}]});
+  if (has(t,'resena','opinion','calific','estrellas','comentario')) return bot(R.resena, {chips:[{label:'Dejar una reseña', href:`https://search.google.com/local/writereview?placeid=${MAP.place}`, solid:true}]});
+  if (has(t,'como reserv','reservo','reservar','reserva')) return bot(R.como);
+  if (has(t,'ubic','direccion','donde','como llego','mapa')) return bot(R.ubic, {chips:[{label:'Cómo llegar', href: MAP.dir, solid:true}]});
+  if (has(t,'horario','abren','atienden','cierran','hasta que hora','a que hora')) return bot(R.horario);
+  if (has(t,'cancha','cesped','techad','sintetic')) return bot(R.canchas);
+  if (has(t,'bebida','gaseosa','agua','cerveza','comida','venden')) return bot(R.bebidas);
+  if (has(t,'hora extra','hora adicional','mas tiempo','extender')) return bot(R.extra);
+  if (has(t,'cada semana','fija','semanal','todos los')) return bot(R.fijas);
+  if (has(t,'gracias','genial','perfecto','ok')) return bot(R.gracias);
+  if (has(t,'hola','buenas','buen dia','buenos')) return bot(R.hola, {chips: MAIN_CHIPS});
+  bot(R.fallback, {chips: [ownerChip('Escribir al dueño', 'Hola, tengo una consulta sobre Sport 3.'), ...MAIN_CHIPS]});
+}
+
+/* ---------- map ----------
+   On the real site this shows Google's interactive map. Where embedding is blocked (this preview),
+   the page keeps a drawn map with the pin and the Google Maps links. */
+const MAP = {
+  lat:-21.5482768, lng:-64.7324257, place:'ChIJJSby6u5HBpQRX_ms7SW84RM',
+  get open(){ return `https://www.google.com/maps/search/?api=1&query=Sport3%20Tarija&query_place_id=${this.place}`; },
+  get dir(){ return `https://www.google.com/maps/dir/?api=1&destination=${this.lat},${this.lng}&destination_place_id=${this.place}`; },
+  get embed(){ return `https://www.google.com/maps?q=${this.lat},${this.lng}&z=16&hl=es&output=embed`; }
+};
+function drawQR(){
+  if (QR_IMG){ const im = $('#qrImg'); im.src = QR_IMG; im.hidden = false; $('#qrCanvas').hidden = true; return; }
+  const c = $('#qrCanvas'), x = c.getContext('2d'); let seed = 11; const rnd = () => (seed = (seed*16807) % 2147483647) / 2147483647;
+  x.fillStyle = '#fff'; x.fillRect(0,0,29,29); x.fillStyle = '#1F1A15';
+  for (let i=0;i<29;i++) for (let j=0;j<29;j++) if (rnd() > .5) x.fillRect(i,j,1,1);
+  [[1,1],[21,1],[1,21]].forEach(([a,b]) => { x.fillStyle='#1F1A15'; x.fillRect(a,b,7,7); x.fillStyle='#fff'; x.fillRect(a+1,b+1,5,5); x.fillStyle='#1F1A15'; x.fillRect(a+2,b+2,3,3); });
+}
+function drawMap(){
+  const c = $('#mapCanvas'), box = $('#map'); if (!c || !box.clientWidth) return;
+  const dpr = Math.min(2, window.devicePixelRatio || 1), W = box.clientWidth, H = box.clientHeight;
+  c.width = W*dpr; c.height = H*dpr; const x = c.getContext('2d'); x.scale(dpr, dpr);
+  x.fillStyle = '#EEE6D7'; x.fillRect(0,0,W,H);
+  let seed = 7; const rnd = () => (seed = (seed*16807) % 2147483647) / 2147483647;
+  x.save(); x.translate(W/2, H*.42); x.rotate(-0.21); x.translate(-W/2, -H*.42);
+  // blocks
+  for (let gx=-W; gx<W*2; gx+=58) for (let gy=-H; gy<H*2; gy+=46){
+    x.fillStyle = rnd() < .12 ? '#D5E6C8' : (rnd() < .5 ? '#F6F0E6' : '#F2EADC');
+    x.beginPath(); x.roundRect(gx+5, gy+5, 48, 36, 4); x.fill();
+  }
+  x.restore();
+  // avenues
+  x.lineCap = 'round';
+  const road = (pts, w, col) => { x.strokeStyle = col; x.lineWidth = w; x.beginPath(); pts.forEach(([a,b],i) => i ? x.lineTo(a,b) : x.moveTo(a,b)); x.stroke(); };
+  road([[-20,H*.78],[W*.45,H*.52],[W+20,H*.3]], 14, '#FFFFFF');
+  road([[-20,H*.78],[W*.45,H*.52],[W+20,H*.3]], 8, '#F7D9AE');
+  road([[W*.18,-20],[W*.3,H+20]], 9, '#FFFFFF');
+  road([[W*.74,-20],[W*.66,H+20]], 9, '#FFFFFF');
+  // the complex: a green field next to the pin
+  x.save(); x.translate(W/2, H*.42+8); x.rotate(-0.21);
+  x.fillStyle = '#8CC57A'; x.beginPath(); x.roundRect(-34,-4,68,40,6); x.fill();
+  x.strokeStyle = 'rgba(255,255,255,.85)'; x.lineWidth = 1.5; x.strokeRect(-30,0,60,32); x.beginPath(); x.moveTo(0,0); x.lineTo(0,32); x.stroke();
+  x.restore();
+}
+function initMap(){
+  $('#mapOpen').href = MAP.open; $('#mapGo').href = MAP.dir;
+  drawMap(); window.addEventListener('resize', drawMap);
+  const box = $('#map');
+  const f = document.createElement('iframe');
+  f.title = 'Mapa de Sport 3 en Google Maps'; f.loading = 'lazy'; f.referrerPolicy = 'no-referrer-when-downgrade';
+  let blocked = false;
+  document.addEventListener('securitypolicyviolation', e => {
+    if (/google/.test(e.blockedURI || '') || e.violatedDirective?.startsWith('frame-src') || e.violatedDirective?.startsWith('child-src')) { blocked = true; f.remove(); box.classList.remove('live'); }
+  });
+  f.addEventListener('load', () => { if (!blocked) setTimeout(() => { if (!blocked && f.isConnected){ f.classList.add('ready'); box.classList.add('live'); $('#mapOpen').hidden = true; } }, 400); });
+  f.src = MAP.embed;
+  box.insertBefore(f, $('#mapOpen'));
+}
+
+
+/* Formularios: se envían por script para que funcionen también en visores que bloquean el envío nativo (vista previa, apps) */
+document.addEventListener('click', e => {
+  const b = e.target.closest('button[type="submit"]'); if (!b || !b.form) return;
+  e.preventDefault(); b.form.dispatchEvent(new Event('submit', {cancelable:true, bubbles:true}));
+});
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Enter' || e.isComposing) return;
+  const t = e.target; if (!(t instanceof HTMLInputElement) || !t.form || ['checkbox','radio','button','submit'].includes(t.type)) return;
+  e.preventDefault(); t.form.dispatchEvent(new Event('submit', {cancelable:true, bubbles:true}));
+});
+/* ---------- boot ---------- */
+renderDate(); renderSlots(false); renderSum();
+initMap();
+connect();
+setInterval(() => { if (S.step === 1 && !document.hidden && SRC.mode !== 'loading') { keepSelIfValid(); renderSlots(false); renderSum(); } }, 60000);
+})();
+
+</script>
+<script>
+/* Propuesta v2: marca los turnos de noche, avisa dónde se encienden las luces
+   y cuenta en la portada cuántos horarios quedan libres. Solo decora lo que ya dibuja app.js. */
+(() => {
+  const slots = document.getElementById('slots');
+  const hero = document.getElementById('hoy');
+  const FOCO = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="7" rx="1"/><path d="M9.7 3v7M14.3 3v7M5 6.5h14"/><path d="M12 10v11M8.5 21h7"/></svg>';
+  let busy = false;
+  function decorar(){
+    if (busy) return; busy = true;
+    const sport = (document.querySelector('.sp[aria-checked="true"] b')?.textContent.trim() || 'Fútbol 6').replace(/ /g, '\u00a0');
+    let primeraNoche = null;
+    slots.querySelectorAll('.slot').forEach(b => {
+      const h = parseInt(b.querySelector('.t')?.textContent, 10);
+      const noche = h >= 19;
+      b.classList.toggle('noche', noche);
+      if (noche && !primeraNoche) primeraNoche = b;
+    });
+    slots.querySelectorAll('.luces').forEach(n => n.remove());
+    if (primeraNoche){
+      const n = document.createElement('p'); n.className = 'luces';
+      n.innerHTML = FOCO + (sport.startsWith('Wally')
+        ? '<span>Desde las 19:00 se juega <b>con luces</b>.</span>'
+        : '<span>Desde las 19:00 se juega <b>con luces</b>: la hora cuesta Bs 150.</span>');
+      slots.insertBefore(n, primeraNoche);
+    }
+    const libres = slots.querySelectorAll('.slot:not(:disabled)').length;
+    const dia = (document.getElementById('dateTag')?.textContent.trim() || '');
+    const cuando = /hoy/i.test(dia) ? 'Hoy' : /mañana/i.test(dia) ? 'Mañana' : (document.getElementById('dateTxt')?.textContent.trim().replace(/,.*$/, '') || 'Ese día');
+    if (hero) hero.innerHTML = libres
+      ? `${cuando} quedan <b>${libres} ${libres === 1 ? 'horario libre' : 'horarios libres'}</b> de ${sport.toLowerCase()}.`
+      : `${cuando} ya no quedan horarios de ${sport.toLowerCase()}. Prueba otro día.`;
+    busy = false;
+  }
+  const propio = n => n.nodeType === 1 && n.classList.contains('luces');
+  new MutationObserver(recs => {
+    // no reaccionar a los avisos que inserta este mismo script
+    if (recs.every(r => r.type === 'childList' && [...r.addedNodes, ...r.removedNodes].every(propio))) return;
+    decorar();
+  }).observe(slots, {childList:true, subtree:true, attributes:true, attributeFilter:['disabled']});
+  new MutationObserver(decorar).observe(document.getElementById('dateTxt'), {childList:true, characterData:true, subtree:true});
+  decorar();
+})();
+
+</script>
+</body>
+</html>

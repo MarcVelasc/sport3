@@ -1,0 +1,90 @@
+/* =====================================================================
+   Propuesta v2 «Partido de noche» · se suma a tema-cancha.css
+   Idea: en Sport 3 se juega sobre todo de noche. La página cuenta el día:
+   la planilla de horarios pasa de la tarde a la noche y desde las 19:00
+   se encienden las luces (por eso sube el precio). La reserva termina en un pase.
+   ===================================================================== */
+:root{
+  --night:#0B2A20;       /* cancha de noche */
+  --night-2:#113629;
+  --flood:#FFF1C9;       /* luz de reflector */
+  --dusk:#F4EFE3;
+}
+
+/* portada: dos reflectores encendidos sobre la cancha */
+.band{
+  background-image:
+    radial-gradient(ellipse 60% 70% at 100% -12%,rgba(255,241,201,.34),rgba(255,241,201,0) 62%),
+    radial-gradient(ellipse 45% 55% at 0% -18%,rgba(255,241,201,.16),rgba(255,241,201,0) 60%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='760' height='440' viewBox='0 0 760 440' fill='none' stroke='%23F7F9F4' stroke-opacity='.22' stroke-width='3'%3E%3Crect x='40' y='30' width='680' height='380' rx='4'/%3E%3Cpath d='M380 30v380'/%3E%3Ccircle cx='380' cy='220' r='70'/%3E%3Ccircle cx='380' cy='220' r='4' fill='%23F7F9F4' fill-opacity='.4'/%3E%3Crect x='40' y='120' width='90' height='200'/%3E%3Crect x='630' y='120' width='90' height='200'/%3E%3C/svg%3E"),
+    repeating-linear-gradient(90deg,rgba(255,255,255,.035) 0 48px,transparent 48px 96px);
+  background-position:0 0,0 0,right -260px top 34px,0 0;
+  background-repeat:no-repeat,no-repeat,no-repeat,repeat;
+  background-size:auto,auto,760px 440px,auto;
+  background-color:var(--night-2);
+}
+.intro h1{font-size:76px;max-width:none}
+/* disponibilidad de hoy, en vivo, en la portada */
+.hoy{margin:6px 0 0;max-width:32ch;font-family:var(--f-display);font-size:24px;font-weight:600;line-height:1.15;color:var(--chalk)}
+.hoy b{font-weight:700;color:#fff;box-shadow:inset 0 -.32em 0 rgba(242,107,29,.85);padding:0 .05em}
+.abierto{font-weight:500;color:rgba(247,249,244,.8);font-size:14.5px}
+
+/* ---------- la planilla: de la tarde a la noche ---------- */
+.slot{transition:background-color 200ms ease,border-color 150ms ease}
+.slot.noche{background:var(--night);border-color:var(--night)}
+.slot.noche .t{color:var(--chalk)}
+.slot.noche .t i{color:rgba(247,249,244,.66)}
+.slot.noche .p{color:var(--flood)}
+.slot.noche .st{background:rgba(155,227,180,.14);color:#A6EBBE}
+.slot.noche:disabled{background:repeating-linear-gradient(135deg,#1A3B30 0 8px,#163428 8px 16px);border-color:transparent}
+.slot.noche:disabled .t,.slot.noche:disabled .t i,.slot.noche:disabled .p,.slot.noche:disabled .st{color:rgba(247,249,244,.42)}
+.slot.noche.res .t{text-decoration-color:rgba(247,249,244,.5)}
+@media (hover:hover) and (pointer:fine){.slot.noche:hover:not(:disabled):not([aria-pressed="true"]){border-color:var(--flood)}}
+.slot.noche:active:not(:disabled):not([aria-pressed="true"]){background:var(--night-2)}
+.slot.noche[aria-pressed="true"]{border-color:var(--orange)}
+.slot.noche[aria-pressed="true"] .p{color:#fff}
+/* el aviso donde se encienden las luces */
+.luces{display:flex;align-items:center;gap:10px;margin:6px 0 0;padding:12px 14px;border-radius:14px 14px 4px 4px;
+  background:linear-gradient(180deg,rgba(11,42,32,0) 0%,rgba(11,42,32,.08) 100%);
+  font-size:14.5px;line-height:1.35;color:var(--ink)}
+.luces svg{flex:none;color:#C98A00}
+.luces b{font-weight:600}
+
+/* ---------- canchas: la elegida se «pinta» al tocarla ---------- */
+.court.on::after{animation:circulo 320ms var(--ease-out)}
+.court.on::before{animation:linea 320ms var(--ease-out)}
+@keyframes circulo{from{transform:translate(-50%,-50%) scale(.2);opacity:0}to{transform:translate(-50%,-50%) scale(1);opacity:1}}
+@keyframes linea{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+
+/* ---------- la reserva como pase de entrada ---------- */
+.dl{
+  position:relative;background:var(--night);border:0;border-radius:18px;padding:18px 18px 20px;color:var(--chalk);
+  -webkit-mask:radial-gradient(circle 11px at 0 calc(100% - 58px),#0000 98%,#000) left/51% 100% no-repeat,
+               radial-gradient(circle 11px at 100% calc(100% - 58px),#0000 98%,#000) right/51% 100% no-repeat;
+          mask:radial-gradient(circle 11px at 0 calc(100% - 58px),#0000 98%,#000) left/51% 100% no-repeat,
+               radial-gradient(circle 11px at 100% calc(100% - 58px),#0000 98%,#000) right/51% 100% no-repeat;
+}
+.dl::after{content:"";position:absolute;left:18px;right:18px;bottom:57px;border-top:2px dashed rgba(247,249,244,.22)}
+.dl dt{color:rgba(247,249,244,.62)}
+.dl dd{color:var(--chalk)}
+.dl dd.hi{color:var(--chalk)}
+.dl dt:last-of-type,.dl dd:last-of-type{padding-top:18px}
+.tick{background:var(--orange);color:#fff}
+
+/* la barra de abajo también es de noche */
+.dock{background:var(--night)}
+
+@media (max-width:420px){
+  .intro h1{font-size:66px}
+  .hoy{font-size:22px}
+  .band{background-image:
+      radial-gradient(ellipse 80% 60% at 100% -12%,rgba(255,241,201,.34),rgba(255,241,201,0) 62%),
+      radial-gradient(ellipse 60% 50% at 0% -18%,rgba(255,241,201,.16),rgba(255,241,201,0) 60%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='760' height='440' viewBox='0 0 760 440' fill='none' stroke='%23F7F9F4' stroke-opacity='.22' stroke-width='3'%3E%3Cpath d='M380 0v440'/%3E%3Ccircle cx='380' cy='220' r='70'/%3E%3Ccircle cx='380' cy='220' r='4' fill='%23F7F9F4' fill-opacity='.4'/%3E%3C/svg%3E"),
+      repeating-linear-gradient(90deg,rgba(255,255,255,.035) 0 48px,transparent 48px 96px);
+    background-position:0 0,0 0,right -340px top 120px,0 0}
+}
+@media (prefers-reduced-motion:reduce){.court.on::after,.court.on::before{animation:none}}
+
+/* botón apagado dentro de la barra de noche */
+main .dock .primary:disabled{background:rgba(247,249,244,.1);color:rgba(247,249,244,.5)}
