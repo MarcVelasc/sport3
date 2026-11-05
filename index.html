@@ -24,14 +24,24 @@
     <a class="brand" href="#" id="home" aria-label="Sport 3, inicio"><img src="img/logo.png" alt="Sport 3"></a>
   </header>
   <div class="intro" id="intro">
-    <h1 id="t1">Reserva <span>tu cancha</span></h1>
+    <h1 id="t1">Fútbol y wally <span>en un solo lugar</span></h1>
+    <p class="hsub">Tu cancha, reservada desde el celular.</p>
     <div class="hero-chips"><span class="hchip"><i></i>Todos los días · 15:00 a 22:00</span><span class="hchip">Fútbol 6 y wally</span><span class="hchip zona"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>Miraflores, Tarija</span></div>
+    <div class="proof">
+      <a class="pr-rate" href="https://www.google.com/maps/search/?api=1&amp;query=Sport3%20F729%2BM2P%20Tarija" target="_blank" rel="noopener" aria-label="Sport 3 en Google Maps: 4,5 de 5 con 194 opiniones"><svg width="15" height="15" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2.8l2.8 5.9 6.4.8-4.7 4.4 1.2 6.4L12 17.2l-5.7 3.1 1.2-6.4-4.7-4.4 6.4-.8z"/></svg><b>4,5</b><span>· 194 opiniones en Google Maps</span></a>
+      <div class="pics">
+        <a href="img/cancha-dia.jpg" target="_blank" rel="noopener"><img src="img/cancha-dia.jpg" alt="Canchas de fútbol 6 de Sport 3 de día" loading="lazy"></a>
+        <a href="img/cancha-red.jpg" target="_blank" rel="noopener"><img src="img/cancha-red.jpg" alt="Cancha de Sport 3 con red y reflectores" loading="lazy"></a>
+        <a href="img/cancha-noche.jpg" target="_blank" rel="noopener"><img src="img/cancha-noche.jpg" alt="Partido nocturno en Sport 3" loading="lazy"></a>
+      </div>
+    </div>
   </div>
 </div>
 
 <main>
   <!-- STEP 1: choose -->
   <section class="step" id="step1" aria-labelledby="t1">
+    <p class="lead1">Elige deporte, día y hora. Mira qué canchas están libres y apártala al instante: el dueño te confirma por WhatsApp.</p>
     <div class="block">
       <div class="bh"><span class="num">1</span><h3>Deporte</h3></div>
       <p class="cta">Elige qué vas a <b>jugar hoy</b>: fútbol 6 o wally.</p>
@@ -94,9 +104,9 @@
       <div class="inp"><label for="celular">Celular (WhatsApp)</label><div class="pre"><span>+591</span><input id="celular" inputmode="numeric" autocomplete="tel-national" placeholder="7XXXXXXX" maxlength="8"></div></div>
       <fieldset class="paysel">
         <legend>¿Cómo vas a pagar?</legend>
-        <label class="payopt"><input type="radio" name="pago" value="qr"><span><b>Pagar ahora con QR</b><small>Tu cancha queda asegurada.</small></span></label>
-        <label class="payopt"><input type="radio" name="pago" value="cancha"><span><b>Pagar en la cancha</b><small>Efectivo o QR al llegar.</small></span></label>
-        <p class="warnbox" id="warnCancha" hidden>Pasados 15 minutos de la hora reservada sin pago ni llegada, la cancha vuelve a quedar disponible para otros clientes.</p>
+        <label class="payopt"><input type="radio" name="pago" value="qr"><span><b>Pagar ahora con QR</b><small>Envías el comprobante por WhatsApp.</small></span></label>
+        <label class="payopt"><input type="radio" name="pago" value="cancha"><span><b>Pagar al llegar</b><small>Para quien prefiere efectivo. También QR en la cancha.</small></span></label>
+        <p class="warnbox" id="warnCancha" hidden>Si tu equipo no llega dentro de los 15 minutos desde la hora reservada, la cancha se libera para otros clientes.</p>
       </fieldset>
       <label class="check"><input type="checkbox" id="cumple"><span>Es para un cumpleaños<small>Los cumpleaños se reservan con mínimo 3 horas seguidas.</small></span></label>
       <p class="err" id="err2" hidden></p>
@@ -109,7 +119,7 @@
     <button type="button" class="back" data-go="2"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>Cambiar datos</button>
     <div class="done">
       <h2 id="t3">Envía tu <span>reserva</span></h2>
-      <p class="note">Se abre un chat con el dueño con tu reserva ya escrita. Solo tienes que tocar enviar.</p>
+      <p class="note">Se abre WhatsApp con tu reserva ya escrita. Solo tienes que tocar enviar.</p>
       <p class="note hold" id="holdNote" hidden>Tu cancha queda apartada 2 horas. Envía el mensaje para que el dueño la confirme.</p>
     </div>
     <dl class="dl" id="dl3"></dl>
@@ -128,7 +138,7 @@
     <div class="done">
       <div class="tick"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path id="tickPath" d="M5 12.5 10 17.5 19 7"/></svg></div>
       <h2 id="t4">Reserva <span>enviada</span></h2>
-      <p class="note">El dueño te confirma por WhatsApp. Tu reserva queda firme con esa confirmación.</p>
+      <p class="note">Tu cancha queda apartada 2 horas. Cuando el dueño la confirme te llega el aviso por WhatsApp, y desde ahí queda firme.</p>
     </div>
     <dl class="dl" id="dl4"></dl>
     <p class="warnbox" id="warn4" hidden></p>

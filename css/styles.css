@@ -479,3 +479,27 @@ body:has(#owner:not([hidden])) #fab{display:none}
 .btn2.fbig{display:flex;align-items:center;justify-content:center;font-weight:700}
 .fno{color:var(--bad)}
 .fall{display:block;text-align:center;margin-top:14px;color:var(--accent-ink);font-weight:600}
+
+/* ===== Correcciones del docente ===== */
+/* propuesta de valor */
+.hsub{margin:-4px 0 0;font-size:17px;font-weight:500;color:rgba(255,255,255,.92);text-shadow:0 1px 10px rgba(0,0,0,.45)}
+.lead1{margin:0 0 4px;font-size:15px;line-height:1.45;color:#5C4A38}
+/* calificación de Google Maps y fotos reales */
+.proof{display:flex;flex-direction:column;gap:10px}
+.pr-rate{display:inline-flex;align-items:center;gap:6px;align-self:flex-start;color:#fff;text-decoration:none;font-size:14px;
+  background:rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.22);border-radius:999px;padding:6px 12px}
+.pr-rate svg{color:#FFC24B}
+.pr-rate b{font-size:15px}
+.pr-rate span{color:rgba(255,255,255,.85)}
+.pics{display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:8px}
+.pics a{display:block;border-radius:14px;overflow:hidden;border:1.5px solid rgba(255,255,255,.35);height:150px}
+.pics img{width:100%;height:100%;object-fit:cover;display:block}
+/* botón principal siempre a la vista en el resumen y al enviar */
+#form2 > button[type="submit"],#btnWa{position:sticky;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:5}
+#form2 > button[type="submit"]{box-shadow:0 10px 26px rgba(229,123,55,.38)}
+#btnWa{box-shadow:0 10px 26px rgba(31,157,85,.38)}
+@media (max-width:600px){
+  body:has(#step2:not([hidden])) .fab,body:has(#step3:not([hidden])) .fab{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+  body:has(#step2:not([hidden])) .chat,body:has(#step3:not([hidden])) .chat{bottom:calc(154px + env(safe-area-inset-bottom,0px))}
+}
+@media (max-width:600px){ .pics a{height:78px} }

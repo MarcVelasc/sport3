@@ -108,7 +108,7 @@ async function mensajeCliente(from: string, body: string) {
   r.wa_cliente = r.wa_cliente || from;
   if (r.estado === "confirmada") return texto(from, `Tu reserva ${r.codigo} ya está confirmada: ${resumen(r)}. ¡Te esperamos!`);
   if (r.estado === "cancelada") return texto(from, `La reserva ${r.codigo} está cancelada. Puedes hacer otra aquí: ${PAGINA}`);
-  await texto(from, `Recibimos tu reserva ${r.codigo}: ${resumen(r)}.\nEl dueño te confirma en un momento por aquí.${r.pago === "qr" ? "\nPuedes enviar tu comprobante de pago en este chat." : ""}`);
+  await texto(from, `Recibimos tu reserva ${r.codigo}: ${resumen(r)}.\nTu cancha queda apartada 2 horas mientras el dueño la confirma; te avisamos por aquí.${r.pago === "qr" ? "\nPuedes enviar tu comprobante de pago en este chat." : ""}`);
   await avisoDueno(r);
 }
 
@@ -146,7 +146,7 @@ async function botonDueno(id: string) {
       if (choca) return texto(DUENO, `No se puede confirmar ${r.codigo}: pasaron más de ${PEND_HORAS} horas y esa cancha ya la tomó otra reserva. Avísale a ${r.nombre} (${r.celular}).`);
     }
     await db.from("reservas").update({ estado: "confirmada" }).eq("id", r.id);
-    await texto(clienteWa(r), `Hola ${r.nombre}, tu reserva en Sport 3 está confirmada: ${resumen(r)}. ¡Te esperamos!`);
+    await texto(clienteWa(r), `Hola ${r.nombre}, tu reserva en Sport 3 está confirmada: ${resumen(r)}.${r.pago === "cancha" && !r.pagado ? " Pagas al llegar; hay 15 minutos de tolerancia desde la hora reservada." : ""} ¡Te esperamos!`);
     return texto(DUENO, `Listo. ${r.codigo} confirmada y ya le avisé a ${r.nombre}.`);
   }
   if (accion === "pago") {
@@ -194,6 +194,20 @@ Deno.serve(async (req) => {
     if (url.searchParams.get("hub.mode") === "subscribe" && url.searchParams.get("hub.verify_token") === VERIFY && VERIFY) {
       return new Response(url.searchParams.get("hub.challenge") ?? "", { status: 200 });
     }
+    // Diagnóstico (protegido con VERIFY_TOKEN): ?diag=1&clave=…&waba=ID
+    //   · conecta la cuenta de WhatsApp (WABA) con la app para que Meta mande los mensajes
+    //   · revisa que el token funcione
+    if (url.searchParams.get("diag") && url.searchParams.get("clave") === VERIFY && VERIFY) {
+      const waba = (url.searchParams.get("waba") ?? "").replace(/\D/g, "");
+      const auth = { Authorization: `Bearer ${TOKEN}` };
+      const out: Record<string, unknown> = { secrets: { WHATSAPP_TOKEN: !!TOKEN, WHATSAPP_PHONE_ID: PHONE_ID, DUENO_WA: DUENO, PAGINA_URL: PAGINA } };
+      out.numero = await (await fetch(`${GRAPH}/${PHONE_ID}?fields=display_phone_number,verified_name`, { headers: auth })).json();
+      if (waba) {
+        out.suscribir = await (await fetch(`${GRAPH}/${waba}/subscribed_apps`, { method: "POST", headers: auth })).json();
+        out.apps_suscritas = await (await fetch(`${GRAPH}/${waba}/subscribed_apps`, { headers: auth })).json();
+      }
+      return Response.json(out);
+    }
     return new Response("Sport 3 bot", { status: 403 });
   }
   if (req.method !== "POST") return new Response("ok");
@@ -203,6 +217,8 @@ Deno.serve(async (req) => {
 
   let payload: any;
   try { payload = JSON.parse(raw); } catch { return new Response("ok"); }
+  const nMsgs = (payload.entry ?? []).flatMap((e: any) => e.changes ?? []).flatMap((c: any) => c.value?.messages ?? []).length;
+  console.log(`aviso de Meta: ${nMsgs} mensaje(s)`);
 
   for (const entry of payload.entry ?? []) {
     for (const change of entry.changes ?? []) {

@@ -337,7 +337,7 @@ function renderSend(){
   $('#total3').textContent = `Bs ${r.total}`;
   const qr = r.pago === 'qr';
   $('#payLbl3').textContent = qr ? 'Paga ahora con QR' : 'A pagar en la cancha';
-  $('#payNote3').textContent = qr ? 'Escanea o guarda el QR, paga y envía la captura del comprobante en el chat de WhatsApp.' : 'Pasados 15 minutos de la hora reservada sin pago ni llegada, la cancha vuelve a quedar disponible para otros clientes.';
+  $('#payNote3').textContent = qr ? 'Escanea o guarda el QR, paga y envía la captura del comprobante en el chat de WhatsApp.' : 'Si tu equipo no llega dentro de los 15 minutos desde la hora reservada, la cancha se libera para otros clientes.';
   $('#qrbox').hidden = !qr; if (qr) drawQR();
   const msg = ownerMessage(r);
   $('#msgPreview').textContent = msg;
@@ -361,7 +361,7 @@ $('#btnWa').addEventListener('click', () => {
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 function renderDone(r){
   $('#dl4').innerHTML = detailRows(r) + `<dt>${r.pago === 'qr' ? 'Pago' : 'A pagar en la cancha'}</dt><dd class="hi">${r.pago === 'qr' ? 'Por QR' : 'Bs ' + r.total}</dd>`;
-  $('#warn4').hidden = r.pago === 'qr'; $('#warn4').textContent = 'Pasados 15 minutos de la hora reservada sin pago ni llegada, la cancha vuelve a quedar disponible para otros clientes.';
+  $('#warn4').hidden = r.pago === 'qr'; $('#warn4').textContent = 'Si tu equipo no llega dentro de los 15 minutos desde la hora reservada, la cancha se libera para otros clientes.';
   $('#btnWa2').href = waLink(ownerMessage(r));
   const ymd = r.date.replace(/-/g,'');
   const q = new URLSearchParams({action:'TEMPLATE', text:`Sport 3 · ${SPORT[r.sport]}`, dates:`${ymd}T${String(r.from).padStart(2,'0')}0000/${ymd}T${String(r.to).padStart(2,'0')}0000`, ctz:'America/La_Paz', details:`${CANCHA_INFO[r.sport][r.court].n}. Total: Bs ${r.total}${r.pago === 'qr' ? ' (pago por QR)' : ' (pago en la cancha)'}.`, location:'Sport 3, Miraflores, Tarija'});
@@ -761,14 +761,14 @@ function alternatives(){
 
 const R = {
   precios: 'Cada hora muestra su precio en la lista de Horarios. Fútbol 6: Bs 120 hasta las 19:00 y Bs 150 desde las 19:00. Wally: Bs 60 la hora. Si su reserva cruza las 19:00, cada hora se cobra con su tarifa.',
-  como: 'Elija el deporte, la fecha, una hora disponible y la cancha, y toque <b>Reservar esta cancha</b>. En el resumen deje su nombre y celular, elija cómo pagar y toque <b>Confirmar reserva</b>: se abre un chat con el dueño con su reserva ya escrita.',
-  pago: 'Puede pagar de dos formas: <b>con QR al reservar</b> (envía la captura del comprobante en el chat de WhatsApp y su cancha queda asegurada) o <b>en la cancha</b>, en efectivo o QR. Si elige pagar en la cancha: pasados 15 minutos de la hora reservada sin pago ni llegada, la cancha vuelve a quedar disponible para otros clientes.',
-  confirma: 'Su reserva queda confirmada cuando el dueño le responde por WhatsApp, en el mismo chat donde la envió. Hasta ese momento el horario no está apartado.<br><br>Si no tiene respuesta, revise que el mensaje se haya enviado; si no, vuelva a enviarlo desde la pantalla final. Si el horario se ocupó justo antes, el dueño le ofrece otro.',
+  como: 'Elija el deporte, la fecha, una hora disponible y la cancha, y toque <b>Reservar esta cancha</b>. En el resumen deje su nombre y celular, elija cómo pagar y toque <b>Confirmar reserva</b>: su cancha queda apartada 2 horas y se abre WhatsApp con su reserva ya escrita. El dueño se la confirma por ese chat.',
+  pago: 'Puede pagar de dos formas: <b>con QR al reservar</b> (envía la captura del comprobante en el chat de WhatsApp) o <b>al llegar</b>, en efectivo o QR, pensado para quien prefiere pagar en efectivo. En los dos casos la reserva queda firme cuando el dueño la confirma. Si paga al llegar y su equipo no llega dentro de los 15 minutos desde la hora reservada, la cancha se libera para otros clientes.',
+  confirma: 'Al tocar <b>Confirmar reserva</b>, su cancha queda <b>apartada 2 horas</b> mientras el dueño la revisa. Queda <b>confirmada</b> cuando el dueño la confirma: le llega el aviso por WhatsApp, en el mismo chat donde envió la reserva. Si en 2 horas no se confirma, la cancha se libera.<br><br>Si no recibe respuesta, revise que el mensaje se haya enviado; si no, vuelva a enviarlo desde la pantalla final.',
   cambio: 'Para cambiar el horario, escríbale al dueño por WhatsApp, en el mismo chat donde envió la reserva, hasta las 12:00 del día del partido. Si hay espacio, se lo cambia; si pasa a la noche, se cobra con la tarifa de noche.',
   cancelar: 'Para cancelar, avísele al dueño por WhatsApp, en el mismo chat donde envió la reserva, hasta las 12:00 del día del partido. Así la cancha queda libre para otro equipo. Después de las 12:00 la reserva sigue en pie.',
   cumple: 'Para cumpleaños reservamos mínimo 3 horas seguidas, con los mismos precios. Como cerramos a las 22:00, el último inicio posible es a las 19:00. Fútbol de 19:00 a 22:00: Bs 450; wally 3 horas: Bs 180. Al reservar, marque <b>Es para un cumpleaños</b>.',
   clima: 'Si llueve se juega igual: las canchas de wally son techadas y las de fútbol no. Si hay granizo o tormenta, el dueño cancela la reserva y le avisa por WhatsApp.',
-  tarde: 'Si eligió pagar en la cancha y no llega, pasados 15 minutos de la hora reservada la cancha vuelve a quedar disponible para otros clientes. El horario termina a la hora reservada.',
+  tarde: 'Hay 15 minutos de tolerancia desde la hora reservada. Si eligió pagar al llegar y su equipo no llega en ese tiempo, la cancha se libera para otros clientes. Si ya pagó por QR, la cancha lo espera. El horario termina a la hora reservada.',
   ubic: 'Estamos en el barrio Miraflores, en Tarija. Al terminar su reserva le mostramos el mapa y el botón Cómo llegar.',
   horario: 'Atendemos todos los días de 15:00 a 22:00, en turnos de una hora; en la web se reserva hasta fin de mes. Las tardes de 15:00 a 18:00 y las noches de 19:00 a 22:00 se llenan rápido, sobre todo los fines de semana.',
   canchas: 'Tenemos 3 canchas de fútbol 6 de césped sintético, sin techo, para equipos de 5 o 6 jugadores, y 3 canchas de wally techadas, para equipos de hasta 5. Al reservar elige la cancha que prefiera.',
