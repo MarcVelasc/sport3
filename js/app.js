@@ -257,12 +257,12 @@ function renderRecap(){
     <dl class="rc-rows">
       <dt>Deporte</dt><dd>${SPORT[S.sport]}</dd>
       <dt>Cancha</dt><dd>Se asigna al llegar<small>Te damos una cancha libre en el complejo</small></dd>
+      <dt>Pago</dt><dd>Al llegar a la cancha<small>Efectivo o QR</small></dd>
       <dt>Precio por hora</dt><dd>${[...new Set(Array.from({length:horas}, (_, k) => price(S.sport, s.from + k)))].map(p => 'Bs ' + p).join(' / ')}</dd>
     </dl>
     <div class="rc-total"><span>Total a pagar</span><b>Bs ${s.total}</b></div>`;
   $('#err2').hidden = true;
 }
-document.querySelectorAll('input[name="pago"]').forEach(r => r.addEventListener('change', () => { $('#warnCancha').hidden = document.querySelector('input[name="pago"]:checked')?.value !== 'cancha'; }));
 $('#celular').addEventListener('input', e => { e.target.value = onlyDigits(e.target.value).slice(0,8); });
 let sending = false;
 $('#form2').addEventListener('submit', async e => {
@@ -273,8 +273,7 @@ $('#form2').addEventListener('submit', async e => {
   const fail = (msg, el) => { err.textContent = msg; err.hidden = false; enter(err, {y:-4, dur:200}); el?.focus(); };
   if (nombre.length < 2) return fail('Escribe tu nombre para la reserva.', $('#nombre'));
   if (!/^[67]\d{7}$/.test(cel)) return fail('El celular debe tener 8 dígitos y empezar con 6 o 7.', $('#celular'));
-  const pago = document.querySelector('input[name="pago"]:checked')?.value;
-  if (!pago) return fail('Elige cómo vas a pagar.', document.querySelector('input[name="pago"]'));
+  const pago = 'cancha'; // el pago siempre se hace al llegar, en efectivo o QR
   if ($('#cumple').checked && s.hours < 3) return fail(`Para cumpleaños se reservan mínimo 3 horas seguidas. Vuelve a Horarios y elige 3 horas, por ejemplo de ${hh(Math.min(19, s.from))} a ${hh(Math.min(19, s.from)+3)}.`);
   for (let h=s.from; h<s.to; h++){
     if (slotState(S.date, S.sport, h).s === 'res'){ toast('Ese horario se acaba de ocupar. Elige otro.'); S.sel = null; go(1); return; }
@@ -313,7 +312,7 @@ function ownerMessage(r){
     `Nombre: ${r.nombre}`,
     `Celular: ${r.cel}`,
     `Total: Bs ${r.total}`,
-    r.pago === 'qr' ? `Pago: QR (envío el comprobante en este chat)` : `Pago: en la cancha`,
+    `Pago: al llegar a la cancha (efectivo o QR)`,
     ...(r.codigo ? ['', `Para Sport 3, confirmar aquí: ${location.href.split('#')[0]}#r=${r.codigo}`] : [])
   ].join('\n');
 }
@@ -339,10 +338,9 @@ function renderSend(){
   const r = S.cur; if (!r) return;
   $('#dl3').innerHTML = detailRows(r);
   $('#total3').textContent = `Bs ${r.total}`;
-  const qr = r.pago === 'qr';
-  $('#payLbl3').textContent = qr ? 'Paga ahora con QR' : 'A pagar en la cancha';
-  $('#payNote3').textContent = qr ? 'Escanea o guarda el QR, paga y envía la captura del comprobante en el chat de WhatsApp.' : 'Si tu equipo no llega dentro de los 15 minutos desde la hora reservada, la cancha se libera para otros clientes.';
-  $('#qrbox').hidden = !qr; if (qr) drawQR();
+  $('#payLbl3').textContent = 'A pagar al llegar a la cancha';
+  $('#payNote3').textContent = 'Pagas ahí mismo, en efectivo o con QR. Si tu equipo no llega dentro de los 15 minutos desde la hora reservada, la cancha se libera para otros clientes.';
+  $('#qrbox').hidden = true;
   const msg = ownerMessage(r);
   $('#msgPreview').textContent = msg;
   $('#btnWa').href = waLink(msg);
@@ -364,11 +362,11 @@ $('#btnWa').addEventListener('click', () => {
 
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 function renderDone(r){
-  $('#dl4').innerHTML = detailRows(r) + `<dt>${r.pago === 'qr' ? 'Pago' : 'A pagar en la cancha'}</dt><dd class="hi">${r.pago === 'qr' ? 'Por QR' : 'Bs ' + r.total}</dd>`;
-  $('#warn4').hidden = r.pago === 'qr'; $('#warn4').textContent = 'Si tu equipo no llega dentro de los 15 minutos desde la hora reservada, la cancha se libera para otros clientes.';
+  $('#dl4').innerHTML = detailRows(r) + `<dt>A pagar en la cancha</dt><dd class="hi">Bs ${r.total}<small>Efectivo o QR</small></dd>`;
+  $('#warn4').hidden = false; $('#warn4').textContent = 'Si tu equipo no llega dentro de los 15 minutos desde la hora reservada, la cancha se libera para otros clientes.';
   $('#btnWa2').href = waLink(ownerMessage(r));
   const ymd = r.date.replace(/-/g,'');
-  const q = new URLSearchParams({action:'TEMPLATE', text:`Sport 3 · ${SPORT[r.sport]}`, dates:`${ymd}T${String(r.from).padStart(2,'0')}0000/${ymd}T${String(r.to).padStart(2,'0')}0000`, ctz:'America/La_Paz', details:`La cancha se asigna al llegar. Total: Bs ${r.total}${r.pago === 'qr' ? ' (pago por QR)' : ' (pago en la cancha)'}.`, location:'Sport 3, Miraflores, Tarija'});
+  const q = new URLSearchParams({action:'TEMPLATE', text:`Sport 3 · ${SPORT[r.sport]}`, dates:`${ymd}T${String(r.from).padStart(2,'0')}0000/${ymd}T${String(r.to).padStart(2,'0')}0000`, ctz:'America/La_Paz', details:`La cancha se asigna al llegar. Total: Bs ${r.total} (se paga al llegar, en efectivo o QR).`, location:'Sport 3, Miraflores, Tarija'});
   $('#gcal').href = 'https://calendar.google.com/calendar/render?' + q.toString();
 }
 
@@ -711,7 +709,7 @@ function availability(t){
       const st = slotState(d, s, h);
       if (st.s === 'free' || st.s === 'low'){
         const p = price(s,h);
-        lines.push(`${cap1(dayName(d))} a las ${hh(h)} hay ${name} disponible. Son Bs ${p} la hora; puede pagar con QR al reservar o en la cancha.`);
+        lines.push(`${cap1(dayName(d))} a las ${hh(h)} hay ${name} disponible. Son Bs ${p} la hora; se paga al llegar a la cancha, en efectivo o QR.`);
         chips.push({label: sports.length > 1 ? `Reservar ${SPORT[s]} ${hh(h)}` : 'Reservar este horario', book:`${s}|${key(d)}|${h}|1`, solid:true});
       } else {
         const alt = freeHours(d, s);
@@ -764,14 +762,14 @@ function alternatives(){
 
 const R = {
   precios: 'Cada hora muestra su precio en la lista de Horarios. Fútbol 5: Bs 120 hasta las 19:00 y Bs 150 desde las 19:00. Wally: Bs 60 la hora. Si su reserva cruza las 19:00, cada hora se cobra con su tarifa.',
-  como: 'Elija el deporte, la fecha y una hora disponible, y toque <b>Reservar este horario</b>. No hace falta elegir cancha: se la asignamos al llegar. En el resumen deje su nombre y celular, elija cómo pagar y toque <b>Confirmar reserva</b>: su cancha queda apartada 2 horas y se abre WhatsApp con su reserva ya escrita. Sport 3 se la confirma por ese chat.',
-  pago: 'Puede pagar de dos formas: <b>con QR al reservar</b> (envía la captura del comprobante en el chat de WhatsApp) o <b>al llegar</b>, en efectivo o QR, pensado para quien prefiere pagar en efectivo. En los dos casos la reserva queda firme cuando Sport 3 la confirma. Si paga al llegar y su equipo no llega dentro de los 15 minutos desde la hora reservada, la cancha se libera para otros clientes.',
+  como: 'Elija el deporte, la fecha y una hora disponible, y toque <b>Reservar este horario</b>. No hace falta elegir cancha: se la asignamos al llegar. En el resumen deje su nombre y celular y toque <b>Confirmar reserva</b>: su cancha queda apartada 2 horas y se abre WhatsApp con su reserva ya escrita. Sport 3 se la confirma por ese chat.',
+  pago: 'No se paga nada al reservar. El pago se hace <b>al llegar a la cancha</b>, en <b>efectivo o QR</b>. La reserva queda firme cuando Sport 3 la confirma por WhatsApp. Si su equipo no llega dentro de los 15 minutos desde la hora reservada, la cancha se libera para otros clientes.',
   confirma: 'Al tocar <b>Confirmar reserva</b>, su cancha queda <b>apartada 2 horas</b> mientras Sport 3 la revisa. Queda <b>confirmada</b> cuando Sport 3 la confirma: le llega el aviso por WhatsApp, en el mismo chat donde envió la reserva. Si en 2 horas no se confirma, la cancha se libera.<br><br>Si no recibe respuesta, revise que el mensaje se haya enviado; si no, vuelva a enviarlo desde la pantalla final.',
   cambio: 'Para cambiar el horario, escríbanos por WhatsApp, en el mismo chat donde envió la reserva, hasta las 12:00 del día del partido. Si hay espacio, se lo cambiamos; si pasa a la noche, se cobra con la tarifa de noche.',
   cancelar: 'Para cancelar, avísenos por WhatsApp, en el mismo chat donde envió la reserva, hasta las 12:00 del día del partido. Así la cancha queda libre para otro equipo. Después de las 12:00 la reserva sigue en pie.',
   cumple: 'Para cumpleaños reservamos mínimo 3 horas seguidas, con los mismos precios. Como cerramos a las 22:00, el último inicio posible es a las 19:00. Fútbol de 19:00 a 22:00: Bs 450; wally 3 horas: Bs 180. Al reservar, marque <b>Es para un cumpleaños</b>.',
   clima: 'Si llueve se juega igual: las canchas de wally son techadas y las de fútbol no. Si hay granizo o tormenta, Sport 3 cancela la reserva y le avisa por WhatsApp.',
-  tarde: 'Hay 15 minutos de tolerancia desde la hora reservada. Si eligió pagar al llegar y su equipo no llega en ese tiempo, la cancha se libera para otros clientes. Si ya pagó por QR, la cancha lo espera. El horario termina a la hora reservada.',
+  tarde: 'Hay 15 minutos de tolerancia desde la hora reservada. Si su equipo no llega en ese tiempo, la cancha se libera para otros clientes. El horario termina a la hora reservada.',
   ubic: 'Estamos en el barrio Miraflores, en Tarija. Al terminar su reserva le mostramos el mapa y el botón Cómo llegar.',
   horario: 'Atendemos todos los días de 15:00 a 22:00, en turnos de una hora; en la web se reserva hasta fin de mes. Las tardes de 15:00 a 18:00 y las noches de 19:00 a 22:00 se llenan rápido, sobre todo los fines de semana.',
   canchas: 'Tenemos 3 canchas de fútbol 5 de césped sintético, sin techo, para equipos de 5 jugadores, y 3 canchas de wally techadas, para equipos de hasta 5. No hace falta elegir cancha: al llegar le asignamos una libre para su horario.',

@@ -101,12 +101,11 @@
       <div class="bh"><h3>Datos de contacto</h3></div>
       <div class="inp"><label for="nombre">Nombre</label><input id="nombre" autocomplete="name" placeholder="Ej. Carlos Mendoza"></div>
       <div class="inp"><label for="celular">Celular (WhatsApp)</label><div class="pre"><span>+591</span><input id="celular" inputmode="numeric" autocomplete="tel-national" placeholder="7XXXXXXX" maxlength="8"></div></div>
-      <fieldset class="paysel">
-        <legend>¿Cómo vas a pagar?</legend>
-        <label class="payopt"><input type="radio" name="pago" value="qr"><span><b>Pagar ahora con QR</b><small>Envías el comprobante por WhatsApp.</small></span></label>
-        <label class="payopt"><input type="radio" name="pago" value="cancha"><span><b>Pagar al llegar</b><small>Para quien prefiere efectivo. También QR en la cancha.</small></span></label>
-        <p class="warnbox" id="warnCancha" hidden>Si tu equipo no llega dentro de los 15 minutos desde la hora reservada, la cancha se libera para otros clientes.</p>
-      </fieldset>
+      <div class="court-info pay-info">
+        <span class="ci-ic" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 12h.01M18 12h.01"/></svg></span>
+        <p><b>Pagas al llegar a la cancha</b>En efectivo o con QR, ahí mismo. No tienes que pagar nada ahora.</p>
+      </div>
+      <p class="warnbox">Si tu equipo no llega dentro de los 15 minutos desde la hora reservada, la cancha se libera para otros clientes.</p>
       <label class="check"><input type="checkbox" id="cumple"><span>Es para un cumpleaños<small>Los cumpleaños se reservan con mínimo 3 horas seguidas.</small></span></label>
       <p class="err" id="err2" hidden></p>
       <button type="submit" class="primary">Confirmar reserva<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></button>

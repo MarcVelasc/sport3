@@ -509,3 +509,7 @@ body:has(#owner:not([hidden])) #fab{display:none}
 .court-info b{display:block;color:var(--fg);font-family:var(--f-display);font-size:15.5px;font-weight:700}
 /* Precio del resumen inferior en naranja */
 .sum .price b{color:var(--accent)}
+
+.dl dd small{display:block;font-family:var(--f-body);font-size:12px;font-weight:500;color:var(--mut)}
+.pay-info{margin-top:4px}
+.paybox b{color:var(--accent)}
