@@ -41,7 +41,7 @@ const db = createClient(env("SUPABASE_URL"), claveServidor());
 /* ---------- textos ---------- */
 const DIAS = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
 const MESES = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
-const SPORT: Record<string, string> = { futbol: "Fútbol 6", wally: "Wally" };
+const SPORT: Record<string, string> = { futbol: "Fútbol 5", wally: "Wally" };
 const CANCHA = ["Cancha A", "Cancha B", "Cancha C"];
 const hh = (h: number) => `${String(h).padStart(2, "0")}:00`;
 function fecha(iso: string) {
@@ -56,6 +56,9 @@ type Reserva = {
 };
 const resumen = (r: Reserva) =>
   `${SPORT[r.deporte]}${r.cumple ? " (cumpleaños)" : ""}, ${fecha(r.fecha)}, de ${hh(r.desde)} a ${hh(r.hasta)}, ${CANCHA[r.cancha] ?? "Cancha " + (r.cancha + 1)}`;
+// Para el cliente: sin cancha (se la asignan al llegar)
+const resumenCliente = (r: Reserva) =>
+  `${SPORT[r.deporte]}${r.cumple ? " (cumpleaños)" : ""}, ${fecha(r.fecha)}, de ${hh(r.desde)} a ${hh(r.hasta)}`;
 const vencida = (r: Reserva) => r.estado === "pendiente" && Date.now() - new Date(r.creada).getTime() > PEND_HORAS * 3600_000;
 const clienteWa = (r: Reserva) => r.wa_cliente || `591${r.celular}`;
 
@@ -100,15 +103,15 @@ async function mensajeCliente(from: string, body: string) {
   const r = m ? await porCodigo(m[1].toUpperCase()) : null;
   if (!r) {
     // Mensaje suelto: se lo pasamos al dueño y orientamos al cliente
-    await texto(from, `Hola, gracias por escribir a Sport 3. Para reservar elige tu horario aquí: ${PAGINA}\nSi es otra consulta, el dueño te responde pronto.`);
+    await texto(from, `Hola, gracias por escribir a Sport 3. Para reservar elige tu horario aquí: ${PAGINA}\nSi es otra consulta, el equipo de Sport 3 te responde pronto.`);
     if (DUENO) await texto(DUENO, `Mensaje de +${from}:\n${body}`);
     return;
   }
   if (!r.wa_cliente) await db.from("reservas").update({ wa_cliente: from }).eq("id", r.id);
   r.wa_cliente = r.wa_cliente || from;
-  if (r.estado === "confirmada") return texto(from, `Tu reserva ${r.codigo} ya está confirmada: ${resumen(r)}. ¡Te esperamos!`);
+  if (r.estado === "confirmada") return texto(from, `Tu reserva ${r.codigo} ya está confirmada: ${resumenCliente(r)}. Al llegar te asignamos tu cancha. ¡Te esperamos!`);
   if (r.estado === "cancelada") return texto(from, `La reserva ${r.codigo} está cancelada. Puedes hacer otra aquí: ${PAGINA}`);
-  await texto(from, `Recibimos tu reserva ${r.codigo}: ${resumen(r)}.\nTu cancha queda apartada 2 horas mientras el dueño la confirma; te avisamos por aquí.${r.pago === "qr" ? "\nPuedes enviar tu comprobante de pago en este chat." : ""}`);
+  await texto(from, `Recibimos tu reserva ${r.codigo}: ${resumenCliente(r)}.\nTu horario queda apartado 2 horas mientras Sport 3 lo confirma; te avisamos por aquí.${r.pago === "qr" ? "\nPuedes enviar tu comprobante de pago en este chat." : ""}`);
   await avisoDueno(r);
 }
 
@@ -121,7 +124,7 @@ async function comprobante(from: string, msg: any) {
   const caption = r ? `Comprobante de ${r.nombre} · reserva ${r.codigo} · Bs ${r.total}` : `Archivo de +${from}`;
   const ok = await enviar({ to: DUENO, type: msg.type, [msg.type]: { id: media?.id, caption } });
   if (!ok) await texto(DUENO, `${caption}. Te lo mandó al número del bot; ábrelo en Meta o pídele que te lo reenvíe.`);
-  await texto(from, "Recibimos tu comprobante. El dueño lo revisa y te confirma por aquí.");
+  await texto(from, "Recibimos tu comprobante. Sport 3 lo revisa y te confirma por aquí.");
   if (r && !r.pagado) {
     const ops: [string, string][] = [["pago:" + r.codigo, "Ya pagó"]];
     if (r.estado === "pendiente") ops.unshift(["conf:" + r.codigo, "Confirmar"]);
@@ -146,7 +149,7 @@ async function botonDueno(id: string) {
       if (choca) return texto(DUENO, `No se puede confirmar ${r.codigo}: pasaron más de ${PEND_HORAS} horas y esa cancha ya la tomó otra reserva. Avísale a ${r.nombre} (${r.celular}).`);
     }
     await db.from("reservas").update({ estado: "confirmada" }).eq("id", r.id);
-    await texto(clienteWa(r), `Hola ${r.nombre}, tu reserva en Sport 3 está confirmada: ${resumen(r)}.${r.pago === "cancha" && !r.pagado ? " Pagas al llegar; hay 15 minutos de tolerancia desde la hora reservada." : ""} ¡Te esperamos!`);
+    await texto(clienteWa(r), `Hola ${r.nombre}, tu reserva en Sport 3 está confirmada: ${resumenCliente(r)}. Al llegar te asignamos tu cancha.${r.pago === "cancha" && !r.pagado ? " Pagas al llegar; hay 15 minutos de tolerancia desde la hora reservada." : ""} ¡Te esperamos!`);
     return texto(DUENO, `Listo. ${r.codigo} confirmada y ya le avisé a ${r.nombre}.`);
   }
   if (accion === "pago") {
@@ -159,7 +162,7 @@ async function botonDueno(id: string) {
   }
   if (accion === "canc") {
     await db.from("reservas").update({ estado: "cancelada" }).eq("id", r.id);
-    await texto(clienteWa(r), `Hola ${r.nombre}, tu reserva en Sport 3 (${resumen(r)}) no se pudo confirmar. Puedes elegir otro horario aquí: ${PAGINA}`);
+    await texto(clienteWa(r), `Hola ${r.nombre}, tu reserva en Sport 3 (${resumenCliente(r)}) no se pudo confirmar. Puedes elegir otro horario aquí: ${PAGINA}`);
     return texto(DUENO, `Listo. ${r.codigo} cancelada; la cancha quedó libre y ya le avisé a ${r.nombre}.`);
   }
 }

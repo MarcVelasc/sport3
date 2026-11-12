@@ -11,7 +11,7 @@ const DIAS = ['domingo','lunes','martes','miércoles','jueves','viernes','sábad
 const DIAS_C = ['dom','lun','mar','mié','jue','vie','sáb'];
 const DIAS_N = ['domingo','lunes','martes','miercoles','jueves','viernes','sabado'];
 const MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
-const SPORT = {futbol:'Fútbol 6', wally:'Wally'};
+const SPORT = {futbol:'Fútbol 5', wally:'Wally'};
 const reduce = matchMedia('(prefers-reduced-motion: reduce)');
 const EASE_OUT = 'cubic-bezier(0.23,1,0.32,1)';
 
@@ -201,26 +201,21 @@ function selInfo(){
   const from = HOURS[S.sel[0]], to = HOURS[S.sel[1]] + 1, total = totalFor(S.sport, from, to);
   return {from, to, hours: to - from, total};
 }
-function renderCourts(){
-  const s = selInfo(), blk = $('#courtBlock');
-  if (!s){ blk.hidden = true; S.court = null; return; }
+/* El cliente no elige cancha: el sistema aparta una libre y en el complejo le asignan la suya al llegar */
+function assignCourt(){
+  const s = selInfo();
+  if (!s){ S.court = null; return; }
   const free = freeCourts(S.date, S.sport, s.from, s.to);
-  if (S.court !== null && !free.includes(S.court)) S.court = null;
-  if (S.court === null && free.length === 1) S.court = free[0];
-  blk.hidden = false;
-  $('#courts').innerHTML = CANCHA_INFO[S.sport].map((c, i) => {
-    const ok = free.includes(i), on = S.court === i;
-    return `<button type="button" class="court${on ? ' on' : ''}" role="radio" aria-checked="${on}" data-c="${i}" ${ok ? '' : 'disabled'}>
-      <span class="cn">${c.n}</span><span class="cd">${c.d}</span><span class="cs">${ok ? (on ? 'Elegida' : 'Disponible') : 'Ocupada'}</span></button>`;
-  }).join('');
+  if (S.court === null || !free.includes(S.court)) S.court = free.length ? free[0] : null;
 }
-$('#courts').addEventListener('click', e => { const b = e.target.closest('.court'); if (!b || b.disabled) return; S.court = +b.dataset.c; renderSum(); });
 function renderSum(){
-  renderCourts();
+  assignCourt();
   const s = selInfo(), ready = !!s && S.court !== null;
   $('#btnContinue').disabled = !ready;
   $('#sum').innerHTML = s
-    ? `<div class="what"><b>${hh(s.from)} a ${hh(s.to)}</b><small>${SPORT[S.sport]} · ${S.court !== null ? CANCHA_INFO[S.sport][S.court].n : 'elige una cancha'} · ${fmtShort(S.date)}</small></div><div class="price"><b>Bs ${s.total}</b></div>`
+    ? (S.court !== null
+      ? `<div class="what"><b>${hh(s.from)} a ${hh(s.to)}</b><small>${SPORT[S.sport]} · ${fmtShort(S.date)}</small></div><div class="price"><b>Bs ${s.total}</b></div>`
+      : `<div class="what"><b>Esas horas no tienen una misma cancha libre</b><small>Elige menos horas seguidas u otro horario.</small></div>`)
     : `<div class="what"><b>Elige un horario disponible</b><small>${SPORT[S.sport]} · ${S.sport==='wally'?'Bs 60 la hora':'desde Bs 120 la hora'}</small></div>`;
 }
 $('#btnContinue').addEventListener('click', () => go(2));
@@ -251,11 +246,20 @@ $('#home').addEventListener('click', e => { e.preventDefault(); go(1); });
 function renderRecap(){
   const s = selInfo(); if (!s || S.court === null) return go(1);
   const horas = s.to - s.from;
-  $('#recap2').innerHTML = `<dt>Deporte</dt><dd>${SPORT[S.sport]}</dd>`
-    + `<dt>Cancha</dt><dd>${CANCHA_INFO[S.sport][S.court].n}<small>${CANCHA_INFO[S.sport][S.court].d}</small></dd>`
-    + `<dt>Día</dt><dd>${fmtLong(S.date).replace(/^./, c => c.toUpperCase())}</dd>`
-    + `<dt>Horario</dt><dd>${hh(s.from)} a ${hh(s.to)}<small>${horas === 1 ? '1 hora' : horas + ' horas'}</small></dd>`
-    + `<dt>Total</dt><dd class="tot">Bs ${s.total}</dd>`;
+  const icon = $('#sp-' + S.sport + ' .ic')?.innerHTML || '';
+  $('#recap2').innerHTML = `
+    <div class="rc-head">
+      <span class="rc-sport"><span class="rc-ic">${icon}</span>${SPORT[S.sport]}</span>
+      <span class="rc-dur">${horas === 1 ? '1 hora' : horas + ' horas'}</span>
+      <b class="rc-time">${hh(s.from)} <i>a</i> ${hh(s.to)}</b>
+      <span class="rc-day">${cap1(fmtLong(S.date))}</span>
+    </div>
+    <dl class="rc-rows">
+      <dt>Deporte</dt><dd>${SPORT[S.sport]}</dd>
+      <dt>Cancha</dt><dd>Se asigna al llegar<small>Te damos una cancha libre en el complejo</small></dd>
+      <dt>Precio por hora</dt><dd>${[...new Set(Array.from({length:horas}, (_, k) => price(S.sport, s.from + k)))].map(p => 'Bs ' + p).join(' / ')}</dd>
+    </dl>
+    <div class="rc-total"><span>Total a pagar</span><b>Bs ${s.total}</b></div>`;
   $('#err2').hidden = true;
 }
 document.querySelectorAll('input[name="pago"]').forEach(r => r.addEventListener('change', () => { $('#warnCancha').hidden = document.querySelector('input[name="pago"]:checked')?.value !== 'cancha'; }));
@@ -275,7 +279,8 @@ $('#form2').addEventListener('submit', async e => {
   for (let h=s.from; h<s.to; h++){
     if (slotState(S.date, S.sport, h).s === 'res'){ toast('Ese horario se acaba de ocupar. Elige otro.'); S.sel = null; go(1); return; }
   }
-  if (!freeCourts(S.date, S.sport, s.from, s.to).includes(S.court)){ toast('Esa cancha se acaba de ocupar. Elige otra.'); go(1); return; }
+  assignCourt();
+  if (S.court === null){ toast('Ese horario se acaba de ocupar. Elige otro.'); go(1); return; }
   S.cur = {nombre, cel, sport:S.sport, date:key(S.date), from:s.from, to:s.to, total:s.total, cumple:$('#cumple').checked, court:S.court, pago, saved:false};
   if (SRC.mode === 'live' && SRC.db){
     const btn = $('#form2 button[type="submit"]'), label = btn.innerHTML;
@@ -288,8 +293,8 @@ $('#form2').addEventListener('submit', async e => {
       if (error) throw error; res = data;
     } catch { res = null; }
     sending = false; btn.disabled = false; btn.innerHTML = label;
-    if (res === 'ocupada'){ toast('Esa cancha se acaba de ocupar. Elige otra.'); S.court = null; await loadAll().catch(() => {}); go(1); return; }
-    if (res === 'invalida') return fail('No pudimos guardar la reserva. Revisa tus datos; si ya tienes reservas pendientes, espera a que el dueño las confirme.');
+    if (res === 'ocupada'){ toast('Ese horario se acaba de ocupar. Elige otro.'); S.court = null; await loadAll().catch(() => {}); go(1); return; }
+    if (res === 'invalida') return fail('No pudimos guardar la reserva. Revisa tus datos; si ya tienes reservas pendientes, espera a que Sport 3 las confirme.');
     if (typeof res === 'string' && res.startsWith('ok')){ S.cur.saved = true; S.cur.codigo = res.split(':')[1] || ''; loadAll().catch(() => {}); }
     else toast('No pudimos apartar la cancha. Envía igual la reserva por WhatsApp.');
   }
@@ -304,7 +309,6 @@ function ownerMessage(r){
     `Nueva reserva Sport 3`,
     `Deporte: ${SPORT[r.sport]}${r.cumple ? ' (cumpleaños)' : ''}`,
     `Fecha: ${fmtLong(d)}`,
-    `Cancha: ${CANCHA_INFO[r.sport][r.court].n} (${CANCHA_INFO[r.sport][r.court].d})`,
     `Horario: ${hh(r.from)} a ${hh(r.to)} (${r.to - r.from} h)`,
     `Nombre: ${r.nombre}`,
     `Celular: ${r.cel}`,
@@ -326,7 +330,7 @@ function detailRows(r){
   return `
     <dt>Deporte</dt><dd>${SPORT[r.sport]}${r.cumple?' · cumpleaños':''}</dd>
     <dt>Fecha</dt><dd>${fmtLong(d)}</dd>
-    <dt>Cancha</dt><dd>${CANCHA_INFO[r.sport][r.court].n}</dd>
+    <dt>Cancha</dt><dd>Se asigna al llegar</dd>
     <dt>Horario</dt><dd>${hh(r.from)} a ${hh(r.to)}</dd>
     <dt>A nombre de</dt><dd>${esc(r.nombre)}</dd>`;
 }
@@ -364,7 +368,7 @@ function renderDone(r){
   $('#warn4').hidden = r.pago === 'qr'; $('#warn4').textContent = 'Si tu equipo no llega dentro de los 15 minutos desde la hora reservada, la cancha se libera para otros clientes.';
   $('#btnWa2').href = waLink(ownerMessage(r));
   const ymd = r.date.replace(/-/g,'');
-  const q = new URLSearchParams({action:'TEMPLATE', text:`Sport 3 · ${SPORT[r.sport]}`, dates:`${ymd}T${String(r.from).padStart(2,'0')}0000/${ymd}T${String(r.to).padStart(2,'0')}0000`, ctz:'America/La_Paz', details:`${CANCHA_INFO[r.sport][r.court].n}. Total: Bs ${r.total}${r.pago === 'qr' ? ' (pago por QR)' : ' (pago en la cancha)'}.`, location:'Sport 3, Miraflores, Tarija'});
+  const q = new URLSearchParams({action:'TEMPLATE', text:`Sport 3 · ${SPORT[r.sport]}`, dates:`${ymd}T${String(r.from).padStart(2,'0')}0000/${ymd}T${String(r.to).padStart(2,'0')}0000`, ctz:'America/La_Paz', details:`La cancha se asigna al llegar. Total: Bs ${r.total}${r.pago === 'qr' ? ' (pago por QR)' : ' (pago en la cancha)'}.`, location:'Sport 3, Miraflores, Tarija'});
   $('#gcal').href = 'https://calendar.google.com/calendar/render?' + q.toString();
 }
 
@@ -443,8 +447,7 @@ $('#oRes').addEventListener('click', async e => {
 /* Una sola reserva, abierta desde el enlace del mensaje de WhatsApp (#r=CODIGO) */
 let focusLookup = '';
 function avisoCliente(r){
-  const cancha = CANCHA_INFO[r.deporte][r.cancha]?.n || `Cancha ${r.cancha+1}`;
-  return `Hola ${r.nombre}, tu reserva en Sport 3 está confirmada: ${SPORT[r.deporte]}, ${fmtLong(fromKey(r.fecha))}, de ${hh(r.desde)} a ${hh(r.hasta)}, ${cancha}. ¡Te esperamos!`;
+  return `Hola ${r.nombre}, tu reserva en Sport 3 está confirmada: ${SPORT[r.deporte]}, ${fmtLong(fromKey(r.fecha))}, de ${hh(r.desde)} a ${hh(r.hasta)}. Al llegar te asignamos tu cancha. ¡Te esperamos!`;
 }
 async function renderFocus(){
   const box = $('#oFocus'), code = O.focus;
@@ -544,7 +547,7 @@ function refreshAll(){
   if (S.step === 1){ keepSelIfValid(); renderSlots(false); renderSum(); }
   if (S.step === 3) renderSend();
   if (S.step === 'owner' && !Object.values(writing).some(Boolean)) renderOwner(false);
-  $('#band').textContent = SRC.mode === 'live' ? 'Los horarios ocupados los marca el dueño de Sport 3.' : 'Versión de demostración · los horarios ocupados son de ejemplo';
+  $('#band').textContent = SRC.mode === 'live' ? 'Los horarios se actualizan en tiempo real.' : 'Versión de demostración · los horarios ocupados son de ejemplo';
 }
 function toDemo(){ if (SRC.mode !== 'loading') return; SRC.mode = 'demo'; refreshAll(); }
 /* Supabase: tabla ocupados (fecha, deporte, hora, canchas) y tabla config (clave, valor) */
@@ -732,7 +735,7 @@ function bookFromChat(sp, dk, h, n){
   S.sel = n ? [HOURS.indexOf(h), HOURS.indexOf(h)] : null;
   keepSelIfValid(); renderSlots(true); renderSum();
   slotsEl.scrollIntoView({behavior: reduce.matches ? 'auto' : 'smooth', block:'center'});
-  toast(n ? 'Horario elegido. Ahora elige la cancha.' : 'Estos son los horarios de ese día.');
+  toast(n ? 'Horario elegido. Ahora toca Reservar este horario.' : 'Estos son los horarios de ese día.');
 }
 function ownerChip(label, text){ return {label, href: waLink(text), wa:true}; }
 
@@ -744,7 +747,7 @@ function lastLine(){
 }
 function ownerAboutLast(intro){
   const r = S.last;
-  return ownerChip('Escribir al dueño', r ? `${intro} Es la de ${SPORT[r.sport]}, ${fmtLong(fromKey(r.date))}, de ${hh(r.from)} a ${hh(r.to)}, a nombre de ${r.nombre}.` : intro);
+  return ownerChip('Escribir a Sport 3', r ? `${intro} Es la de ${SPORT[r.sport]}, ${fmtLong(fromKey(r.date))}, de ${hh(r.from)} a ${hh(r.to)}, a nombre de ${r.nombre}.` : intro);
 }
 function alternatives(){
   if (SRC.mode === 'loading') return bot('Estoy cargando los horarios. Pregúnteme de nuevo en un momento.');
@@ -755,24 +758,24 @@ function alternatives(){
     if (want !== null) hs.sort((a,b) => Math.abs(a-want) - Math.abs(b-want));
     hs.slice(0, i === 0 ? 3 : 2).forEach(h => out.length < 5 && out.push({label:`${cap1(dayName(d))} ${hh(h)}`, book:`${s}|${key(d)}|${h}|1`}));
   }
-  if (!out.length) return bot(`No encontré horarios libres de ${SPORT[s].toLowerCase()} en los próximos días dentro de este mes. Puede probar con ${s === 'futbol' ? 'wally' : 'fútbol 6'} o escribirle al dueño.`, {chips:[ownerChip('Escribir al dueño','Hola, busco un horario en Sport 3 y la web muestra todo ocupado.')]});
+  if (!out.length) return bot(`No encontré horarios libres de ${SPORT[s].toLowerCase()} en los próximos días dentro de este mes. Puede probar con ${s === 'futbol' ? 'wally' : 'fútbol 5'} o escribirnos por WhatsApp.`, {chips:[ownerChip('Escribir a Sport 3','Hola, busco un horario en Sport 3 y la web muestra todo ocupado.')]});
   bot(`Estos son los horarios de ${SPORT[s].toLowerCase()} libres más cercanos${want !== null ? ` a las ${hh(want)}` : ''}. Toque uno y queda elegido en el formulario.`, {chips: out});
 }
 
 const R = {
-  precios: 'Cada hora muestra su precio en la lista de Horarios. Fútbol 6: Bs 120 hasta las 19:00 y Bs 150 desde las 19:00. Wally: Bs 60 la hora. Si su reserva cruza las 19:00, cada hora se cobra con su tarifa.',
-  como: 'Elija el deporte, la fecha, una hora disponible y la cancha, y toque <b>Reservar esta cancha</b>. En el resumen deje su nombre y celular, elija cómo pagar y toque <b>Confirmar reserva</b>: su cancha queda apartada 2 horas y se abre WhatsApp con su reserva ya escrita. El dueño se la confirma por ese chat.',
-  pago: 'Puede pagar de dos formas: <b>con QR al reservar</b> (envía la captura del comprobante en el chat de WhatsApp) o <b>al llegar</b>, en efectivo o QR, pensado para quien prefiere pagar en efectivo. En los dos casos la reserva queda firme cuando el dueño la confirma. Si paga al llegar y su equipo no llega dentro de los 15 minutos desde la hora reservada, la cancha se libera para otros clientes.',
-  confirma: 'Al tocar <b>Confirmar reserva</b>, su cancha queda <b>apartada 2 horas</b> mientras el dueño la revisa. Queda <b>confirmada</b> cuando el dueño la confirma: le llega el aviso por WhatsApp, en el mismo chat donde envió la reserva. Si en 2 horas no se confirma, la cancha se libera.<br><br>Si no recibe respuesta, revise que el mensaje se haya enviado; si no, vuelva a enviarlo desde la pantalla final.',
-  cambio: 'Para cambiar el horario, escríbale al dueño por WhatsApp, en el mismo chat donde envió la reserva, hasta las 12:00 del día del partido. Si hay espacio, se lo cambia; si pasa a la noche, se cobra con la tarifa de noche.',
-  cancelar: 'Para cancelar, avísele al dueño por WhatsApp, en el mismo chat donde envió la reserva, hasta las 12:00 del día del partido. Así la cancha queda libre para otro equipo. Después de las 12:00 la reserva sigue en pie.',
+  precios: 'Cada hora muestra su precio en la lista de Horarios. Fútbol 5: Bs 120 hasta las 19:00 y Bs 150 desde las 19:00. Wally: Bs 60 la hora. Si su reserva cruza las 19:00, cada hora se cobra con su tarifa.',
+  como: 'Elija el deporte, la fecha y una hora disponible, y toque <b>Reservar este horario</b>. No hace falta elegir cancha: se la asignamos al llegar. En el resumen deje su nombre y celular, elija cómo pagar y toque <b>Confirmar reserva</b>: su cancha queda apartada 2 horas y se abre WhatsApp con su reserva ya escrita. Sport 3 se la confirma por ese chat.',
+  pago: 'Puede pagar de dos formas: <b>con QR al reservar</b> (envía la captura del comprobante en el chat de WhatsApp) o <b>al llegar</b>, en efectivo o QR, pensado para quien prefiere pagar en efectivo. En los dos casos la reserva queda firme cuando Sport 3 la confirma. Si paga al llegar y su equipo no llega dentro de los 15 minutos desde la hora reservada, la cancha se libera para otros clientes.',
+  confirma: 'Al tocar <b>Confirmar reserva</b>, su cancha queda <b>apartada 2 horas</b> mientras Sport 3 la revisa. Queda <b>confirmada</b> cuando Sport 3 la confirma: le llega el aviso por WhatsApp, en el mismo chat donde envió la reserva. Si en 2 horas no se confirma, la cancha se libera.<br><br>Si no recibe respuesta, revise que el mensaje se haya enviado; si no, vuelva a enviarlo desde la pantalla final.',
+  cambio: 'Para cambiar el horario, escríbanos por WhatsApp, en el mismo chat donde envió la reserva, hasta las 12:00 del día del partido. Si hay espacio, se lo cambiamos; si pasa a la noche, se cobra con la tarifa de noche.',
+  cancelar: 'Para cancelar, avísenos por WhatsApp, en el mismo chat donde envió la reserva, hasta las 12:00 del día del partido. Así la cancha queda libre para otro equipo. Después de las 12:00 la reserva sigue en pie.',
   cumple: 'Para cumpleaños reservamos mínimo 3 horas seguidas, con los mismos precios. Como cerramos a las 22:00, el último inicio posible es a las 19:00. Fútbol de 19:00 a 22:00: Bs 450; wally 3 horas: Bs 180. Al reservar, marque <b>Es para un cumpleaños</b>.',
-  clima: 'Si llueve se juega igual: las canchas de wally son techadas y las de fútbol no. Si hay granizo o tormenta, el dueño cancela la reserva y le avisa por WhatsApp.',
+  clima: 'Si llueve se juega igual: las canchas de wally son techadas y las de fútbol no. Si hay granizo o tormenta, Sport 3 cancela la reserva y le avisa por WhatsApp.',
   tarde: 'Hay 15 minutos de tolerancia desde la hora reservada. Si eligió pagar al llegar y su equipo no llega en ese tiempo, la cancha se libera para otros clientes. Si ya pagó por QR, la cancha lo espera. El horario termina a la hora reservada.',
   ubic: 'Estamos en el barrio Miraflores, en Tarija. Al terminar su reserva le mostramos el mapa y el botón Cómo llegar.',
   horario: 'Atendemos todos los días de 15:00 a 22:00, en turnos de una hora; en la web se reserva hasta fin de mes. Las tardes de 15:00 a 18:00 y las noches de 19:00 a 22:00 se llenan rápido, sobre todo los fines de semana.',
-  canchas: 'Tenemos 3 canchas de fútbol 6 de césped sintético, sin techo, para equipos de 5 o 6 jugadores, y 3 canchas de wally techadas, para equipos de hasta 5. Al reservar elige la cancha que prefiera.',
-  servicios: 'No tengo ese dato confirmado. Para no darle información equivocada, pregúntele directamente al dueño.',
+  canchas: 'Tenemos 3 canchas de fútbol 5 de césped sintético, sin techo, para equipos de 5 jugadores, y 3 canchas de wally techadas, para equipos de hasta 5. No hace falta elegir cancha: al llegar le asignamos una libre para su horario.',
+  servicios: 'No tengo ese dato confirmado. Para no darle información equivocada, escríbanos por WhatsApp.',
   bebidas: 'Las bebidas y otras consultas se atienden directamente en el complejo.',
   extra: 'La hora adicional se pide en la cancha, si la hora siguiente está libre. Ahí le indican el precio.',
   fijas: 'No hay reservas fijas: los equipos que juegan cada semana reservan aquí como cualquier cliente, para que nadie bloquee un horario que quizá no use.',
@@ -780,14 +783,14 @@ const R = {
   resena: '¡Gracias por jugar con nosotros! Su opinión en Google Maps ayuda a otros equipos a encontrarnos.',
   gracias: '¡Con gusto! Lo esperamos en Sport 3.',
   hola: '¡Hola! ¿En qué le puedo ayudar con su reserva?',
-  fallback: 'No tengo esa información. Puede escribirle al dueño por WhatsApp, o elegir una de estas dudas frecuentes.'
+  fallback: 'No tengo esa información. Puede escribirnos por WhatsApp, o elegir una de estas dudas frecuentes.'
 };
 
 function answer(raw){
   const t = norm(raw);
-  if (has(t,'torneo','campeonato','liga')) return bot('¡Qué bueno! Los torneos los coordina directamente el dueño. Escríbale por WhatsApp y él le responde.', {chips:[ownerChip('Escribir al dueño', 'Hola, quiero organizar un torneo en Sport 3.')]});
-  if (has(t,'varias canchas','dos canchas','las tres','tres canchas','2 canchas','3 canchas','todas las canchas')) return bot('Las reservas de varias canchas a la vez las coordina el dueño. Escríbale por WhatsApp.', {chips:[ownerChip('Escribir al dueño', 'Hola, quiero reservar varias canchas a la vez en Sport 3.')]});
-  if (has(t,'descuento','rebaja','promo','precio especial','mas barato')) return bot('Los precios especiales los ve directamente el dueño. Escríbale por WhatsApp.', {chips:[ownerChip('Escribir al dueño', 'Hola, quería consultar por un precio especial en Sport 3.')]});
+  if (has(t,'torneo','campeonato','liga')) return bot('¡Qué bueno! Los torneos se coordinan directamente con Sport 3. Escríbanos por WhatsApp y le respondemos.', {chips:[ownerChip('Escribir a Sport 3', 'Hola, quiero organizar un torneo en Sport 3.')]});
+  if (has(t,'varias canchas','dos canchas','las tres','tres canchas','2 canchas','3 canchas','todas las canchas')) return bot('Las reservas de varias canchas a la vez se coordinan directamente con Sport 3. Escríbanos por WhatsApp.', {chips:[ownerChip('Escribir a Sport 3', 'Hola, quiero reservar varias canchas a la vez en Sport 3.')]});
+  if (has(t,'descuento','rebaja','promo','precio especial','mas barato')) return bot('Los precios especiales se consultan directamente con Sport 3. Escríbanos por WhatsApp.', {chips:[ownerChip('Escribir a Sport 3', 'Hola, quería consultar por un precio especial en Sport 3.')]});
   if (has(t,'cancel','anular','no puedo ir','no vamos','no podemos ir')) return bot([R.cancelar, lastLine()].filter(Boolean).join('<br><br>'), {chips:[ownerAboutLast('Hola, quiero cancelar mi reserva en Sport 3.')]});
   if (has(t,'cambiar','cambio','reprogram','mover mi','pasar mi')) return bot([R.cambio, lastLine()].filter(Boolean).join('<br><br>'), {chips:[ownerAboutLast('Hola, quiero cambiar el horario de mi reserva en Sport 3.')]});
   if (has(t,'confirm','quedo','registr','llego mi','recibio','estado','respuesta','no me respond','no responde','firme','seguro')) return bot([R.confirma, lastLine()].filter(Boolean).join('<br><br>'), {chips: S.last ? [ownerAboutLast('Hola, quería confirmar mi reserva en Sport 3.')] : null});
@@ -797,7 +800,7 @@ function answer(raw){
   const hasWhen = parseHour(t) !== null || parseDay(t) !== null;
   if (has(t,'cumple')) return bot(R.cumple, {chips:[{label:'Ver horarios libres', q:'que horarios hay libres hoy'}]});
   if (wantsAvail || (hasWhen && (parseSport(t) || has(t,'hay','cancha')))) return availability(t);
-  if (has(t,'vestuario','ducha','bano','parqueo','estacionamiento','parking','pelota','pechera','iluminacion','seguridad','wifi','kiosko','kiosco')) return bot(R.servicios, {chips:[ownerChip('Preguntar al dueño', 'Hola, tengo una consulta sobre las instalaciones de Sport 3.')]});
+  if (has(t,'vestuario','ducha','bano','parqueo','estacionamiento','parking','pelota','pechera','iluminacion','seguridad','wifi','kiosko','kiosco')) return bot(R.servicios, {chips:[ownerChip('Preguntar a Sport 3', 'Hola, tengo una consulta sobre las instalaciones de Sport 3.')]});
   if (has(t,'jugadores','personas','cuantos juegan','equipo de')) return bot(R.canchas);
   if (has(t,'precio','cuanto','costo','cuesta','tarifa','vale','cobran')) return bot(R.precios);
   if (has(t,'lluvia','llueve','granizo','tormenta','clima')) return bot(R.clima);
@@ -813,7 +816,7 @@ function answer(raw){
   if (has(t,'cada semana','fija','semanal','todos los')) return bot(R.fijas);
   if (has(t,'gracias','genial','perfecto','ok')) return bot(R.gracias);
   if (has(t,'hola','buenas','buen dia','buenos')) return bot(R.hola, {chips: MAIN_CHIPS});
-  bot(R.fallback, {chips: [ownerChip('Escribir al dueño', 'Hola, tengo una consulta sobre Sport 3.'), ...MAIN_CHIPS]});
+  bot(R.fallback, {chips: [ownerChip('Escribir a Sport 3', 'Hola, tengo una consulta sobre Sport 3.'), ...MAIN_CHIPS]});
 }
 
 /* ---------- map ----------
