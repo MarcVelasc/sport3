@@ -41,7 +41,7 @@
 <main>
   <!-- STEP 1: choose -->
   <section class="step" id="step1" aria-labelledby="t1">
-    <p class="lead1">Elige deporte, día y hora. Mira qué horarios están libres y aparta tu cancha al instante: Sport 3 te confirma por WhatsApp.</p>
+    <p class="lead1">Elige deporte, día y hora. Mira qué horarios están libres y envía tu reserva por WhatsApp: Sport 3 te la confirma.</p>
     <div class="block">
       <div class="bh"><span class="num">1</span><h3>Deporte</h3></div>
       <p class="cta">Elige qué vas a <b>jugar hoy</b>: fútbol 5 o wally.</p>
@@ -99,13 +99,12 @@
     <div class="recap" id="recap2" aria-label="Tu reserva"></div>
     <form id="form2" class="block" novalidate>
       <div class="bh"><h3>Datos de contacto</h3></div>
-      <div class="inp"><label for="nombre">Nombre</label><input id="nombre" autocomplete="name" placeholder="Ej. Carlos Mendoza"></div>
+      <div class="inp"><label for="nombre">Nombre completo</label><input id="nombre" autocomplete="name" placeholder="Ej. Carlos Mendoza Rojas"></div>
       <div class="inp"><label for="celular">Celular (WhatsApp)</label><div class="pre"><span>+591</span><input id="celular" inputmode="numeric" autocomplete="tel-national" placeholder="7XXXXXXX" maxlength="8"></div></div>
       <div class="court-info pay-info">
         <span class="ci-ic" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 12h.01M18 12h.01"/></svg></span>
-        <p><b>Pagas al llegar a la cancha</b>En efectivo o con QR, ahí mismo. No tienes que pagar nada ahora.</p>
+        <p><b>Pago completo por QR</b>Al confirmar te mostramos el QR de Sport 3. Pagas el total y envías la captura del comprobante por WhatsApp. <strong>Tu reserva se aprueba solo cuando recibimos el comprobante.</strong></p>
       </div>
-      <p class="warnbox">Si tu equipo no llega dentro de los 15 minutos desde la hora reservada, la cancha se libera para otros clientes.</p>
       <label class="check"><input type="checkbox" id="cumple"><span>Es para un cumpleaños<small>Los cumpleaños se reservan con mínimo 3 horas seguidas.</small></span></label>
       <p class="err" id="err2" hidden></p>
       <button type="submit" class="primary">Confirmar reserva<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></button>
@@ -116,12 +115,20 @@
   <section class="step" id="step3" hidden aria-labelledby="t3">
     <button type="button" class="back" data-go="2"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>Cambiar datos</button>
     <div class="done">
-      <h2 id="t3">Envía tu <span>reserva</span></h2>
-      <p class="note">Se abre WhatsApp con tu reserva ya escrita. Solo tienes que tocar enviar.</p>
-      <p class="note hold" id="holdNote" hidden>Tu cancha queda apartada 2 horas. Envía el mensaje para que Sport 3 la confirme.</p>
+      <h2 id="t3">Paga y envía tu <span>comprobante</span></h2>
+      <p class="note">Tu reserva todavía <b>no está aprobada</b>. Sigue estos 3 pasos:</p>
     </div>
-    <dl class="dl" id="dl3"></dl>
-    <div class="paybox" id="paybox3"><span id="payLbl3">Total</span><b id="total3">Bs 0</b><small id="payNote3"></small><div class="qrbox" id="qrbox" hidden><canvas id="qrCanvas" width="29" height="29" aria-label="Código QR de pago"></canvas><img id="qrImg" alt="Código QR de pago de Sport 3" hidden></div></div>
+    <div class="pay-alert" role="note">
+      <p class="pa-title">Sin comprobante, tu reserva no se aprueba</p>
+      <ol>
+        <li><span><b>Paga <span class="js-total">Bs 0</span> con el QR.</b> Descárgalo y ábrelo en la app de tu banco.</span></li>
+        <li><span><b>Envía tu reserva por WhatsApp</b> al <span class="js-tel"></span> con el botón verde.</span></li>
+        <li><span><b>En ese mismo chat, envía la captura del comprobante.</b> Sport 3 lo revisa y aprueba tu reserva.</span></li>
+      </ol>
+      <p class="pa-foot">Tu horario no queda apartado hasta que Sport 3 confirme la reserva.</p>
+    </div>
+    <div class="paybox" id="paybox3"><span id="payLbl3">Total a pagar por QR</span><b id="total3">Bs 0</b><small id="payNote3"></small><div class="qrbox" id="qrbox"><canvas id="qrCanvas" width="29" height="29" aria-label="Código QR de pago"></canvas><img id="qrImg" alt="Código QR de pago de Sport 3" hidden></div>
+      <a class="btn2 qr-dl" id="qrDl" download="QR-pago-Sport3.jpg"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19h14"/></svg>Descargar QR</a></div>
     <div class="block" style="gap:10px">
       <a class="primary wa" id="btnWa" target="_blank" rel="noopener">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.3a.5.5 0 0 0 0-.5l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.2 2.2 2.2 0 0 0 .1-1.3c0-.1-.2-.2-.5-.3z"/></svg>
@@ -129,6 +136,7 @@
       </a>
       <details class="preview"><summary>Ver el mensaje que se enviará<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary><pre id="msgPreview"></pre></details>
     </div>
+    <dl class="dl" id="dl3"></dl>
   </section>
 
   <!-- STEP 4: sent -->
@@ -136,10 +144,16 @@
     <div class="done">
       <div class="tick"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path id="tickPath" d="M5 12.5 10 17.5 19 7"/></svg></div>
       <h2 id="t4">Reserva <span>enviada</span></h2>
-      <p class="note">Tu cancha queda apartada 2 horas. Cuando Sport 3 la confirme te llega el aviso por WhatsApp, y desde ahí queda firme.</p>
+      <p class="note">Ahora falta lo más importante: <b>tu comprobante de pago</b>.</p>
+    </div>
+    <div class="pay-alert" role="note">
+      <p class="pa-title">¿Ya enviaste la captura del comprobante?</p>
+      <p>Tu reserva se aprueba <b>solo cuando Sport 3 recibe el comprobante</b> del pago QR de <span class="js-total">Bs 0</span>, en el mismo chat de WhatsApp (<span class="js-tel"></span>). Cuando lo revisemos te llega la confirmación por ahí.</p>
+      <a class="primary wa" id="btnProof" target="_blank" rel="noopener"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.3a.5.5 0 0 0 0-.5l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.2 2.2 2.2 0 0 0 .1-1.3c0-.1-.2-.2-.5-.3z"/></svg>Enviar mi comprobante</a>
+      <a class="pa-link" id="qrDl2" download="QR-pago-Sport3.jpg">¿Aún no pagaste? Descarga el QR</a>
+      <p class="pa-foot">Tu horario no queda apartado hasta que Sport 3 confirme la reserva.</p>
     </div>
     <dl class="dl" id="dl4"></dl>
-    <p class="warnbox" id="warn4" hidden></p>
     <div class="block" style="gap:10px">
       <div class="bh"><h3>Cómo llegar</h3></div>
       <div class="map" id="map">
@@ -153,7 +167,7 @@
       </div>
     </div>
     </div>
-    <p class="note">¿No llegaste a enviar el mensaje? Vuelve a enviarlo. Si no puedes ir, avísanos por WhatsApp hasta las 12:00 del día del partido para liberar la cancha.</p>
+    <p class="note">¿No llegaste a enviar el mensaje de la reserva? Vuelve a enviarlo. Si no puedes ir, avísanos por WhatsApp hasta las 12:00 del día del partido para liberar la cancha.</p>
     <div class="block" style="gap:10px">
       <a class="btn2" id="btnWa2" target="_blank" rel="noopener">Volver a enviar por WhatsApp</a>
       <a class="btn2" id="gcal" target="_blank" rel="noopener">
@@ -170,7 +184,7 @@
     <div class="done">
       <span class="owner-pill"><i></i>Administración de Sport 3 · los clientes no la ven</span>
       <h2 id="t5">Reservas</h2>
-      <p class="note">Aquí llegan las reservas de la página. Toque <b>Confirmar</b> cuando el cliente le escriba y <b>Pagó</b> cuando vea el comprobante o le pague en la cancha. Si una reserva pendiente no se confirma en 2 horas, la cancha vuelve a quedar libre.</p>
+      <p class="note">Las reservas llegan a su WhatsApp con el comprobante de pago. Cuando confirme una, marque aquí el horario como ocupado para que los demás clientes ya no lo vean libre.</p>
     </div>
     <div id="oFocus" hidden></div>
     <form class="block" id="oLogin" novalidate>
@@ -184,10 +198,10 @@
     <div id="oPanel" hidden>
     <p class="note">Sesión: <span id="oUser"></span> · <button type="button" class="linkbtn" id="oLogout">Cerrar sesión</button></p>
     <div class="days" id="oDays" role="group" aria-label="Día"></div>
-    <h3 class="osec">Reservas de la página</h3>
-    <div class="ores" id="oRes" aria-live="polite"></div>
-    <h3 class="osec">Por teléfono o en persona</h3>
-    <p class="note">Marque cuántas canchas quedan ocupadas en cada turno. Las reservas de la página ya se cuentan solas.</p>
+    <h3 class="osec" hidden>Reservas de la página</h3>
+    <div class="ores" id="oRes" aria-live="polite" hidden></div>
+    <h3 class="osec">Horarios ocupados</h3>
+    <p class="note">Marque cuántas canchas quedan ocupadas en cada turno, sea por WhatsApp, por teléfono o en persona.</p>
     <div class="seg" id="oSport" role="radiogroup" aria-label="Deporte" data-v="0">
       <span class="seg-ind" aria-hidden="true"></span>
       <button type="button" role="radio" aria-checked="true" data-sport="futbol"><b>Fútbol 5</b></button>
@@ -195,7 +209,7 @@
     </div>
     <div class="olist" id="oList"></div>
     <div class="saved" id="oSaved" aria-live="polite"></div>
-    <form class="block" id="oPhoneForm" novalidate>
+    <form class="block" id="oPhoneForm" novalidate hidden>
       <div class="inp"><label for="oPhone">Su WhatsApp personal, donde llegan las reservas</label>
         <div style="display:flex;gap:8px"><div class="pre" style="flex:1"><span>+591</span><input id="oPhone" inputmode="numeric" placeholder="7XXXXXXX" maxlength="15"></div>
         <button type="submit" class="btn2" style="height:auto;padding:0 16px">Guardar</button></div></div>
@@ -204,7 +218,7 @@
     </div>
   </section>
 
-  <p class="demo-band" id="band">Versión de demostración · los horarios ocupados son de ejemplo</p>
+  <p class="demo-band" id="band" hidden>Versión de demostración · los horarios ocupados son de ejemplo</p>
   <p class="demo-band"><a href="privacidad.html" style="color:inherit">Política de privacidad</a></p>
 </main>
 

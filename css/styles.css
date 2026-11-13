@@ -513,3 +513,25 @@ body:has(#owner:not([hidden])) #fab{display:none}
 .dl dd small{display:block;font-family:var(--f-body);font-size:12px;font-weight:500;color:var(--mut)}
 .pay-info{margin-top:4px}
 .paybox b{color:var(--accent)}
+
+/* Pago completo por QR: aviso fuerte de que sin comprobante no se aprueba la reserva */
+.court-info p strong{display:block;margin-top:6px;color:var(--accent-ink);font-weight:700}
+.pay-alert{position:relative;display:flex;flex-direction:column;gap:10px;border-radius:18px;padding:16px 16px 14px;color:#fff;overflow:hidden;
+  background:radial-gradient(120% 140% at 100% 0%,rgba(234,177,85,.3) 0%,transparent 55%),linear-gradient(135deg,#2B1B0D 0%,#3D2614 100%);box-shadow:0 10px 26px rgba(43,27,13,.18)}
+.pay-alert::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--grad)}
+.pay-alert p{margin:0;font-size:14px;line-height:1.45;color:#F1E4D5}
+.pay-alert b{color:#fff}
+.pay-alert .pa-title{display:flex;align-items:center;gap:8px;font-family:var(--f-display);font-weight:700;font-size:18px;line-height:1.2;color:#fff}
+.pay-alert .pa-title::before{content:"!";flex:none;display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;font-size:15px}
+.pay-alert ol{margin:0;padding:0;list-style:none;counter-reset:pa;display:flex;flex-direction:column;gap:10px}
+.pay-alert li{counter-increment:pa;display:grid;grid-template-columns:26px 1fr;gap:10px;font-size:14px;line-height:1.4;color:#F1E4D5}
+.pay-alert li::before{content:counter(pa);display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--grad);color:#fff;font:700 13px/1 var(--f-display)}
+.pay-alert li b{display:block}
+.pay-alert .pa-foot{font-size:12.5px;color:#D9C6B2;border-top:1px solid rgba(255,255,255,.14);padding-top:10px}
+.pay-alert .primary{margin-top:4px}
+.pay-alert .pa-link{align-self:center;color:var(--amber);font-size:13.5px;font-weight:600}
+.qrbox img{width:min(100%,280px);height:auto;image-rendering:auto;border:0;border-radius:16px;box-shadow:0 8px 22px rgba(229,123,55,.28)}
+.qr-dl{grid-column:1/-1;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:8px;text-decoration:none}
+.pay-alert li > span{min-width:0}
+.rc-total span{font-size:12.5px;letter-spacing:.04em;line-height:1.25}
+.rc-total b{white-space:nowrap;font-size:28px}

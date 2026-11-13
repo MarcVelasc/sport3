@@ -8,7 +8,7 @@ window.SPORT3 = {
   supabaseKey: 'sb_publishable_dtreP_da977x-c5ElRPp7g_i4_2nRXH',
 
   /* WhatsApp del dueño (8 dígitos, sin +591). Se usa si no hay otro guardado en la pantalla del dueño. */
-  telefono: '57905773',
+  telefono: '74535098',
 
   /* Turnos: hora de inicio de cada uno (el último, 21 → termina a las 22:00) */
   horas: [15, 16, 17, 18, 19, 20, 21],
@@ -20,5 +20,5 @@ window.SPORT3 = {
   },
 
   /* QR de cobro del dueño: ruta de la imagen, por ejemplo 'img/qr.png'. Vacío = QR de ejemplo. */
-  qr: ''
+  qr: 'img/qr-pago.jpg'
 };

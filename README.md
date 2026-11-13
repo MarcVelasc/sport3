@@ -1,6 +1,6 @@
 # Sport 3 · Reserva de canchas
 
-Landing de reservas para Sport 3 (fútbol 5 y wally, Miraflores, Tarija). El cliente elige deporte, fecha y hora (la cancha se asigna al llegar), deja su nombre y celular, y la reserva (el pago siempre es al llegar, en efectivo o QR) se envía al WhatsApp del dueño con el mensaje ya escrito.
+Landing de reservas para Sport 3 (fútbol 5 y wally, Miraflores, Tarija). El cliente elige deporte, fecha y hora (la cancha se asigna al llegar), deja su nombre y celular, paga el total con el QR de Sport 3 y envía su reserva y la captura del comprobante por WhatsApp. La página no guarda la reserva ni bloquea el horario: Sport 3 marca los horarios ocupados desde `#dueno` se envía al WhatsApp del dueño con el mensaje ya escrito.
 
 Proyecto de la materia Marketing Móvil (MKD-314), UCB Tarija.
 Equipo: Marco Velasco, Favian Paniagua, Regina Rodriguez, Luz Angel Cari.
